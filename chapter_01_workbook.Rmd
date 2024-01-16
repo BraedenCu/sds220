@@ -1,0 +1,91 @@
+---
+title: "S&DS 220 Chapter 1 code examples"
+author: "Braeden Cullen"
+date: "2024-01-16"
+output:
+  html_document:
+    highlight: default
+    toc: true
+    number_sections: true
+    toc_depth: 3
+    theme: spacelab
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data in R
+
+This document contains code examples of the topics contained in Chapter 1 of [*Probability, Statistics, and Data: A fresh approach using R*](https://mathstat.slu.edu/~speegle/_book/preface.html) by Darrin Speegle and Bryan Clair.
+
+For each bullet point in the sections below, add a code chunk with code examples.  To add a code chunk, go to "Code -> Insert Chunk" or use the shortcut `option` + `command` + `i`.
+
+```{r}
+2 + 2
+```
+
+## Arithmetic and variable assignment
+
+- operations: `+`, `-`, `*`, `/`, also `^`, `**`, `%%`
+- exponentials and logarithms: `exp`, `log`
+- storing variables `<-` and the `str` function
+- comments `#`
+
+## Help
+
+- help with `?` and the "Help" tab in RStudio
+
+## Vectors
+
+- the combine function `c()`
+- the `:` operator
+- the `rep` function with arguments `times`, `length.out`, or `each`
+- example with `c` and `rep`
+- `seq` function with arguments `from`, `to` and `by`, or `length.out`
+- operations on vectors
+- `sum`, `mean`, `max`, `min`
+- basic scatterplot `plot(x, y)`
+
+## Indexing vectors
+
+- indexing with numbers
+- indexing with logicals
+- indexing with comparisons: `==`, `!=`, `>`, `<`, `>=`, `<=`
+- subset with `%in%`
+- built in data sets: `rivers`, `discoveries`
+- `head`, `sort`, `table`
+
+## Data types
+
+- numeric
+- integer
+- character
+- logical
+- factor
+- complex
+- raw
+- missing values: `NA`, `na.rm = TRUE`
+
+## Data frames
+
+- examples: `trees`, `mtcars`, `airquality`
+- `str`, `head`, `summary`
+- subsetting `[<rows> , <columns>]`
+- rows/columns by numeric vectors, logicals
+- columns by character vector with column names
+- getting columns with `<dataset name>$<column name>`
+- `which.max`, `which.min`
+
+## Reading data from files
+
+- `read.csv`
+- working directory: `getwd()`, `setwd()`
+
+## Packages
+
+- `install.packages("<package name>")`
+- `library(<package name>)`
