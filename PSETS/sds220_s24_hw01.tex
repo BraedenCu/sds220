@@ -1,0 +1,342 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={S\&DS 220: Homework 1},
+  pdfauthor={Braeden Cullen},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{S\&DS 220: Homework 1}
+\author{Braeden Cullen}
+\date{2024-01-19}
+
+\begin{document}
+\maketitle
+
+\hypertarget{instructions}{%
+\subsection{Instructions}\label{instructions}}
+
+\begin{itemize}
+\tightlist
+\item
+  This assignment is \textbf{due Friday January 19th, 11:59
+  pm}\footnote{There is a 48 hour grace period, so you have until the
+    end of Sunday.} in Gradescope. Download the R Markdown version of
+  this document from Canvas (called ``sds220\_s24\_hw01.rmd'').
+\item
+  Be sure to put you name in the ``author'' section of the YAML header
+  above.
+\item
+  This homework assignment consists of two parts.
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    In Part I, you will work through R tutorials in the \texttt{swirl}
+    package at your own pace. This will not be turned in, and you do not
+    need to complete it before doing Part II.
+  \item
+    In Part II, you will be working the \texttt{nhtemp} data set, which
+    is built into R. There are 5 questions, each worth 20 points. For
+    each question, your solution will consist of writing R code (in a
+    code chunk) or writing an explanation (outside of a code chunk after
+    the prompt).
+  \end{enumerate}
+\item
+  Submit your solutions in Gradescope as a pdf file generated from this
+  document by clicking the \emph{Knit} button at the top of the window.
+\end{itemize}
+
+\newpage
+
+\hypertarget{part-i-swirl-package-tutorials}{%
+\subsection{\texorpdfstring{Part I: \texttt{swirl} package
+tutorials}{Part I: swirl package tutorials}}\label{part-i-swirl-package-tutorials}}
+
+First you need to install the \texttt{swirl} package. In the
+\emph{console} window, type the command
+
+\begin{quote}
+\texttt{install.packages("swirl")}
+\end{quote}
+
+This will install the \texttt{swirl} package on your computer. R
+packages are written by R users and shared with the R community through
+a central repository. They contain extra tools and expand the
+functionality base R. Some packages focus on specialized applications,
+including finance, sports, astronomy, and gene sequencing (and much much
+more).
+
+Here is a
+\href{https://cran.r-project.org/web/packages/available_packages_by_name.html}{list
+of current R packages}. As you can see, the list is quite extensive. In
+addition to this, some users create packages and share them from their
+\href{https://github.com}{Github} account, rather than using the central
+CRAN repository.
+
+When you download a package, it goes into a folder on your computer
+called a \emph{library}. However its contents are not available
+immediately. Each time you open a new R session, you can make a package
+available with the \texttt{library} function. Think of the folder that
+contains R packages as a library (that's what R calls it after all!),
+and the individual packages as books. The \texttt{library} function is
+like going to the library and checking out a book (package).
+
+Load the \texttt{swirl} package by typing the following command on the
+command line in the console:
+
+\begin{quote}
+\texttt{library(swirl)}
+\end{quote}
+
+You will be greeted with a welcome message and prompted to type in the
+command
+
+\begin{quote}
+\texttt{swirl()}
+\end{quote}
+
+to start the tutorial. Do so, and follow the prompts. When you get to
+the list of courses, choose the first option:
+
+\begin{quote}
+1: R Programming: The basics of programming in R
+\end{quote}
+
+This course consists of 15 lessons, each of which takes about 10-15
+minutes to complete. Work through these lessons at your own pace. You do
+not need to complete them all before moving on to Part II of this
+assignment. I recommend doing several lessons each day (or every couple
+of days) over the next two weeks. You are welcome to do more and dive
+into the other swirl courses! The more time you put into learning R, the
+easier it will become and the more you'll be able to do.
+
+\newpage
+
+\hypertarget{part-ii-basic-r}{%
+\subsection{Part II: Basic R}\label{part-ii-basic-r}}
+
+\hypertarget{question-1}{%
+\subsubsection{Question 1}\label{question-1}}
+
+Write R code to create a numeric vector that repeats the sequence
+\texttt{1,\ 1,\ 2,\ 3,\ 5} eight hundred times. Store the result as
+\texttt{fib}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\hypertarget{question-2}{%
+\subsubsection{Question 2}\label{question-2}}
+
+\texttt{nhtemp} is a dataset that is built into R. Create a histogram of
+\texttt{nhtemp} using the \texttt{hist} function. Set the color of the
+histogram to a color that you like (but something other than the
+default).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\hypertarget{question-3}{%
+\subsubsection{Question 3}\label{question-3}}
+
+In the console window call the \texttt{help} function on
+\texttt{nhtemp}. What is range of years for the data set?
+
+\begin{quote}
+\emph{Your answer here:} \_\_\_\_
+\end{quote}
+
+Call the function \texttt{str} on \texttt{nhtemp} to see what type of
+object it is.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\hypertarget{question-4}{%
+\subsubsection{Question 4}\label{question-4}}
+
+What is the mean temperature in the \texttt{nhtemp} data?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+What is the standard deviation of the temperatures in the
+\texttt{nhtemp} data?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+What is the maximum temperature in the \texttt{nhtemp} data?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+Which year had the maximum temperature in the \texttt{nhtemp} data? Do
+not manually inspect the data for the largest value. Use the function
+\texttt{which.max} and figure which year this corresponds to.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\hypertarget{question-5}{%
+\subsubsection{Question 5}\label{question-5}}
+
+\begin{itemize}
+\tightlist
+\item
+  Call the \texttt{plot} function on \texttt{nhtemp}.
+\item
+  Change the label on the \emph{x}-axis to ``Year'' with the
+  \texttt{xlab} argument.
+\item
+  Change the label on the \emph{y}-axis to ``Degrees Fahrenheit'' with
+  the \texttt{ylab} argument.
+\item
+  Give the plot the title ``Temperatures in New Haven, CT from 1912 to
+  1971'' with the \texttt{main} argument.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# your answer here}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}
