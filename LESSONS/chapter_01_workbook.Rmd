@@ -168,6 +168,16 @@ head(sort(rivers, decreasing = FALSE, n=10))
 - raw
 - missing values: `NA`, `na.rm = TRUE`
 
+- note, NA is not true or false ! it is unknown
+
+```{r}
+exam_scores <- c(92, 70, 30, 42, 99, 88, 72, NA, 13)
+exam_scores > 75
+# mean(exam_scores) -> returns NA since can't take mean of vector which has NA
+length(exam_scores)
+mean(exam_scores, na.rm = TRUE)
+```
+
 ## Data frames
 
 - examples: `trees`, `mtcars`, `airquality`
