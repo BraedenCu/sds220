@@ -3,9 +3,9 @@ title: 'S&DS 220: Homework 1'
 author: "Braeden Cullen"
 date: "2024-01-19"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 urlcolor: blue
 ---
 
@@ -60,7 +60,6 @@ Write R code to create a numeric vector that repeats the sequence `1, 1, 2, 3, 5
 
 ```{r}
 # your answer here
-vec <- c(1, 1, 2, 3, 5)
 fib <- rep(c(1, 1, 2, 3, 5), times = 800)
 ```
 
@@ -82,7 +81,7 @@ hist(nhtemp, col="blue")
 
 In the console window call the `help` function on `nhtemp`.  What is range of years for the data set?
 
-> *Your answer here:* ____
+> *Your answer here:* 1912 to 1971
 
 Call the function `str` on `nhtemp` to see what type of object it is.
 
@@ -124,8 +123,7 @@ Which year had the maximum temperature in the `nhtemp` data?  Do not manually in
 
 ```{r}
 # your answer here
-which.max(nhtemp)
-42
+1912 + which.max(nhtemp)
 
 ```
 

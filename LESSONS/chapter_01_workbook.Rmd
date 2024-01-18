@@ -41,23 +41,121 @@ For each bullet point in the sections below, add a code chunk with code examples
 
 ## Vectors
 
-- the combine function `c()`
-- the `:` operator
+- don't forget that R is 1-indexed, unlike most other languages like python
+
+- the combine function `c -> used to create vectors, since we are combining entries
+```{r}
+c(1:4, -10:-14) # combines 1 to 4 and -10 to -14
+
+```
+
+- the `:` operator, makes a vector itself but can also be used c(1:10) in the same manner to create a vector
+```{r}
+3:10
+```
+
 - the `rep` function with arguments `times`, `length.out`, or `each`
+```{r}
+rep(c(1:4, -10:-14), times = 3)
+
+rep(pi, times =)
+```
+
 - example with `c` and `rep`
+```{r}
+v1 <- rep(c("abe", "bello"), each = 5)
+v2 <- rep(c("abe", "bello"), times = 5)
+v1
+v2
+```
+```{r}
+v3 <- rep(1:52, length.out = 100)
+v3
+v4 <- rep(1:50, length.out = 100)
+v4
+```
+
 - `seq` function with arguments `from`, `to` and `by`, or `length.out`
+```{r}
+seq(from = 0, to = 100, by = 1)
+seq(from = 0, to = 1, by = 0.01)
+seq(from = 0, to = 1, length.out = 11)
+```
+
 - operations on vectors
+```{r}
+x <- c(1, 2, 3, 4, 5)
+2*x
+x+2
+x^2
+```
+
 - `sum`, `mean`, `max`, `min`
+```{r}
+sum(x)
+mean(x)
+max(x)
+min(x)
+```
+
 - basic scatterplot `plot(x, y)`
+```{r}
+y <- c(2, 3, 4, 5, 6)
+plot(x, y)
+
+years <- 1900:2024
+set.seed(10)
+values <- rnorm(n = length(years), mean = 10, sd = 4)
+plot(x = years, y = values, col = "salmon", type = "l")
+plot(x = years, y = values, col = "salmon")
+```
+```{r}
+hist(values, col="azure", breaks = seq(from = min(values), 
+                                       to = max(values), 
+                                       length.out = 15))
+```
+```{r}
+plot(x = years,
+     y = values,
+     col = "salmon3",
+     xlab = "Years",
+     ylab = "Meaningless made up values",
+     main = "Title")
+```
 
 ## Indexing vectors
 
 - indexing with numbers
+```{r}
+values[1:5]
+values[10]
+values[seq(from = 1, to = length(values), by = 2)]
+
+```
+
 - indexing with logicals
+```{r}
+which.max(values) # location of max val
+which.min(values) # location of min val 
+```
+
 - indexing with comparisons: `==`, `!=`, `>`, `<`, `>=`, `<=`
+```{r}
+values[values > 15 | values < 5]
+values > 10
+values[!(values > 5)] # will give you all values !(>5)
+```
+
 - subset with `%in%`
 - built in data sets: `rivers`, `discoveries`
 - `head`, `sort`, `table`
+
+```{r}
+head(rivers, n = 10)
+head(sort(rivers), n = 10)
+head(sort(rivers, decreasing = TRUE), n=10)
+head(sort(rivers, decreasing = FALSE, n=10))
+```
 
 ## Data types
 
