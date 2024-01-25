@@ -181,6 +181,39 @@ mean(exam_scores, na.rm = TRUE)
 ## Data frames
 
 - examples: `trees`, `mtcars`, `airquality`
+
+```{r}
+head(airquality)
+head(trees)
+head(mtcars)
+
+tail (airquality, n = 20)
+```
+
+```{r}
+dim(airquality) # num rows num cols
+str(airquality)
+summary(airquality)
+```
+
+```{r}
+airquality_mod <- airquality
+airquality_mod$Month <- factor(airquality_mod$Month, ordered = TRUE)
+str(airquality_mod)
+summary(airquality_mod)
+airquality_mod[airquality_mod$Ozone > 20 & is.na(airquality_mod$Ozone), ]
+
+airquality_mod[1:5, c("Wind", "Day")]
+```
+
+
+```{r}
+my_squaring_func <- function(x) {
+  x^2
+}
+```
+
+
 - `str`, `head`, `summary`
 - subsetting `[<rows> , <columns>]`
 - rows/columns by numeric vectors, logicals
