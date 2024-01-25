@@ -171,7 +171,13 @@ num_manual
 
 ```{r}
 # your code here
-mtcars$am[1].mpg > 25
+num_auto <- mtcars$mpg[mtcars$am == "auto"]
+num_auto_greater <- sum(num_auto > 25)
+num_auto_greater
+num_manual <- mtcars$mpg[mtcars$am == "manual"]
+num_manual_greater <- sum(num_manual > 25)
+num_manual_greater
+# 0 auto, 6 manual
 ```
 
 \newpage
@@ -186,37 +192,36 @@ This problem uses the data set `hot_dogs` from the package `fosdata`.  See the s
 
 ```{r}
 # your code here
-# This problem uses the data set `hot_dogs` from the package `fosdata`.  See the section called **Libraries** in the Preface of the text under "Software Installation" (page xii). > *Important: never install a package in an R script or R Markdown document.  Always use the console!* (a) How many observations of how many variables are there? What types are the variables?
 library(fosdata)
 hot_dogs
-dim(hot_dogs)
+dim(hot_dogs) 
+# 54 observations of 3 variables
 str(hot_dogs)
+# the variables are type, calories, and sodium
 ```
 
 (b) What are the three kinds of hot dogs in this data set?
 
 ```{r}
 # your code here
-# (b) What are the three kinds of hot dogs in this data set?
-table(hot_dogs$Type)
-
+table(hot_dogs$type)
+# Beef Meat Poultry
 ```
 
 (c) What is the highest sodium content of any hot dog in this data set?
 
 ```{r}
 # your code here
-# (c) What is the highest sodium content of any hot dog in this data set?
-max(hot_dogs$Sodium)
-
+max(hot_dogs$sodium)
+# 645 
 ```
 
 (d) What is the mean calorie content for Beef hot dogs?
 
 ```{r}
 # your code here
-
-
+mean(hot_dogs$calories[hot_dogs$type=="Beef"])
+# 156.85
 ```
 
 
