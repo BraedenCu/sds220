@@ -23,7 +23,6 @@ In this exercise, you will graph the function $f(p) = p(1-p)$ for $p \in [0, 1]$
 
 ```{r}
 # your code here
-#use seq to create a vector `p` of numbers from 0 to 1 spaced by 0.2
 p <- seq(0, 1, by = 0.2)
 p
 ```
@@ -32,7 +31,6 @@ p
 
 ```{r}
 # your code here
-#Use plot to plot `p` in the `x` coordinate and `p(1-p)` in the `y` coordinate. Read the help page for `plot` and experiment with the `type` argument to find a good choice for this graph.
 plot(p, p*(1-p), type = "l")
 ```
 
@@ -40,7 +38,6 @@ plot(p, p*(1-p), type = "l")
 
 ```{r}
 # your code here
-# Repeat, but with creating a vector `p` of numbers from 0 to 1 spaced by 0.01.
 p <- seq(0, 1, by = 0.01)
 plot(p, p*(1-p), type = "l")
 
@@ -72,7 +69,6 @@ s
 
 ```{r}
 # your code here
-#make a histogram for rivers and color it rainbow
 hist(rivers, col = rainbow(10))
 ```
 
@@ -87,7 +83,6 @@ summary(rivers)
 
 ```{r}
 # your code here
-# Find the longest and shortest lengths of rivers in the set.
 mx <- max(rivers)
 mn <- min(rivers)
 mx 
@@ -98,7 +93,6 @@ mn
 
 ```{r}
 # your code here
-# Make a list of all (lengths of) rivers longer than 1000 miles.
 river_lst <- rivers[rivers > 1000]
 river_lst
 ```
@@ -122,7 +116,6 @@ table(state.region)
 
 ```{r}
 # your code here
-# Which states have area less than 10,000 square miles?
 less_than <- state.name[state.area < 10000]
 less_than
 ```
@@ -193,7 +186,6 @@ This problem uses the data set `hot_dogs` from the package `fosdata`.  See the s
 ```{r}
 # your code here
 library(fosdata)
-hot_dogs
 dim(hot_dogs) 
 # 54 observations of 3 variables
 str(hot_dogs)
