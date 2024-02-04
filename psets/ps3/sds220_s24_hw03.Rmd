@@ -108,10 +108,10 @@ probabilities$yellow + probabilities$red + probabilities$orange
 (c) Estimate (using simulation) the probability that a random selection of four M&M's will contain at least one blue M&M.
 
 ```{r}
-n_sims <- 1e5
-n_mms <- 4
-mms <- sample(names(probabilities), size = n_sims * n_mms, replace = TRUE, prob = unlist(probabilities))
-mms <- matrix(mms, nrow = n_sims) # produce a matrix containing the result of every simulation
+num_sims <- 1e5
+num_mms <- 4
+mms <- sample(names(probabilities), size = num_sims * num_mms <- 4, replace = TRUE, prob = unlist(probabilities))
+mms <- matrix(mms, nrow = num_sims) # produce a matrix containing the result of every simulation
 any_blue <- apply(mms, 1, function(x) "blue" %in% x) # loop over each row (indicated by the 1 for iterate using row margin) if blue exists in the row, 1 if not 0
 mean(any_blue) # take the mean of this result
 ```
@@ -119,9 +119,9 @@ mean(any_blue) # take the mean of this result
 (d) Estimate (using simulation) the probability that a random selection of six M&M's will contain all six colors.
 
 ```{r}
-n_mms <- 6
-mms <- sample(names(probabilities), size = n_sims * n_mms, replace = TRUE, prob = unlist(probabilities))
-mms <- matrix(mms, nrow = n_sims)
+num_mandm <- 6
+mms <- sample(names(probabilities), size = num_sims * num_mandm, replace = TRUE, prob = unlist(probabilities))
+mms <- matrix(mms, nrow = num_sims)
 all_colors <- apply(mms, 1, function(x) length(unique(x)) == 6) # same procedure as before, except check if each element is unique therefore indicating all 6 colors
 mean(all_colors)
 ```
@@ -175,18 +175,18 @@ Bob Ross was a painter with a PBS television show, "The Joy of Painting", that r
 
 ```{r}
 # insert R code here
-p_tree <- 0.91
-p_two_trees <- 0.85
-p_two_trees / p_tree
+prob_tree <- 0.91
+prob_two_trees <- 0.85
+prob_two_trees / prob_tree
 ```
 
 (b) 18% of Bob’s paintings contain a cabin. Given that he painted a cabin, there is a 35% chance the cabin is on a lake. What is the probability that a Bob Ross painting contains both a cabin and a lake?
 
 ```{r}
 # insert R code here
-p_cabin <- 0.18
-p_lake_given_cabin <- 0.35
-p_cabin * p_lake_given_cabin
+prob_cabin <- 0.18
+prob_lake_given_cabin <- 0.35
+prob_cabin * prob_lake_given_cabin
 ```
 
 \newpage
@@ -199,8 +199,8 @@ Ultimate frisbee players are so poor they don’t own coins. So, team captains d
 
 ```{r}
 # insert R code here
-p_different = 0.5
-p_different
+prob_different = 0.5
+prob_different
 ```
 
 (b) Suppose two captains flip frisbees. Assume the probability that a frisbee lands convex side up is $p$. Compute the probability (in terms of $p$) that the two frisbees match.
@@ -214,21 +214,21 @@ print('p_match = p^2 + (1-p)^2')
 
 ```{r}
 # insert R code here
-p <- seq(0, 1, by = 0.01)
-p_match <- p^2 + (1-p)^2
+prob <- seq(0, 1, by = 0.01)
+prob_match <- p^2 + (1-p)^2
 #make the color of the plot green
-plot(p, p_match, xlab = "p", ylab = "Probability of match", col = "green")
+plot(prob, prob_match, xlab = "p", ylab = "Probability of match", col = "blue")
 ```
 
 (d) One Reddit user flipped a frisbee 800 times and found that in practice, the convex side lands up 45% of the time. When captains flip, what is the probability of "same?" What is the probability of "different?"
 
 ```{r}
 # insert R code here
-p <- 0.45
-p_match <- p^2 + (1-p)^2
-p_different <- 1 - p_match
-p_match
-p_different
+prob <- 0.45
+prob_match <- prob^2 + (1-prob)^2
+prob_different <- 1 - p_match
+prob_match
+prob_different
 ```
 
 (e) What advice would you give to an ultimate frisbee team captain?
