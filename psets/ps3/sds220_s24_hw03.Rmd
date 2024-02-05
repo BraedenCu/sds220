@@ -110,8 +110,8 @@ probabilities$yellow + probabilities$red + probabilities$orange
 ```{r}
 num_sims <- 1e5
 num_mms <- 4
-mms <- sample(names(probabilities), size = num_sims * num_mms <- 4, replace = TRUE, prob = unlist(probabilities))
-mms <- matrix(mms, nrow = num_sims) # produce a matrix containing the result of every simulation
+mms <- sample(names(probabilities), size = num_sims * num_mms, replace = TRUE, prob = unlist(probabilities))
+ # produce a matrix containing the result of every simulation
 any_blue <- apply(mms, 1, function(x) "blue" %in% x) # loop over each row (indicated by the 1 for iterate using row margin) if blue exists in the row, 1 if not 0
 mean(any_blue) # take the mean of this result
 ```
@@ -133,9 +133,9 @@ mean(all_colors)
 In a room of 100 people, estimate (using simulation) the probability that at least two people were not only born on the same day, but also during the same hour of the same day. (For example, both were born between 2 and 3.)
 
 ```{r}
-# Setting up the simulation
-set.seed(40) # For reproducibility
-simulations <- 1000 # Number of simulations
+
+set.seed(35) 
+simulations <- 1000
 num_people <- 100
 total_matches <- 0
 
@@ -162,7 +162,7 @@ for(k in 1:simulations) {
 
 # calculating the probability
 probability <- total_matches / simulations
-probability*100
+probability
 ```
 
 \newpage
@@ -174,7 +174,6 @@ Bob Ross was a painter with a PBS television show, "The Joy of Painting", that r
 (a) 91% of Bob’s paintings contain a tree and 85% contain two or more trees. What is the probability that he painted a second tree, given that he painted a tree?
 
 ```{r}
-# insert R code here
 prob_tree <- 0.91
 prob_two_trees <- 0.85
 prob_two_trees / prob_tree
@@ -183,7 +182,6 @@ prob_two_trees / prob_tree
 (b) 18% of Bob’s paintings contain a cabin. Given that he painted a cabin, there is a 35% chance the cabin is on a lake. What is the probability that a Bob Ross painting contains both a cabin and a lake?
 
 ```{r}
-# insert R code here
 prob_cabin <- 0.18
 prob_lake_given_cabin <- 0.35
 prob_cabin * prob_lake_given_cabin
@@ -198,7 +196,6 @@ Ultimate frisbee players are so poor they don’t own coins. So, team captains d
 (a) Suppose you flip two fair coins. What is the probability they show different sides?
 
 ```{r}
-# insert R code here
 prob_different = 0.5
 prob_different
 ```
@@ -206,27 +203,23 @@ prob_different
 (b) Suppose two captains flip frisbees. Assume the probability that a frisbee lands convex side up is $p$. Compute the probability (in terms of $p$) that the two frisbees match.
 
 ```{r}
-# insert R code here
-print('p_match = p^2 + (1-p)^2')
+print('prob_match = p^2 + (1-p)^2')
 ```
 
 (c) Make a graph of the probability of a match in terms of $p$. Set the $x$ and $y$ labels inside the `plot` function with `xlab` and `ylab`.
 
 ```{r}
-# insert R code here
 prob <- seq(0, 1, by = 0.01)
-prob_match <- p^2 + (1-p)^2
-#make the color of the plot green
+prob_match <- prob^2 + (1-prob)^2
 plot(prob, prob_match, xlab = "p", ylab = "Probability of match", col = "blue")
 ```
 
 (d) One Reddit user flipped a frisbee 800 times and found that in practice, the convex side lands up 45% of the time. When captains flip, what is the probability of "same?" What is the probability of "different?"
 
 ```{r}
-# insert R code here
 prob <- 0.45
 prob_match <- prob^2 + (1-prob)^2
-prob_different <- 1 - p_match
+prob_different <- 1 - prob_match
 prob_match
 prob_different
 ```
@@ -234,14 +227,12 @@ prob_different
 (e) What advice would you give to an ultimate frisbee team captain?
 
 ```{r}
-# insert R code here
 "Bet on same side up"
 ```
 
 (f) Is the two-frisbee flip better than a single-frisbee flip for deciding the offense?
 
 ```{r}
-# insert R code here
 "Yes because the probability of a match is higher than the probability of a different side up."
 ```
 
@@ -252,7 +243,6 @@ prob_different
 How many ways are there of getting exactly 4 heads when tossing a coin 10 times? Hint: experiment with the R function `choose`.
 
 ```{r}
-# insert R code here
 choose(10, 4)
 ```
 
@@ -263,6 +253,5 @@ choose(10, 4)
 How many ways are there of getting exactly 4 heads when tossing a coin 10 times, assuming that the 4th head came on the 10th toss?
 
 ```{r}
-# insert R code here
 choose(9, 3)
 ```
