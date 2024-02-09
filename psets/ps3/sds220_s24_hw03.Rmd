@@ -111,7 +111,7 @@ probabilities$yellow + probabilities$red + probabilities$orange
 num_sims <- 1e5
 num_mms <- 4
 mms <- sample(names(probabilities), size = num_sims * num_mms, replace = TRUE, prob = unlist(probabilities))
- # produce a matrix containing the result of every simulation
+mms <- matrix(mms, nrow = num_sims) # produce a matrix containing the result of every simulation
 any_blue <- apply(mms, 1, function(x) "blue" %in% x) # loop over each row (indicated by the 1 for iterate using row margin) if blue exists in the row, 1 if not 0
 mean(any_blue) # take the mean of this result
 ```
