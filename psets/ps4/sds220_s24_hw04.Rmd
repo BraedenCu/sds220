@@ -1,0 +1,143 @@
+---
+title: "S&DS 220: Homework 4"
+subtitle: "Due Friday February 9"
+author: "<insert you name>"
+output:
+  pdf_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# load R packages used here
+library(fosdata)
+```
+
+## Instructions
+
+1. Complete the questions below.  Upload your knitted PDF solutions to Gradescope by the due date.
+2. Your solutions should be a combination of writing and R code.  When writing, use complete sentences.
+3. Previous homework assignments already had code chunks created for you.  Now it is up to you to insert R code chunks within each problem as needed.
+4. You should aim for clear and concise communication (in both words and R code).
+
+\newpage
+
+## Problem set questions
+
+### Question 1: Exercise 2.23
+
+Suppose you do an experiment where you select ten people at random and ask their birthdays.
+
+Here are three events:
+
+- $A$: all ten people were born in February.
+- $B$: the first person was born in February.
+- $C$: the second person was born in January.
+
+(a) Which pair(s) of these events are disjoint, if any?
+
+*Solution.*
+
+(b) Which pair(s) of these events are independent, if any?
+
+*Solution.*
+
+
+(c) What is $P(B | A)$?
+
+*Solution.*
+
+
+### Question 2: Exercise 2.26
+
+Suppose a die is tossed three times. Let $A$ be the event "the first toss is a 5". Let $B$ be the event "the first toss is the largest number rolled" (the "largest" can be a tie). Determine, via simulation or otherwise, whether $A$ and $B$ are independent.
+
+*Solution.*
+
+
+### Question 3: Exercise 2.30
+
+Suppose there is a new test that detects whether people have a disease. If a person has the disease, then the test correctly identifies that person as being sick 99.9\% of the time (*sensitivity* of the test). If a person does not have the disease, then the test correctly identifies the person as being well 97\% of the time (*specificity* of the test). Suppose that 2\% of the population has the disease. Find the probability that a randomly selected person has the disease given that they test positive for the disease.
+
+*Solution.*
+
+
+### Question 4: Exercise 2.35
+
+You should answer these questions without using simulation (however, feel free to check your answer with simulation). Six standard six-sided dice are rolled.
+
+(a) How many outcomes are there?
+
+*Solution.*
+
+
+(b) How many outcomes are there such that all of the dice are different numbers?
+
+*Solution.*
+
+
+(c) What is the probability that you obtain six different numbers when you roll six dice?
+
+*Solution.*
+
+
+\newpage
+
+### Question 5: Loops in R
+
+Read the Vignette: Loops in R at the end of chapter 3 on pages 82 and 83 in our text. Below is an example of a `while` loop that counts the number of coin tosses until the 50th time heads appears, where the probability of heads is 0.4.
+
+```{r, eval=FALSE}
+# example of a while loop
+
+heads_50 <- replicate(1e4, {
+  # initialize the number of heads to 0
+  n_heads <- 0
+  # initialize the number of coin tosses to 0
+  n_tosses <- 0
+  
+  while(n_heads < 50){
+    # simulate a coin toss
+    coin_toss <- sample(c("H", "T"), size = 1, prob = c(0.4, 0.6))
+    
+    # increment the number of tosses by 1
+    n_tosses <- n_tosses + 1
+    
+    # if the coin toss is heads, increment the number of heads by 1
+    if(coin_toss == "H") {
+      n_heads <- n_heads + 1
+    }
+  
+  }
+  # return the total number of tosses
+  n_tosses
+})
+```
+
+(a) Write a `while` loop to count the number of times a standard six-sided die is rolled until an accumulated total of 250 or more is achieved. Include your `while` loop code inside `replicate` to simulate this experiment 10,000 times.
+
+*Solution.*
+
+
+Use the results of the simulation you wrote in part (a) to answer parts (b) through (e). In other words, don't re-simulate the experiment.
+
+(b) Estimate the mean and standard deviation of the number of rolls.
+
+*Solution.*
+
+
+(c) Make a histogram of the number of rolls. Give the histogram an appropriate title and axes labels.
+
+*Solution.*
+
+
+(d) Estimate the probability that 75 or fewer rolls are required.
+
+*Solution.*
+
+
+(e) Suppose after 70 rolls, the accumulated dice total less than 250. What is the probability an accumulated total of 250 or more will be achieved in the next 5 rolls?
+
+*Solution.*
+
