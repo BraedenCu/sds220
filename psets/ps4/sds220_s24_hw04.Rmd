@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 4"
 subtitle: "Due Friday February 9"
-author: "<insert you name>"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -37,30 +37,97 @@ Here are three events:
 
 (a) Which pair(s) of these events are disjoint, if any?
 
-*Solution.*
+#### Solution
+
+A,C 
+
+There is one disjoint pair. Events are disjoint if they cannot occur at the same time. In this case, if all ten people were born in February, then the first person was born in February, and the second person was born in January. Thus, A and C are disjoint.
 
 (b) Which pair(s) of these events are independent, if any?
 
-*Solution.*
+#### Solution
+
+B,C
+
+Events are independent if the occurrence of one event does not affect the probability of the occurrence of the other event. This is the only possible pair of independent events.
 
 
 (c) What is $P(B | A)$?
 
-*Solution.*
+#### Solution
+
+The probability that the first person was born in February dominates the probability that all ten people were born in February because the first person is a subset of all ten people. Thus, P(B | A) = P (B) = 1/12.
+
 
 
 ### Question 2: Exercise 2.26
 
 Suppose a die is tossed three times. Let $A$ be the event "the first toss is a 5". Let $B$ be the event "the first toss is the largest number rolled" (the "largest" can be a tie). Determine, via simulation or otherwise, whether $A$ and $B$ are independent.
 
-*Solution.*
+#### Solution
+
+```{r}
+
+num_trials <- 1e5
+
+# checking for A and B
+trials_A_B <- replicate(num_trials, {
+  die_tosses <- sample(1:6, size = 3, replace = TRUE)
+  
+  A <- die_tosses[1] == 5
+  
+  B <- die_tosses[1] == max(die_tosses)
+  
+  A & B
+})
+
+# only checking if the first number is 5
+trials_A <- replicate(num_trials, {
+  die_tosses <- sample(1:6, size = 3, replace = TRUE)
+  
+  A <- die_tosses[1] == 5
+  
+  A
+})
+
+# does not consider the first element being 5, only the largest number rolled
+trials_B <- replicate(num_trials, {
+  die_tosses <- sample(1:6, size = 3, replace = TRUE)
+  
+  B <- die_tosses[1] == max(die_tosses)
+  
+  B
+})
+mean(trials_A_B) # 0.11619
+mean(trials_A)   # 0.16691
+mean(trials_B)   # 0.42241
+
+mean(trials_A_B) * mean(trials_A) # P(A intersection B) * P(A) =  0.01937676
+```
+
+Ok now that we have our results, we can complete the picture. The independence of two events, A and B, are considered independent if the occurence of one does not affect the probability of the occurrence of the other. The equation representing this situation is as follows: P(A intersection B) = P(A) * P(B). In our case, we have P(A intersection B) = 0.11619, P(A) = 0.16691, P(B) = 0.42241, P(B) * P(A) =  0.01937676. We can see that P(A intersection B) is not equal to P(A) * P(B), so we can conclude that A and B are not independent.
+
 
 
 ### Question 3: Exercise 2.30
 
 Suppose there is a new test that detects whether people have a disease. If a person has the disease, then the test correctly identifies that person as being sick 99.9\% of the time (*sensitivity* of the test). If a person does not have the disease, then the test correctly identifies the person as being well 97\% of the time (*specificity* of the test). Suppose that 2\% of the population has the disease. Find the probability that a randomly selected person has the disease given that they test positive for the disease.
 
-*Solution.*
+#### Solution
+
+to solve this problem we will make use of Bayes Theorum, which is useful in this case because it allows us to update the probabilities of an event when given new information (in this case, the result of the test). The equation for Bayes Theorum is as follows: P(A | B) = P(B | A) * P(A) / P(B). In this case, A is the event that a person has the disease, and B is the event that a person tests positive for the disease. We are given the following information: P(B | A) = 0.999, P(A) = 0.02, and P(B) = P(B | A) * P(A) + P(B | A complement) * P(A complement). We can calculate P(B | A complement) as 1 - P(B | A complement) = 0.97, and P(A complement) = 1 - P(A) = 0.98. Plugging in these values, we get P(B) = 0.999 * 0.02 + 0.03 * 0.98 = 0.04994. Now we can calculate P(A | B) = 0.999 * 0.02 / 0.04994 = 0.3992791. So the probability that a randomly selected person has the disease given that they test positive for the disease is 0.40.
+
+lets do this in R for more clarity  
+```{r}
+P_B_A <- 0.999
+P_A <- 0.02
+P_B_A_complement <- 1 - 0.97
+P_A_complement <- 1 - 0.02
+P_B <- P_B_A * P_A + P_B_A_complement * P_A_complement
+P_A_B <- P_B_A * P_A / P_B
+P_A_B # 0.4046173
+
+```
 
 
 ### Question 4: Exercise 2.35
@@ -69,17 +136,43 @@ You should answer these questions without using simulation (however, feel free t
 
 (a) How many outcomes are there?
 
-*Solution.*
+#### Solution
 
+6^6 = 46656
+lets test it using simulation
+
+```{r}
+# determine the number of possible outcomes when six six-sided dice are rolled
+outcomes <- replicate(1e6, {
+  die_rolls <- sample(1:6, size = 6, replace = TRUE)  
+  paste(die_rolls, collapse = "")
+})
+
+length(unique(outcomes)) # 46656
+```
 
 (b) How many outcomes are there such that all of the dice are different numbers?
 
-*Solution.*
+#### Solution 
+
+die 1 -> can land on 6 different numbers
+die 2 -> can land on 5 different numbers
+die 3 -> can land on 4 different numbers
+die 4 -> can land on 3 different numbers
+die 5 -> can land on 2 different numbers
+die 6 -> can land on 1 number
+
+6*5*4*3*2*1 = 6! = 720
 
 
 (c) What is the probability that you obtain six different numbers when you roll six dice?
 
-*Solution.*
+#### Solution
+
+total number of outcomes = 46656
+number of outcomes such that all of the dice are different numbers = 720
+P(all dice are different) = 720 / 46656 = 0.01543209876
+
 
 
 \newpage
@@ -117,27 +210,65 @@ heads_50 <- replicate(1e4, {
 
 (a) Write a `while` loop to count the number of times a standard six-sided die is rolled until an accumulated total of 250 or more is achieved. Include your `while` loop code inside `replicate` to simulate this experiment 10,000 times.
 
-*Solution.*
+#### Solution
 
+```{r}
+num_trials <- 1e4
+
+n_rolls_matrix <- replicate(num_trials, {
+  accumulated_total <- 0
+  n_rolls <- 0
+  
+  while(accumulated_total < 250){
+    # simulate a die roll
+    die_roll <- sample(1:6, size = 1)
+    
+    accumulated_total <- accumulated_total + die_roll
+    
+    # increment the number of rolls by 1
+    n_rolls <- n_rolls + 1
+  }
+  n_rolls
+})
+
+mean(n_rolls_matrix) # 71.8493
+sd(n_rolls_matrix) # 4.151036
+
+# find number of elements of n_rolls_matrix that are less than or equal to 75
+sum(n_rolls_matrix <= 75) / num_trials # 0.8127
+
+# solve for number of rolls between 71 and 75
+sum(n_rolls_matrix >= 71 & n_rolls_matrix <= 75) / num_trials # 0.4381
+```
 
 Use the results of the simulation you wrote in part (a) to answer parts (b) through (e). In other words, don't re-simulate the experiment.
 
 (b) Estimate the mean and standard deviation of the number of rolls.
 
-*Solution.*
+#### Solution
 
+mean = 71.8493
+standard deviation = 4.151036
 
 (c) Make a histogram of the number of rolls. Give the histogram an appropriate title and axes labels.
 
-*Solution.*
-
+```{r}
+# construct historgram with number of rolls
+hist(n_rolls_matrix, main = "Number of Rolls to Achieve an Accumulated Total of at Least 250", xlab = "Number of Rolls", ylab = "Frequency", col = "salmon")
+```
 
 (d) Estimate the probability that 75 or fewer rolls are required.
 
-*Solution.*
+#### Solution
 
+0.8127
 
 (e) Suppose after 70 rolls, the accumulated dice total less than 250. What is the probability an accumulated total of 250 or more will be achieved in the next 5 rolls?
 
-*Solution.*
+#### Solution
 
+We are at roll 71. What is the probability that between row 71 and 75 we will get a total of 250 or more? we simply need to check how many rolls in our n_rolls_matrix are either 71, 72, 73, 74, or 75. We can then divide this number by the total number of trials to get our probability. 
+
+probability = 0.4381
+
+```{r}
