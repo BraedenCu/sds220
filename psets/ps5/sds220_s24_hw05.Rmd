@@ -208,18 +208,6 @@ pmf_num_same_name
 
 # poisson approximation from above
 dpois(x = 0:8, lambda = 1) |> round(4)
-
-# comparison as a plot
-plot(pmf_num_same_name, type = "b", col = "purple",
-  xlab = "Number of People Who Draw Their Own Name",
-  ylab = "Probability of Drawing Their Own Name",
-  main = "Simulation in Comparison to Poisson Approximation of Number of People Who Draw Their Own Name")
-  lines(x = 0:8, y = dpois(x = 0:8, lambda = 1),
-  type = "b", col = "purple", lwd = 2)
-  legend("topright", legend = c("Simulation", "poisson approximation"),
-  col = c("salmon", "purple"), lwd = 2, lty = 1, pch = 1)
-
-  
 ```
 
 Because the outputs are so close, the Poisson approximation is doing a **great job.**
@@ -241,7 +229,7 @@ vowels <- c("A", "E", "I", "O", "U")
 
 # run simulation, check if the tiles pulled are in vowels vector using the %in% operator
 num_vowels <- replicate(1e4, {
-  tiles <- sample(scrabble$piece, size = 7, replace = FALSE)
+  tiles <- sample(scrabble$piece, size = 7, replace = FALSE) # use fosdata:scrabble
   sum(tiles %in% vowels) # %in% operator simply checks if tiles sample are in vowels 
 })
 
@@ -285,60 +273,16 @@ k * m / (m + n)
 
 (d) What is the standard deviation of the number of vowels drawn when drawing 7 tiles?
 
+
+The standard deviation of the number of vowels drawn when drawing 7 tiles is given by the formula:
+$$
+\sqrt{\frac{k \cdot m}{m + n} \cdot \frac{n}{m + n} \cdot \frac{m + n - k}{m + n - 1}}
+$$
+
 ```{r}
-# the formula for this is = $\sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))$
+
 sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))
- 
-number_vowels <- replicate(1e4, {
-  tiles <- sample(scrabble$piece, size = 7, replace = FALSE)
-  sum(tiles %in% vowels) # same methodology as before
-})
 
-sd(number_vowels) # standard deviation
-
-simulated_pmf_results <- proportions(table(number_vowels))
-
-
-plot(simulated_pmf_results, 
-  type = "h",
-  xlim = c(-0.5, 8), ylim = c(0, 0.35),
-  ylab = "Probability",
-  xlab = "Number of Vowels Drawn",
-  main = "Simulated PMF Hypergeometric Distribution: # Vols Drawn",
-  col = "salmon")
-
-points(0:7, simulated_pmf_results, col = "purple", pch = 16)
-
-# pmf hypogemetric
-lines(0:7 + 0.1, 
-  dhyper(0:7, m = m, n = n, k = k),
-  col = "salmon", 
-  lwd = 2, 
-  type = "h")
-
-# the simulated pmf results
-points(0:7 + 0.1, 
-       dhyper(0:7, m = m, n = n, k = k), 
-       col = "salmon", 
-       pch = 16)
-
-# text labelling
-text(x = 0:7-0.1, 
-     y = simulated_pmf_results + 0.02, 
-     labels = simulated_pmf_results, 
-     col = "salmon")
-
-text(x = 0:7+0.1, 
-     y = simulated_pmf_results + 0.01,
-     labels = round(dhyper(0:7, m = m, n = n, k = k), 4),
-     col = "salmon")
-
-# legend
-legend("topright", 
-       legend = c("Simulation", "Hypergeometric pmf"),
-       col = c("salmon", "purple"), 
-       lwd = 2, 
-       pch = 16)
 ```
 
 
