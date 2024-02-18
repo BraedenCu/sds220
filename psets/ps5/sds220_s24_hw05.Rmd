@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
   ---
 title: "S&DS 220: Homework 5"
 subtitle: "Due Friday February 16"
@@ -118,7 +123,9 @@ n*p
 $(P(X \geq 42)$
 ```{r}
 # we can calculate the probability binomial to solve for $(P(X \geq 42)$
-pbinom(41, size = n, prob = b, lower.tail = FALSE)
+n <- 262
+p <- 0.047
+pbinom(41, size = n, prob = p, lower.tail = FALSE)
 ```
 
 
@@ -170,11 +177,13 @@ mean(num_same_name)
 (b) The pmf of $N$ can estimated from your simulation from part (a) using `proportions(table())`.  Print this pmf and make a plot of the pmf using `plot()` with the argument `type = "h"`.
 
 ```{r}
-pmf_num_same_name <- proportions(table(N))
+pmf_num_same_name <- proportions(table(num_same_name))
 plot(pmf_num_same_name, type = "h",
   xlab = "Number of People",
   ylab = "Probability",
-  main = "PMF of the Number of People Who Draw Their Own Name")
+  main = "PMF of the Number of People Who Draw Their Own Name",
+  col = "salmon")
+
 ```
 
 (c) We can also approximate the distribution of $N$ using a Poisson distribution.  Since each person has a 1/27 chance of drawing their name from the hat and all 27 people draw a name, the mean of $N$ is $E(N) = 27 \cdot 1/27 = 1$.  And so we can approximate $N$ with a $\text{Poisson}(1)$ distribution.  Using `dpois`, give the values of the pmf of a $\text{Poisson}(1)$ for `x = 0:8` (if the values are given in scientific notation, you can get rid of this by using `round()` with the argument `digits = 4`).  Plot this pmf as in (b) using `plot()` with `type = "h"`.
@@ -186,7 +195,8 @@ dpois(x = 0:8, lambda = 1) |> round(4) # poisson approximation rounded to 4 deci
 plot(dpois(x = 0:8, lambda = 1), type = "h",
   xlab = "Number of People",
   ylab = "Probability",
-  main = "The Poisson Approximation of the Number of People Who Draw Their Own Name")
+  main = "The Poisson Approximation of the Number of People Who Draw Their Own Name",
+  col = "salmon")
 
 ```
 
@@ -200,19 +210,22 @@ pmf_num_same_name
 dpois(x = 0:8, lambda = 1) |> round(4)
 
 # comparison as a plot
-plot(pmf_N, type = "b", col = "salmon",
+plot(pmf_num_same_name, type = "b", col = "purple",
   xlab = "Number of People Who Draw Their Own Name",
   ylab = "Probability of Drawing Their Own Name",
   main = "Simulation in Comparison to Poisson Approximation of Number of People Who Draw Their Own Name")
   lines(x = 0:8, y = dpois(x = 0:8, lambda = 1),
-  type = "b", col = "black", lwd = 2)
+  type = "b", col = "purple", lwd = 2)
   legend("topright", legend = c("Simulation", "poisson approximation"),
-  col = c("salmon", "black"), lwd = 2, lty = 1, pch = 1)
+  col = c("salmon", "purple"), lwd = 2, lty = 1, pch = 1)
 
   
 ```
 
 Because the outputs are so close, the Poisson approximation is doing a **great job.**
+
+
+
 
 \newpage
 
@@ -227,10 +240,12 @@ Players begin the game by drawing seven tiles from a bag of 100 tiles. Estimate 
 vowels <- c("A", "E", "I", "O", "U")
 
 # run simulation, check if the tiles pulled are in vowels vector using the %in% operator
-num_vows <- replicate(1e4, {
+num_vowels <- replicate(1e4, {
   tiles <- sample(scrabble$piece, size = 7, replace = FALSE)
   sum(tiles %in% vowels) # %in% operator simply checks if tiles sample are in vowels 
 })
+
+
 
 mean(num_vowels == 0) # probability of no vowels
 ```
@@ -270,7 +285,6 @@ k * m / (m + n)
 
 (d) What is the standard deviation of the number of vowels drawn when drawing 7 tiles?
 
-$\sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))$
 ```{r}
 # the formula for this is = $\sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))$
 sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))
@@ -285,27 +299,46 @@ sd(number_vowels) # standard deviation
 simulated_pmf_results <- proportions(table(number_vowels))
 
 
-plot(simulated_pmf_results, type = "h", col = "darkblue", xlim = c(-0.5, 8), ylim = c(0, 0.35),
+plot(simulated_pmf_results, 
+  type = "h",
+  xlim = c(-0.5, 8), ylim = c(0, 0.35),
   ylab = "Probability",
   xlab = "Number of Vowels Drawn",
-  main = "Results of Simulated PMF of the Number of Vowels Drawn in 7 Tiles of Scrabble")
+  main = "Simulated PMF Hypergeometric Distribution: # Vols Drawn",
+  col = "salmon")
 
-points(0:7, simulated_pmf_results, col = "darkblue", pch = 16)
+points(0:7, simulated_pmf_results, col = "purple", pch = 16)
 
-# pmf of hypergeometric, nudging the x-values
-lines(0:7 + 0.1, dhyper(0:7, m = m, n = n, k = k),
-col = "red3", lwd = 2, type = "h")
-points(0:7 + 0.1, dhyper(0:7, m = m, n = n, k = k), col = "red3", pch = 16)
+# pmf hypogemetric
+lines(0:7 + 0.1, 
+  dhyper(0:7, m = m, n = n, k = k),
+  col = "salmon", 
+  lwd = 2, 
+  type = "h")
 
-# add text labels
-text(x = 0:7-0.2, y = simulated_pmf_results + 0.04, labels = simulated_pmf_results, col = "darkblue")
-text(x = 0:7+0.2, y = simulated_pmf_results + 0.02,
-  labels = round(dhyper(0:7, m = m, n = n, k = k), 4),
-  col = "red3")
+# the simulated pmf results
+points(0:7 + 0.1, 
+       dhyper(0:7, m = m, n = n, k = k), 
+       col = "salmon", 
+       pch = 16)
 
-# create a legend
-legend("topright", legend = c("Simulation", "Hypergeometric pmf"),
-col = c("darkblue", "red3"), lwd = 2, pch = 16)
+# text labelling
+text(x = 0:7-0.1, 
+     y = simulated_pmf_results + 0.02, 
+     labels = simulated_pmf_results, 
+     col = "salmon")
+
+text(x = 0:7+0.1, 
+     y = simulated_pmf_results + 0.01,
+     labels = round(dhyper(0:7, m = m, n = n, k = k), 4),
+     col = "salmon")
+
+# legend
+legend("topright", 
+       legend = c("Simulation", "Hypergeometric pmf"),
+       col = c("salmon", "purple"), 
+       lwd = 2, 
+       pch = 16)
 ```
 
 
@@ -343,7 +376,12 @@ pmf_estimation_rolls
 (c) Plot the estimated probability mass function from (b), using `plot()` with the argument `type = "h"`.
 
 ```{r}
-plot(pmf_estimation_rolls, type = "h", xlab = "Number of Rolls", ylab = "Probability of Deathrolling", main = "Simulated PMF of the Total Number of Rolls")'")
+plot(pmf_estimation_rolls, 
+     type = "h", 
+     xlab = "Number of Rolls", 
+     ylab = "Probability of Deathrolling", 
+     main = "Simulated PMF of the Total Number of Rolls",
+     col = "salmon")
 ```
 
 (d) Estimate the probability that player 1 wins.
