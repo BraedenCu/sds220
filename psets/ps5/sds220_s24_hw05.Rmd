@@ -95,8 +95,10 @@ mean_x
 # variance of x is going to be the second moment - mean squared 
 second_moment_x <- sum((x^2)*probs)
 # variance
-var_x <- second_moment_x - mean_x^2
-var_x
+variance_x <- second_moment_x - mean_x^2
+variance_x
+standard_deviation_x <- sqrt(variance_x)
+standard_deviation_x
 ```
 
 \newpage
@@ -113,9 +115,9 @@ Answer the following (without simulation). Recall that `pbinom` is the cdf and `
 
 ```{r}
 # the expected number of ender pearls is the mean of the binomial distribution, therefore np
-n <- 262
-p <- 0.047
-n*p
+number_pearls <- 262
+probability <- 0.047
+number_pearls*probability
 ```
 
 (b) What is the probability of getting 42 or more ender pearls after 262 trades?
@@ -123,9 +125,9 @@ n*p
 $(P(X \geq 42)$
 ```{r}
 # we can calculate the probability binomial to solve for $(P(X \geq 42)$
-n <- 262
-p <- 0.047
-pbinom(41, size = n, prob = p, lower.tail = FALSE)
+number_of_trades <- 262
+probability <- 0.047
+pbinom(41, size = number_of_trades, prob = probability, lower.tail = FALSE)
 ```
 
 
@@ -135,9 +137,9 @@ When you kill a blaze, you have a $50\%$ chance of getting a blaze rod. Dream go
 
 ```{r}
 # again we can solve for the expected number of blaze rods by solving for np
-n <- 305
-p <- 0.5
-n*p
+blazes_killed <- 305
+probability <- 0.5
+blazes_killed*probability
 ```
 
 (d) What is the probability of getting 211 or more blaze rods after killing 305 blazes?
@@ -146,7 +148,7 @@ $(P(X \geq 211)$
 ```{r}
 # we can calculate the probability binomial to solve for $(P(X \geq 211)$
 # again, using probability binom exceeding 211
-pbinom(210, size = n, prob = p, lower.tail = FALSE)
+pbinom(210, size = blazes_killed, prob = probability, lower.tail = FALSE)
 ```
 
 (e) Do you think Dream was cheating?
@@ -171,6 +173,8 @@ num_same_name <- replicate(1e4, {
 
 # expected value of num_same_name
 mean(num_same_name)
+# standard deviation
+sd(num_same_name)
 ```
 
 
@@ -178,10 +182,11 @@ mean(num_same_name)
 
 ```{r}
 pmf_num_same_name <- proportions(table(num_same_name))
-plot(pmf_num_same_name, type = "h",
+plot(pmf_num_same_name, 
+  type = "h",
   xlab = "Number of People",
   ylab = "Probability",
-  main = "PMF of the Number of People Who Draw Their Own Name",
+  main = "PMF: Number of People Who Draw Same Name",
   col = "salmon")
 
 ```
@@ -192,7 +197,8 @@ plot(pmf_num_same_name, type = "h",
 # poisson approximation
 dpois(x = 0:8, lambda = 1) |> round(4) # poisson approximation rounded to 4 decimal places
 
-plot(dpois(x = 0:8, lambda = 1), type = "h",
+plot(dpois(x = 0:8, lambda = 1), 
+  type = "h",
   xlab = "Number of People",
   ylab = "Probability",
   main = "The Poisson Approximation of the Number of People Who Draw Their Own Name",
@@ -281,7 +287,7 @@ $$
 
 ```{r}
 
-sqrt(k * m / (m + n) * n / (m + n) * (m + n - k)/(m + n - 1))
+sqrt(k * m / (m + n) * n / (m + n) * (m + n - k) / (m + n - 1))
 
 ```
 
@@ -298,11 +304,13 @@ Deathrolling in World of Warcraft works as follows.  Player 1 tosses a 1000-side
 
 ```{r}
 rolls <- replicate(1e4, {
-  die <- 1000; roll <- 0
+  die_1000 <- 1000
+  roll <- 0
   # rule for deathroll: keep rolling until you get a 1, then if you get a 1, you lose
-  while(die > 1){
+  while(die_1000 > 1)
+    {
     roll <- roll + 1
-    die <- sample(1:die, size = 1)
+    die_1000 <- sample(1:die_1000, size = 1)
   }
   roll
 })
