@@ -1,0 +1,11 @@
+# Practice Session One : Chapter 2
+
+```{r}
+birthday_poss <- 1:365
+
+sim <- replicate(1000, {
+    result <- anyDuplicated(sample(birthday_poss, size = 25, replace = TRUE))
+    result > 0
+})
+mean(sim)
+```

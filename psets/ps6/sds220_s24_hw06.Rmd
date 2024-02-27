@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 6"
 subtitle: "Due Friday February 23"
-author: "Braeden"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -33,38 +33,20 @@ Suppose that scores on an exam are normally distributed with mean 80 and standar
 
 **Solution**
 
-Given that the exam scores are normally distributed with a mean ($\mu$) of 80 and a standard deviation ($\sigma$) of 5, first, we calculate the Z-score for a score of 85: $$Z = \frac{X - \mu}{\sigma} = \frac{85 - 80}{5} = 1$$ Using the Z-score, we can find the probability that a student scores less than or equal to 85, $P(Z \leq 1)$, and then subtract this from 1 to find the probability of scoring higher than 85, $P(X > 85)$. The value of $P(Z \leq 1)$ is approximately 0.85 when looked up in a standard normal distribution table or calculated using a cumulative distribution function (CDF). The probability of a student scoring higher than 85 is:
-$$
-P(X > 85) = 1 - P(Z \leq 1) = 1 - 0.85 = 0.15
-$$
-
-Thus, the probability that a student scores higher than 85 on the exam is approximately **0.15**.
+```{r}
+mean <- 80
+sd <- 5
+pnorm(85, mean, sd, lower.tail = FALSE)
+```
 
 (b) Assume that exam scores are independent and that 10 students take the exam.  What is the probability that 4 or more students score 85 or higher on the exam?  Compute the exact probability, and then estimate it with simulation.
 
 **Solution**
 
-
-Assuming exam scores are independent and normally distributed with a mean ($\mu$) of 80 and a standard deviation ($\sigma$) of 5, we want to find the probability that 4 or more out of 10 students score 85 or higher on the exam. Given the correct probability of a single student scoring more than 85 is approximately 0.15 we can model the scenario with a binomial distribution where the probability of success on a single trial is $p = 0.15$, and the number of trials is $n = 10$. The probability of exactly $k$ students scoring above 85 is given by the binomial probability formula:
-
-$$
-P(X = k) = \binom{n}{k} p^k (1-p)^{n-k} = 0.05
-$$
-
-Therefore, the exact probability of 4 or more students scoring 85 or higher on the exam is equal  0.05 by simply pluggin values into the formula.
-
+The number of students out of 10 who get an 85 or higher is binomial with n = 10 and p = prob that single student gets > 85.
 ```{r}
-n <- 10 # num students
-mu <- 80 # mean score
-sigma <- 5 # standard deviation
-n_sims <- 10000
-times_above_4 <- 0
-
-sum(replicate(n_sims, {
-  scores <- rnorm(n, mu, sigma)
-  times_above_4 <- times_above_4 + (sum(scores > 85) >= 4)
-})) / n_sims
-
+p <- pnorm(85, mean, sd, lower.tail = FALSE)
+pbinom(3, 10, p, lower.tail = FALSE);
 ```
 \newpage
 
@@ -80,8 +62,13 @@ $$
 P(X > 5) = 1 - P(X \leq 5) = 1 - \frac{5}{30} = 1 - \frac{1}{6} = \frac{5}{6}
 $$
 
- The probability of sending a text on 3 consecutive days is $(\frac{5}{6})^3 = \frac{125}{216}$.
-This computation is relatively simple because we are dealing with a uniform distribution, thereby allowing us to use the formula for the probability of a uniform distribution. 
+The probability of sending a text on 3 consecutive days is $(\frac{5}{6})^3 = \frac{125}{216}$.
+This computation is relatively simple because we are dealing with a uniform distribution, thereby allowing us to use the formula for the probability of a uniform distribution. Proof through simulation:
+
+```{r}
+prob <- punif(30, 0, 30) - punif(5, 0, 30) # probability of sending a text on any given day
+prob^3
+```
 
 \newpage
 
@@ -102,25 +89,17 @@ $$
 
 Failure for the two components is independent, therefore, the probability is simply 1 - the sum of the probabilities that both components will last longer than 10 years. The probability that a single component will last longer than 10 years is: 
 
-P(system working after t years) = 1 - P(both fail by t years) = 
+P(system working after t years) 
 $$
-1 - (1-e^{-\lambda t}) * (1-e^{-\lambda t}) = 1 - (1-e^{-\frac{1}{5} * 10})^2 = 0.2523549.
+(1-e^{-\lambda t}) * (1-e^{-\lambda t}) = 1 - (1-e^{-\frac{1}{5} * 10})^2 = 0.74764
 $$
 
 Simulation:
 ```{r}
-lambda <- 1/5  
-t <- 10  
-num_sims <- 10000 
-
-exact_answer <- 1 - (1 - exp(-lambda * t))^2
-
-fail_A <- rexp(num_sims, rate = lambda)
-fail_B <- rexp(num_sims, rate = lambda)
-combined_fail_time <- pmin(fail_A, fail_B)
-prob_fail_before_10_sim <- mean(combined_fail_time < t)
-
-prob_fail_before_10_sim
+mean(replicate(1e4, {
+  c <- rexp(2, 1/5) # time to failure for the two components
+  max(c) < 10
+}))
 ```
 
 
@@ -134,35 +113,52 @@ For each of the following descriptions of a random variable, indicate whether it
 
 **Solution.**
 
-$P(Y = 3)$ is a binomial distribution becuase there are only two outcomes, therefore we can determine this value using the binomial distribution formula. The expected # of sixes, $E(Y)$, is $np = 10 * \frac{1}{6} = \frac{10}{6}$. The variance of $Y$, $\text{Var}(Y)$, is $np(1-p) = 10 * \frac{1}{6} * \frac{5}{6} = \frac{50}{36}$.
+$P(Y = 3)$ is a binomial distribution becuase there are only two outcomes, therefore we can determine this value using the binomial distribution formula. Only two possible outcomes, success or failure, therefore **binomial** is a good distribution to use for modelling. Expected number of sixes = 10(1/6) = 5/3. The variance is np(1-p) = 10(1/6)5/6 = 25/18.
 
-Only two possible outcomes, success or failure, therefore **binomial** is a good distribution to use for modelling.
+```{r} 
+probability <- 1/6
+size <- 10
+# P(Y = 3)
+dbinom(3, size, probability)
+```
 
 
 (b) Let $U$ be the random variable which counts the number accidents which occur at an intersection in one week.  What type of random variable is $U$?  Suppose that, on average, 2 accidents occur per week.  Find $P(U = 2)$, $E(U)$, and $\text{Var}(U)$.
 
 **Solution**
 
-This problem requires that we consider time (static period of a week) and the number of accidents that occur in that period. Therefore, **Poisson** would be a fantastic model to utilize here. If on average 2 accidents occur a week, we can caclulate P(U = 2) using the Poisson distribution formula. The expected number of accidents, $E(U)$, is $\lambda = 2$. The variance of $U$, $\text{Var}(U)$, is also $\lambda = 2$.
+This problem requires that we consider time (static period of a week) and the number of accidents that occur in that period. Therefore, **Poisson(2)** would be a fantastic model to utilize here. If on average 2 accidents occur a week, we can caclulate P(U = 2) using the Poisson distribution formula. The expected number of accidents, $E(U)$, is $\lambda = 2$. The variance of $U$, $\text{Var}(U)$, is also $\lambda = 2$.
+
+$P(U = 2) = 2 / e^2 = 0.27$
+```{r}
+dpois(2, 2) # P(U = 2)
+
+```
 
 (c) Suppose a stop light has a red light that lasts for 60 seconds, a green light that lasts for 30 seconds, and a yellow light that lasts for 5 seconds. When you first observe the stop light, it is red. Let $X$ denote the time until the light turns green. What type of rv would be used to model $X$? What is its mean?
 
 **Solution**
 
-This problem requires that we consider a non-static timeframe and the time it takes between events occuring. Therefore, **exponential** would be the ideal model for this case.
-Using exponential, the mean of $X$ is $\frac{1}{\lambda} = \frac{1}{30}$.
+This problem requires that we consider a non-static timeframe and the time it takes between events occuring. Therefore, **uniform** would be the ideal model for this case. Uniform(0, 60), the mean would be 30 seconds.
 
 (d) Customers arrive at a teller’s window at a uniform rate of 5 per hour. Let $X$ be the length in minutes of time that the teller has to wait until they see their first customer after starting their shift. What type of rv is $X$? What is its mean? Find the probability that the teller waits less than 10 minutes for their first customer.
 
 **Solution**
 
-Contant rate of arrival, only time of events is changing therefore **exponential** would be the ideal model for this case. The mean of $X$ is $\frac{1}{\lambda} = \frac{1}{5}$. The probability that the teller waits less than 10 minutes for their first customer is $P(X < 10) = 1 - e^{-\frac{1}{5} * 10} = 1 - e^{-2} = 1 - 0.13533528324 = 0.86466471676$.
+Contant rate of arrival, only time of events is changing therefore **exponential** would be the ideal model for this case. The expected value would be 1/5 hours = 12 minutes. 
+```{r}
+pexp(1/6, rate = 5) # P(X < 1/6)
+```
 
 (e) A coin is tossed until a head is observed. Let $X$ denote the total number of tails observed during the experiment. What type of rv is $X$? What is its mean? Find $P(X \leq 3)$.
 
 **Solution** 
 
-One event is repeated until success is achieved. Since the number of trials is not fixed, **geometric** would be the ideal model for this case. The mean of $X$ is $\frac{1}{p} = \frac{1}{0.5} = 2$. $P(X \leq 3)$ is $P(X = 0) + P(X = 1) + P(X = 2) + P(X = 3) = 1 + 0.5 + 0.25 + 0.125 = 1.875$.
+One event is repeated until success is achieved. Since the number of trials is not fixed, **geometric** would be the ideal model for this case. The mean is (1/2)/(1/2) = 1. 
+```{r}
+prob <- 1/2
+pgeom(3, prob)
+```
 
 (f) Let $X$ be the recorded body temperature of a healthy adult in degrees Fahrenheit. What type of rv is $X$? Estimate its mean and standard deviation, based on your knowledge of body temperatures.
 
@@ -192,9 +188,9 @@ rate <- 0.5
 
 perform_steps <- function(sample_means_size, size, rate) {
   data <- replicate(sample_means_size, mean(rexp(size, rate)))
-  mean(data)
-  sd(data)
-  hist(data, probability = TRUE, xlab = "Sample Mean", ylab = "Density", main = "Histogram of Sample Means", col = "forestgreen", border = "black")
+  print(mean(data))
+  print(sd(data))
+  hist(data, probability = TRUE, xlab = "Sample Mean", ylab = "Density", main = paste("Histogram With Exponential Distribution With Size: ", size), col = "forestgreen", border = "black")
 }
 perform_steps(sample_means_size, size, rate)
 ```
@@ -229,11 +225,13 @@ perform_steps(sample_means_size, size, rate)
 #perform steps (1), (2), (3) with
 size = 200
 
-
+perform_steps(sample_means_size, size, rate)
 ```
 
 (e) What do you notice about the mean, variance, and shape of the histogram as the sample size $n$ increases?
 
 **Solution**
 
-As the sample size increases the mean and the variance both increase, and the shape of the histogram becomes more normal. This is consistent with the Central Limit Theorem. The Central Limit Theorum states that the distribution of a sample will approximate a normal distribution under certain conditions, as shown above by the histograms. The CLT states that the distribution of sample means will tend towards a normal distribution as the sample size increases, regardless of the original distribution of the data, provided the original distribution has a finite variance. 
+The mean grows closer to 2 and the variance shrinks as the sample size increases.
+
+This is consistent with the Central Limit Theorem. The Central Limit Theorum states that the distribution of a sample will approximate a normal distribution under certain conditions, as shown above by the histograms. The CLT states that the distribution of sample means will tend towards a normal distribution as the sample size increases, regardless of the original distribution of the data, provided the original distribution has a finite variance. 

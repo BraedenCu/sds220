@@ -1,0 +1,365 @@
+# Probability, Statitsics and Data: A Fresh Approach Using R
+
+## Chapter 2: Probability
+
+### Probability Basics
+
+### Simulations
+
+- Simulation with sample is the gold standard
+  - syntax of **sample** is as follows: sample(x, size, replace = FALSE, prob = NULL)
+    - x = # of vector elements sampling
+    - size = # of samples being taken
+    - replace = wether u are replacing the vars or not
+    - prob = vector of weights associated with x
+  - **replicate** is the gold standard for repeated events -> syntax: repicate(n, expr)
+    - replicates the expression in expr n times
+  
+### Conditional probability and independence
+
+- $P(A | B) = P(A) \cup P(B) / P(B)$
+  - Read as probability of A given B
+  - The process of assuming B occurs and making computations under that assumption is called conditioning on B
+- Two simple facts about conditional probability
+  - $P((A \cap B) | B) = P(A|B)$
+    - "The probability of A and B given B is the probability of A given B
+  - $P(A \cup B|B) = 1$
+    - There is no event B|B, so parenthesis around the other portion is assumed
+
+### Independent Events
+
+- Two events are independent if knowledge of one event does not give any probabalistic information as to wether or not the other event occurs
+  - Formal definition: $P(A \cap B) = P(A)P(B)$
+- Theorums: if A and B are events with non-zero probability
+
+1. A and B are independent
+2. $(P \cap B) = P(A)P(B)$ -> multiplication rule
+3. P(A|B) = P(A)
+4. P(B|A) = P(B)
+
+### Simulating Conditional Probability
+
+- Remember the formula: $P(A | B) = P(A \cap B) / P(B)$
+
+### Bayes rule and conditioning
+
+- The law of total productivity
+  - $P(A) = P(A \cap B) + P(A \cap \bar B) = P(A|B)P(B) + P(A|\bar B)P(\bar B)$
+    - This formula is breaking the probability of A into two pieces, one where B happens (P(A|B)P(B)) and the other where B does not happen (P(A|barB)P(barB)), bar(B) is the case where B does not happen
+  - This law allows us to compute the probability of an event through **conditioning** on another event
+- **Bayes rule** allows us to compute $P(A|B) from P(B)$, Bayes rule forms the foundation for bayesian statistics
+  - $P(A|B) = (P(B|A)P(A))/P(B) = (P(B|A)P(A))/(P(B|A)P(A) + P(B|\bar A)P(\bar A))$
+- Law of Total Probability and Bayes Rule General Theorum, uses summary
+
+### Counting arguments
+
+- Given sample space S and event E, remember $P(E) = E/S$
+  - Rule of product
+    - if there are m ways to do something, and for each of those n ways there are n ways to do another thing, then there are n x m ways to do both things
+  - **Combinations**
+    - the number of ways of choosing k distinct objects from a set of n, given by:
+    - $n! / (k!(n-k)!)$
+    - choose(n, k) in R
+
+## Discrete Random Variables
+
+- A **random variable** is a function from S to the real line. Random variables are denoted by a capital letter. A random variable is a number that summarizes an outcome of a sample space.
+  - For example, lets say we have 8 combinations of coin flips, one random variable (rv) could be the number of heads observed
+  - It can be optimal to hide everything but the rv to simplify the solving of a problem
+- **discrete** random variables are integers that typically come from **counting** something.
+- **continuouts** random variables take values in an **interval** of numbers and come from **measuring** something.
+
+### Probability Mass Functions
+
+- A **discrete random variable** is a random variable that takes an integer value. A **discrete** random variable is charictarized by its **probability mass function** (pmf)
+  - the pmf p of a rv X is given by $p(x) = P(X = x)
+  - pmf's always follow these theorums
+    - $p(x) \geq 0 for all x$
+    - $\sum p(x) = 1$, all pmf values sum to one !
+- Useful R tip: calling (sample variable) > (number) will return a sample of T/F based on that comparison, performing the mean() on the output of that computation is incredibly powerful 
+
+### Expected Value
+
+- If you perform a statistical experiment repeatedly and observe the value of X at each time, the average of these observations will converge to a **fixed value** as the # of observations becomes large, this is known as the **expected value** of x, written as **E[X]**
+  - **expected value = mean**
+- Law of large numbers
+  - the mean of n observations of a random variable X converges to the expected value E[X] as n appraoches inf, assuming E[X] is defined
+
+### Binomial and Geometric Random Variables
+
+- Both involve Bernoulli trials
+  - A **Bernoulli Trial** is an experiment that can result in **two possible outcomes**, which can be denoted as "success" and "failure"
+  - A **Bernoulli Process** is a repeated sequence of identical, **independent** Bernoulli trials
+    - NOTE: success chance **must** be the same for each trial
+- **Binomial Random Variable** counts the number of successes in a fixed number of trials
+  - a random variable X is said to be binomial random variable with params n and p if $P(X = x) = (n choose x)p^{x}(1-p)^{n-x} x = 0, 1, 2, ..., n$
+    - n = # of trials
+    - p = probability of success
+    - shorthand -> X ~ Binom(n, p)
+  - Most important use case for binomial rv 
+    - counting the number of successes in a Bernoulli process of fixed length n
+      - reworded, if X counts the number of independent and identically disributed Bernoulli trials, each with a probability of success p, then X ~ binom(n, p)
+    - To be **precisely** binomial, must be drawing from a sample **with replacement**, for large datasets, you don't need to sample with replacement but it will be an approximation.
+  - Theorum
+    - If X counts the # of successes in n **independent** and **identically distributed** Bernoulli trials with probability of success p, then X ~ binom(n, p)
+    - let X be a binomial rv with params n and p, then E[X] = np
+  - critical R functions 
+    - dbinom(x, size, prob) -> returns the probability of x successes in size trials with probability of success prob
+    - pbinom(x, size, prob) -> returns the probability of x or fewer successes in size trials with probability of success prob
+    - qbinom(p, size, prob) -> returns the number of successes such that the probability of x or fewer successes in size trials with probability of success prob is p
+    - rbinom(n, size, prob) -> returns n random numbers from a binomial distribution with size trials and probability of success prob
+- **Geometric Random Variable** counts the number of trails before the first success
+  - Formal Definition: a random variable X is said to be a **geometric random variable** with parameter **p** if $P(X = x) = (1-p)^{x}p, x = 0, 1, 2, 3, ...$
+    - p = probability of success
+    - shorthand -> X ~ Geom(p)
+  - Theorum:
+    - let X be the rv counting the # of **failures before the first success** in a Bernoulli process with probability of success p, then X ~ geom(p)
+    - let X be a geometric rv with probability of success p, then $E[X] = (1-p)/p$
+  - critical R functions  
+    - dgeom(x, prob) -> returns the probability of x failures before the first success in a Bernoulli process with probability of success prob
+    - pgeom(x, prob) -> returns the probability of x or fewer failures before the first success in a Bernoulli process with probability of success prob
+    - rgeom(n, prob) -> returns n random numbers from a geometric distribution with probability of success prob
+
+### Functions of a random variable
+
+- Formal Definition
+  - Let X be a discrete rv with pmf p, and let g be a function, then $E[g(X)] = \sum g(x)p(x)$
+    - This is the expected value of the function g(X)
+- Important observations about expected values
+  - Expected value is linear
+  - Expected value of a constant is a that constant
+- These observations allow us to simplify the formula for the expected value of a binomial random variable  
+  - **let X ~ binom(n, p), E[X] = np**
+
+### Variance, standard deviation, and independence
+
+- **variance:** the measure of a spread of a variable around its **expected value**
+  - rv with large variance are quite far from their ev, rv small variance close to ev
+  - **standard deviation == sqrt(variance)**
+    - standard devation also measures the spread, but is in the same units as the random variable
+  - Formal Definition   
+    - let X be a random variable with expected value $\mu = E[X]$, then the variance of X is given by $Var(X) = E[(X - \mu)^{2}]$, the standard deviation (sd) of X is given by $\sigma (X)$ which equals the square root of the variance: $\sigma (X) = \sqrt{Var(X)}$
+  - Theorum 
+    - **Computing Variance:** $Var(X) = E[X^{2}] - (E[X])^{2}$
+      - this is the most useful formula for computing variance
+
+
+### Independent Random Variables
+
+- Two rv X and Y are independent if knowledge of one does not give probabalistic information about the value of Y and vice versa  
+  - **Formal Definition** 
+    - two random variables X and Y are independent if for all x and y, $P(X = x, Y = y) = P(X = x)P(Y = y)$
+  - **Theorum** 
+    - Let X be a rv and c a constant, thenf
+    - $Var(cX) = c^{2}Var(X)$
+      - taking a constant out of variance, must square it !
+    - $\sigma (cX) = |c|\sigma (X)$
+      - sd of a constant times a rv is the abs val of the const times sd of rv
+  - **Theorum** 
+    - if X and Y are independent, then $Var(X + Y) = Var(X) + Var(Y)$
+
+## Possion, Negative Binomial, Hypergeometric
+
+### Possion
+
+- a **poisson process** models events that happen at **random times**
+  - radioactive decay is a great example of this
+  - assumptions of a Poisson process
+    - the probability of an event occuring in a time interval [a, b] depends **only** on the length of the interval [c, d]
+    - if [a, b] and [c, d] are disjoint time intervals, then the prob that an event occurs in [a, b] is indep of [c, d]
+    - two events cannot happen at the same timethe prob of an event occuring in a time interval [a, a + h] is roughly $/lambda h$ for some constant $\lambda$
+      - events occur at a certain rate denoted by **$/lambda$** 
+- **Poisson random variable** counts the number of events in a fixed interval of time or space
+  - **Formal Definition**
+    - a random variable X is said to be a poisson random variable with parameter $\lambda$ if $P(X = x) = e^{-\lambda}(\lambda^{x}/x!) x = 0, 1, 2, 3, ...$
+      - $\lambda$ = average number of events in the interval
+      - shorthand -> X ~ Pois($\lambda$)
+  - **Theorum**
+    - Let X be the rv that counts the # of occurences in a Poisson process with rate $/lambda$ over one unit of time, the nX is a Poisson rv with rate $/lambda$
+    - the mean and variance of a Poisson rv are **both** equal to $\lambda$
+  - **critical R functions**
+    - dpois(x, lambda) -> returns the probability of x events in a poisson process with average number of events lambda
+    - ppois(x, lambda) -> returns the probability of x or fewer events in a poisson process with average number of events lambda
+    - rpois(n, lambda) -> returns n random numbers from a poisson distribution with average number of events lambda
+  
+### Negative Binomial
+
+- **Negative Binomial**
+  - Waiting for the second success rather than the first success
+  - **Definition**
+    - suppose we observe a seq of Berouilli trials with prob of success p, if X denotes the # of failures before nth success, then X is a negative binomial random variable with parameters n and p. the pmf of X is given by $p(x) = choose(x + n - 1, x)p^{n}(1-p)^{x}, x = 0, 1, 2..$
+      - n = # of successes
+      - p = probability of success
+      - shorthand -> X ~ NegBinom(n, p)
+    - charictaristics
+      - the mean of a neg binomial = $np/(1-p)$
+      - the variance of a neg binomial = $np/(1-p)^{2}$
+  - **Useful R functions**
+    - dnbinom(x, size, prob) -> returns the probability of x failures before the nth success in a Bernoulli process with probability of success prob
+
+### Hypergeometric  
+
+- Experiments which consist of sampling without replacement from a population partitioned into **two** subgroups, one labelled "success" and one ""failure." The rv that counts the # of successes in the sample is a hypergeometric rv.
+- $P(X = x) = (choose(m, x) * choose(n, k-x))/(choose(m+n, k))$ 
+- E[X] = $k(m/(m+n))$
+- Var(X) = $k(m/(m+n))(n/(m+n))(m+n-k)/(m+n-1)$
+  - here, the fudge factor is $(m+n-k)/(m+n-1)$ which essentially means that the variance of a hypergeometric is less than that of a binomial, in particular when m+n=k the variance of X is 0
+    - this is because when m+n is much larger than k, we approx a hypgeometric rv with a binomial rv with parameters $n = m + n, p = m/(m+n)$
+- **Useful R Functions**
+  - dhyper(x, m, n, k) -> returns the probability of x successes in a sample of size k from a population with m successes and n failures
+  - phyper(x, m, n, k) -> returns the probability of x or fewer successes in a sample of size k from a population with m successes and n failures
+
+### Continuous Random Variables
+
+- continues rv's are utilized to model rv's that can take on **any** value in an interval either finite or infinite
+  - ex: height of rando selected human, error measurement when measuring huma nheight
+- continuous rv's behave simularly to discrete **except** for the face that we need to replace **sums** of the pmf with **integrals** of the analagous probability density function (**pdf**) 
+  - **pdf** is a function f such that for any two numbers a and b with a < b, the probability that the rv X takes on a value between a and b is given by the area under the curve of f between a and b
+  - **Formal Definition**
+    - a random variable X is said to be a continuous random variable if there exists a non-negative function f such that for any two numbers a and b with a < b, $P(a \leq X \leq b) = \int_{a}^{b}f(x)dx$
+      - f is called the probability density function (pdf) of X
+  - **Theorum**
+    - let X be a continuous rv with pdf f, then for any function g, $E[g(X)] = \int g(x)f(x)dx$
+  - **Theorum**
+    - let X be a continuous rv with pdf f, then $E[X] = \int xf(x)dx$
+  - **Theorum**
+    - let X be a continuous rv with pdf f, then $Var(X) = E[X^{2}] - (E[X])^{2}$
+  - **Theorum**
+    - let X be a continuous rv with pdf f, then the mean and variance of X are given by $E[X] = \int xf(x)dx$ and $Var(X) = E[X^{2}] - (E[X])^{2}$
+
+### Probability Density Functions
+
+- **Definition**
+  - A probability density function (pdf) is a func f such that
+  - 1. f(x) >= 0 for all x
+  - 2. $\int_{-\infty}^{\infty}f(x)dx = 1$
+- **Definition**
+  - a continous rrv X is a rv described by a pdf, in the sense that: $P(a \leq X \leq b) = \int_{a}^{b}f(x)dx$
+    - whenever $a \leq b$ including the cases a = -inf and b = inf
+  - **Definition**
+    - the cumulative distribution function (cdf) associated with X (either discrete or continuous) is the func $F(x) = P(X \leq x)$
+      - the cdf of a continuous rv X is given by $F(x) = \int_{-\infty}^{x}f(t)dt$ written out in terms of pdfs and pmfs:
+        - if X is continuous: $F(X) = P(X \leq x) = \int_{-\infty}^{x}f(t)dt$ 
+        - if X is discrete: $\sum_{x, n=-inf}p(n)$
+  - By the fundamental theorum of calculus (FTC), when X is cont. F is a continuous func, hence the name cont. rv. 
+  - Major diff. btw cont and discrete rv: discrete rvs can take on only countably many different values whereas cont rvs typically take on values in an **interval** such as [0, 1] or (-inf, inf)
+  - **Theorum**
+    - let X be a cont. rv with pdf f and cdf f
+    - 1. $d/dx(F) = f$
+    - 2. $P(a \leq X \leq b) = F(b) - F(a)$
+    - 3. P(X \geq a) = 1 - F(a) = $\int_{a}^{\infty}f(x)dx$
+
+### Expected values
+
+- **Definition**
+  - Let X be a cont rv with pdf F
+  - the **expected value** of X is given by $E[X] = \int_{-\infty}^{\infty}xf(x)dx$
+- **Theorum**
+  - let X be a cont rv and let g be a func
+  - $E[g(X)] = \_int g(x)f(x)dx$
+
+
+### Variance and Standard deviation
+
+- the var and sd of a cont. rv play the same role as they do for discrete rv, that is, they measure the spread of the rv about its mean
+- note: the defn are unchanged from the discrete case !
+  - for a rv with expected value $\mu$
+    - $var(x) = E[(X - \mu)^2] = E[X^2] - E[X]^2$
+    - $\sigma (X) = \sqrt{Var(x)}$
+
+### Normal Random Variables
+
+- the normal distribution is the most important in all of statistics. It is often known as the bell curve. 
+- the importance of this distribution stems from the **central limit theorum** which implies that many rv's have a distribution that is approximately normal. many measured qty's are commonly modelled with normal distributions
+- **mathematical defn** of the **normal distribution**
+  - begins with $h(x) = e^{-x^2}$, which produces the bell shaped normal curve centered at zero, but this is **not** a distribution by itself since it does not have area 1 below the curve, to fix this, we need to divide by the constant $\sqrt{\pi}$, this gives us the standard normal distribution
+  - **standard normal distribution** : a rv Z is said to be standard normal if it has the pdf $f(z) = (1/\sqrt{2\pi})e^{-z^2/2}$
+    - the cdf of the standard normal distribution is denoted by $\Phi(z)$
+    - the cdf of the standard normal distribution is given by $\Phi(z) = \int_{-\infty}^{z}f(t)dt$
+  - using R to compute cdf of the normal distribution
+    - pnorm(X) = $P(Z /leq X)$, computing the probability that Z is less than or equal to X
+    - by shifting and rescaling Z, we define the noraml rv with **mean $\mu$ and variance $\sigma^2$ as sd = $\sigma$**
+  - **Definition**
+    - the normal random variable X with mean $\mu$ and sd $\sigma$ is given by $X = \sigma Z + \mu$, which we write as X ~ Norm($\mu, \sigma^2$) = Norm(mean, variance) = Norm(mean, standard deviation squared)
+- the pdf of a normal rv is given by **theorum:**
+  - let X be a normal vs with params $\mu$ and $\sigma^2$, then the pdf of X is given by $f(x) = (1/\sigma\sqrt{2\pi})e^{-(x-\mu)^2/2\sigma^2}$ with -inf < x < inf
+- for any normal rv, approx: (known as the **emperical rule**)
+  - 68% of the data falls within 1 sd of the mean
+  - 95% of the data falls within 2 sd of the mean
+  - 99.7% of the data falls within 3 sd of the mean
+
+
+### Computations with normal rv
+
+- **R implementation**
+  - R has lots of built-in's for dealing with normal rv's, the root name for these is norm
+    - prefixes d, p, and r specify the pdf, cdf, and random sampling 
+    - the q prefix indicates the inverse cdf function
+    - if X ~ Norm($\mu, \sigma$), then
+      - dnorm(x, mean, sd) -> height of pdf at x
+      - pnorm(x, mean, sd) -> gives $P(X \leq x)$, the cdf
+      - qnorm(p, mean, sd) -> gives val of x so that $P(X /leq x)$ = p, the inverse cdf
+      - rnorm(n, mean, sd) -> simulates N rv's of X
+
+### Normal Approximation to the Binomial
+
+- the value of a binomial rv is the sum of independent factors, aka the **bernoulli trials**
+  - A special case of the Central Limit Theorum is that a binomial rv can be well approximated by a normal rv **if** the number of trails is **large**
+  - sd of a binomial rv **theorum:**
+    - let x ~ binom(n, p), var and sd are given by $Var(X) = np(1-p)$ and $\sigma (X) = \sqrt{np(1-p)}$
+  - now, we can approx binoniaml rv X by a random normal variable with the **same** mean and sd as x, **theorum:**
+    - fix p, for large n, the binomial rv X ~ binom(n, p) is approx. normal with mean $\mu = np$ and sd $\sigma = sqrt(np(1-p))$
+    - the size of n required for a decent approximation depends on accuracy required and p 
+      - if p is close to 0 or 1, then n must be very large because these binom. distributions are not as well approxed by the normal distribution
+      - those that are close to 0 or 1 are not well approxed by the normal distribution
+    - this kind of normal approximation is typically used to work with binomial rv's because calculating the binomial distribution is difficult
+      - **in R:** pbinom makes it easy to work with binomial pdf's directly. 
+        - **what is a pdf?** a pdf is a function that gives the probability of a random variable taking on a certain value. this is the probability density function.
+
+### Uniform and Exponential Random Variables
+
+- Uniform rv's can be discrete or continuous. A discrete uniform var may take on one of **finitely** many values, all **equally likely.**
+- **Definition**
+  - a cont uniform random variable X on the interval [a, b] has pdf given by $f(x) = 1/(b-a)$ for a <= x <= b, 0 otherwise
+  - A cont. uniform rv X is charictarized by the property that for **any** interval $I \subset [a, b]$, the probability $P(X \in I)$ depends **only** on the length of the interval, I. we write X ~ unif(a, b) if X is continuous uniform on the interval [a, b].
+- Relation to Poisson process 
+  - if a poisson process is observed after some length of time T and you see that that event has occured exactly once, then the time that the event occured in the interval [0, T] is uniformly distributed.   
+- mean and variance of the uniform rv **theorum:**
+  - for x ~ unif(a, b), the expected value, E[X], is given by $E[X] = (a+b)/2$ and the variance, Var(X), is given by $Var(X) = (b-a)^2/12$
+
+### Exponential Random Variables
+
+- **Defn**
+  - an exponential random variable, X, with rate $\lambda$ has pdf $f(x) = \lambda e^{-\lambda x}$ for x > 0, we write $X ~ exp(\lambda)$
+- exponential random variables measure the **waiting time** until the **first event** occurs in a **Poisson process**. Note, a poisson process is a process that occurs at **random times**, such as radioactive decay.
+- the exponential distribution is a skew distribution, meaning that it is not symmetric
+- **theorum:**
+  - let $X ~ Exp(\lambda)$ be an exponential rv with rate $\lambda$, then the mean and variance of X are: $E[X] = 1 / \lambda$ and $Var(X) = 1 / \lambda^2$
+
+
+### summary
+
+- refer to dist_cheatsheet
+- when modelling a **count** of something, you need to typically choose between **binomial, geometric, and poisson** distributions. 
+  - **binomial** is used when you are counting the number of successes in a fixed number of trials, Bernoulli trials
+  - **geometric** is used when you are counting the number of trials before the first success, Bernoulli trils
+  - **poission** is used when you are counting the number of events in a fixed interval of time or space, poisson process
+- the normal random variable 
+  - great starting point for **continuous measurements** that have a **central value** and become less common away from that mean.
+  - **exponential variables** show up when waiting for events to occur
+  - **continuous uniform variables** Can sometimes occur as the location of an event in time or space, when the event is known to have happened on some **fixed interval.**
+- **R Cheatsheet for these types of functions:**
+    - R provides these random variables through a set of four functions for each known distribution. The four functions are determined by a prefix, which can be **p, d, r, or q**. The **root** determines which distribution we are talking about. Each distribution function takes a single argument first, determined by the **prefix**, and then some number of parameters, determined by the **root**. The general form of a distribution function in R is: [prefix][root] ( argument, parameter1, parameter2, ..)
+      - available prefixes are:
+        - p: compute the cumulative distribution func $P(X \le x)$, argument is x
+        - d: compute pdf or pmf of f, value is f(x) and arg is x, in the discrete case, this is the prob P(X = x)
+        - r: sample from the rv. arg is N = # samples to take 
+        - q: quantile func, inverse cdf.
+        - binom: binomial, params are n = # of trials, p = prob of success
+        - geom: geometric, param is p = prob of succcess 
+        - pois: poission, parameter is $\lambda$ = rate at which events occur or the mean # of events over the time interval
+        - nbinom: negative binomial, params are size = # of successes, and prob
+        - hyper: hypergeometric w/ params m = # of white balls, n = # of black balls, k = # of balls drawn without replacement
+        - unif: uniform, parameters are a, b
+        - norm: normal, parameters are mean ($\mu$) and sd ($\sigma$)
+        - exp: exponential, parameter $\lambda$, aka the rate.
