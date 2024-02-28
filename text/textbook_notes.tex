@@ -1,0 +1,1517 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\hypertarget{probability-statitsics-and-data-a-fresh-approach-using-r}{%
+\section{Probability, Statitsics and Data: A Fresh Approach Using
+R}\label{probability-statitsics-and-data-a-fresh-approach-using-r}}
+
+\hypertarget{chapter-2-probability}{%
+\subsection{Chapter 2: Probability}\label{chapter-2-probability}}
+
+\hypertarget{probability-basics}{%
+\subsubsection{Probability Basics}\label{probability-basics}}
+
+\hypertarget{simulations}{%
+\subsubsection{Simulations}\label{simulations}}
+
+\begin{itemize}
+\tightlist
+\item
+  monte carlo simulation = stochastic simulation = simulation
+\item
+  Simulation with sample is the gold standard
+
+  \begin{itemize}
+  \tightlist
+  \item
+    syntax of \textbf{sample} is as follows: sample(x, size, replace =
+    FALSE, prob = NULL)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      x = \# of vector elements sampling
+    \item
+      size = \# of samples being taken
+    \item
+      replace = wether u are replacing the vars or not
+    \item
+      prob = vector of weights associated with x
+    \end{itemize}
+  \item
+    \textbf{replicate} is the gold standard for repeated events
+    -\textgreater{} syntax: repicate(n, expr)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      replicates the expression in expr n times
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{conditional-probability-and-independence}{%
+\subsubsection{Conditional probability and
+independence}\label{conditional-probability-and-independence}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(P(A | B) = P(A) \cup P(B) / P(B)\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Read as probability of A given B
+  \item
+    The process of assuming B occurs and making computations under that
+    assumption is called conditioning on B
+  \end{itemize}
+\item
+  Two simple facts about conditional probability
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(P((A \cap B) | B) = P(A|B)\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      "The probability of A and B given B is the probability of A given
+      B
+    \end{itemize}
+  \item
+    \(P(A \cup B|B) = 1\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      There is no event B\textbar B, so parenthesis around the other
+      portion is assumed
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{independent-events}{%
+\subsubsection{Independent Events}\label{independent-events}}
+
+\begin{itemize}
+\tightlist
+\item
+  Two events are independent if knowledge of one event does not give any
+  probabalistic information as to wether or not the other event occurs
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Formal definition: \(P(A \cap B) = P(A)P(B)\)
+  \end{itemize}
+\item
+  Theorums: if A and B are events with non-zero probability
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  A and B are independent
+\item
+  \((P \cap B) = P(A)P(B)\) -\textgreater{} multiplication rule
+\item
+  P(A\textbar B) = P(A)
+\item
+  P(B\textbar A) = P(B)
+\end{enumerate}
+
+\hypertarget{simulating-conditional-probability}{%
+\subsubsection{Simulating Conditional
+Probability}\label{simulating-conditional-probability}}
+
+\begin{itemize}
+\tightlist
+\item
+  Remember the formula: \(P(A | B) = P(A \cap B) / P(B)\)
+\end{itemize}
+
+\hypertarget{bayes-rule-and-conditioning}{%
+\subsubsection{Bayes rule and
+conditioning}\label{bayes-rule-and-conditioning}}
+
+\begin{itemize}
+\tightlist
+\item
+  The law of total productivity
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(P(A) = P(A \cap B) + P(A \cap \bar B) = P(A|B)P(B) + P(A|\bar B)P(\bar B)\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      This formula is breaking the probability of A into two pieces, one
+      where B happens (P(A\textbar B)P(B)) and the other where B does
+      not happen (P(A\textbar barB)P(barB)), bar(B) is the case where B
+      does not happen
+    \end{itemize}
+  \item
+    This law allows us to compute the probability of an event through
+    \textbf{conditioning} on another event
+  \end{itemize}
+\item
+  \textbf{Bayes rule} allows us to compute \(P(A|B) from P(B)\), Bayes
+  rule forms the foundation for bayesian statistics
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(P(A|B) = (P(B|A)P(A))/P(B) = (P(B|A)P(A))/(P(B|A)P(A) + P(B|\bar A)P(\bar A))\)
+  \end{itemize}
+\item
+  Law of Total Probability and Bayes Rule General Theorum, uses summary
+\end{itemize}
+
+\hypertarget{counting-arguments}{%
+\subsubsection{Counting arguments}\label{counting-arguments}}
+
+\begin{itemize}
+\tightlist
+\item
+  Given sample space S and event E, remember \(P(E) = E/S\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Rule of product
+
+    \begin{itemize}
+    \tightlist
+    \item
+      if there are m ways to do something, and for each of those n ways
+      there are n ways to do another thing, then there are n x m ways to
+      do both things
+    \end{itemize}
+  \item
+    \textbf{Combinations}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the number of ways of choosing k distinct objects from a set of n,
+      given by:
+    \item
+      \(n! / (k!(n-k)!)\)
+    \item
+      choose(n, k) in R
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{discrete-random-variables}{%
+\subsection{Discrete Random Variables}\label{discrete-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  A \textbf{random variable} is a function from S to the real line.
+  Random variables are denoted by a capital letter. A random variable is
+  a number that summarizes an outcome of a sample space.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For example, lets say we have 8 combinations of coin flips, one
+    random variable (rv) could be the number of heads observed
+  \item
+    It can be optimal to hide everything but the rv to simplify the
+    solving of a problem
+  \end{itemize}
+\item
+  \textbf{discrete} random variables are integers that typically come
+  from \textbf{counting} something.
+\item
+  \textbf{continuouts} random variables take values in an
+  \textbf{interval} of numbers and come from \textbf{measuring}
+  something.
+\end{itemize}
+
+\hypertarget{probability-mass-functions}{%
+\subsubsection{Probability Mass
+Functions}\label{probability-mass-functions}}
+
+\begin{itemize}
+\tightlist
+\item
+  A \textbf{discrete random variable} is a random variable that takes an
+  integer value. A \textbf{discrete} random variable is charictarized by
+  its \textbf{probability mass function} (pmf)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the pmf p of a rv X is given by \$p(x) = P(X = x)
+  \item
+    pmf's always follow these theorums
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \(p(x) \geq 0 for all x\)
+    \item
+      \(\sum p(x) = 1\), all pmf values sum to one !
+    \end{itemize}
+  \end{itemize}
+\item
+  Useful R tip: calling (sample variable) \textgreater{} (number) will
+  return a sample of T/F based on that comparison, performing the mean()
+  on the output of that computation is incredibly powerful
+\end{itemize}
+
+\hypertarget{expected-value}{%
+\subsubsection{Expected Value}\label{expected-value}}
+
+\begin{itemize}
+\tightlist
+\item
+  If you perform a statistical experiment repeatedly and observe the
+  value of X at each time, the average of these observations will
+  converge to a \textbf{fixed value} as the \# of observations becomes
+  large, this is known as the \textbf{expected value} of x, written as
+  \textbf{E{[}X{]}}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{expected value = mean}
+  \end{itemize}
+\item
+  Law of large numbers
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the mean of n observations of a random variable X converges to the
+    expected value E{[}X{]} as n appraoches inf, assuming E{[}X{]} is
+    defined
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{binomial-and-geometric-random-variables}{%
+\subsubsection{Binomial and Geometric Random
+Variables}\label{binomial-and-geometric-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  Both involve Bernoulli trials
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A \textbf{Bernoulli Trial} is an experiment that can result in
+    \textbf{two possible outcomes}, which can be denoted as ``success''
+    and ``failure''
+  \item
+    A \textbf{Bernoulli Process} is a repeated sequence of identical,
+    \textbf{independent} Bernoulli trials
+
+    \begin{itemize}
+    \tightlist
+    \item
+      NOTE: success chance \textbf{must} be the same for each trial
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Binomial Random Variable} counts the number of successes in a
+  fixed number of trials
+
+  \begin{itemize}
+  \tightlist
+  \item
+    a random variable X is said to be binomial random variable with
+    params n and p if
+    \(P(X = x) = (n choose x)p^{x}(1-p)^{n-x} x = 0, 1, 2, ..., n\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      n = \# of trials
+    \item
+      p = probability of success
+    \item
+      shorthand -\textgreater{} X \textasciitilde{} Binom(n, p)
+    \end{itemize}
+  \item
+    Most important use case for binomial rv
+
+    \begin{itemize}
+    \tightlist
+    \item
+      counting the number of successes in a Bernoulli process of fixed
+      length n
+
+      \begin{itemize}
+      \tightlist
+      \item
+        reworded, if X counts the number of independent and identically
+        disributed Bernoulli trials, each with a probability of success
+        p, then X \textasciitilde{} binom(n, p)
+      \end{itemize}
+    \item
+      To be \textbf{precisely} binomial, must be drawing from a sample
+      \textbf{with replacement}, for large datasets, you don't need to
+      sample with replacement but it will be an approximation.
+    \end{itemize}
+  \item
+    Theorum
+
+    \begin{itemize}
+    \tightlist
+    \item
+      If X counts the \# of successes in n \textbf{independent} and
+      \textbf{identically distributed} Bernoulli trials with probability
+      of success p, then X \textasciitilde{} binom(n, p)
+    \item
+      let X be a binomial rv with params n and p, then E{[}X{]} = np
+    \end{itemize}
+  \item
+    critical R functions
+
+    \begin{itemize}
+    \tightlist
+    \item
+      dbinom(x, size, prob) -\textgreater{} returns the probability of x
+      successes in size trials with probability of success prob
+    \item
+      pbinom(x, size, prob) -\textgreater{} returns the probability of x
+      or fewer successes in size trials with probability of success prob
+    \item
+      qbinom(p, size, prob) -\textgreater{} returns the number of
+      successes such that the probability of x or fewer successes in
+      size trials with probability of success prob is p
+    \item
+      rbinom(n, size, prob) -\textgreater{} returns n random numbers
+      from a binomial distribution with size trials and probability of
+      success prob
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Geometric Random Variable} counts the number of trails before
+  the first success
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Formal Definition: a random variable X is said to be a
+    \textbf{geometric random variable} with parameter \textbf{p} if
+    \(P(X = x) = (1-p)^{x}p, x = 0, 1, 2, 3, ...\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      p = probability of success
+    \item
+      shorthand -\textgreater{} X \textasciitilde{} Geom(p)
+    \end{itemize}
+  \item
+    Theorum:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be the rv counting the \# of \textbf{failures before the
+      first success} in a Bernoulli process with probability of success
+      p, then X \textasciitilde{} geom(p)
+    \item
+      let X be a geometric rv with probability of success p, then
+      \(E[X] = (1-p)/p\)
+    \end{itemize}
+  \item
+    critical R functions
+
+    \begin{itemize}
+    \tightlist
+    \item
+      dgeom(x, prob) -\textgreater{} returns the probability of x
+      failures before the first success in a Bernoulli process with
+      probability of success prob
+    \item
+      pgeom(x, prob) -\textgreater{} returns the probability of x or
+      fewer failures before the first success in a Bernoulli process
+      with probability of success prob
+    \item
+      rgeom(n, prob) -\textgreater{} returns n random numbers from a
+      geometric distribution with probability of success prob
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{functions-of-a-random-variable}{%
+\subsubsection{Functions of a random
+variable}\label{functions-of-a-random-variable}}
+
+\begin{itemize}
+\tightlist
+\item
+  Formal Definition
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Let X be a discrete rv with pmf p, and let g be a function, then
+    \(E[g(X)] = \sum g(x)p(x)\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      This is the expected value of the function g(X)
+    \end{itemize}
+  \end{itemize}
+\item
+  Important observations about expected values
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Expected value is linear
+  \item
+    Expected value of a constant is a that constant
+  \end{itemize}
+\item
+  These observations allow us to simplify the formula for the expected
+  value of a binomial random variable
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{let X \textasciitilde{} binom(n, p), E{[}X{]} = np}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{variance-standard-deviation-and-independence}{%
+\subsubsection{Variance, standard deviation, and
+independence}\label{variance-standard-deviation-and-independence}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{variance:} the measure of a spread of a variable around its
+  \textbf{expected value}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    rv with large variance are quite far from their ev, rv small
+    variance close to ev
+  \item
+    \textbf{standard deviation == sqrt(variance)}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      standard devation also measures the spread, but is in the same
+      units as the random variable
+    \end{itemize}
+  \item
+    Formal Definition
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be a random variable with expected value \(\mu = E[X]\),
+      then the variance of X is given by \(Var(X) = E[(X - \mu)^{2}]\),
+      the standard deviation (sd) of X is given by \(\sigma (X)\) which
+      equals the square root of the variance:
+      \(\sigma (X) = \sqrt{Var(X)}\)
+    \end{itemize}
+  \item
+    Theorum
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{Computing Variance:} \(Var(X) = E[X^{2}] - (E[X])^{2}\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        this is the most useful formula for computing variance
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{independent-random-variables}{%
+\subsubsection{Independent Random
+Variables}\label{independent-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  Two rv X and Y are independent if knowledge of one does not give
+  probabalistic information about the value of Y and vice versa
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Formal Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      two random variables X and Y are independent if for all x and y,
+      \(P(X = x, Y = y) = P(X = x)P(Y = y)\)
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Let X be a rv and c a constant, thenf
+    \item
+      \(Var(cX) = c^{2}Var(X)\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        taking a constant out of variance, must square it !
+      \end{itemize}
+    \item
+      \(\sigma (cX) = |c|\sigma (X)\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        sd of a constant times a rv is the abs val of the const times sd
+        of rv
+      \end{itemize}
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      if X and Y are independent, then \(Var(X + Y) = Var(X) + Var(Y)\)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{possion-negative-binomial-hypergeometric}{%
+\subsection{Possion, Negative Binomial,
+Hypergeometric}\label{possion-negative-binomial-hypergeometric}}
+
+\hypertarget{possion}{%
+\subsubsection{Possion}\label{possion}}
+
+\begin{itemize}
+\tightlist
+\item
+  a \textbf{poisson process} models events that happen at \textbf{random
+  times}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    radioactive decay is a great example of this
+  \item
+    assumptions of a Poisson process
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the probability of an event occuring in a time interval {[}a, b{]}
+      depends \textbf{only} on the length of the interval {[}c, d{]}
+    \item
+      if {[}a, b{]} and {[}c, d{]} are disjoint time intervals, then the
+      prob that an event occurs in {[}a, b{]} is indep of {[}c, d{]}
+    \item
+      two events cannot happen at the same timethe prob of an event
+      occuring in a time interval {[}a, a + h{]} is roughly
+      \(/lambda h\) for some constant \(\lambda\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        events occur at a certain rate denoted by \textbf{\(/lambda\)}
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Poisson random variable} counts the number of events in a
+  fixed interval of time or space
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Formal Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      a random variable X is said to be a poisson random variable with
+      parameter \(\lambda\) if
+      \(P(X = x) = e^{-\lambda}(\lambda^{x}/x!) x = 0, 1, 2, 3, ...\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \(\lambda\) = average number of events in the interval
+      \item
+        shorthand -\textgreater{} X \textasciitilde{} Pois(\(\lambda\))
+      \end{itemize}
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Let X be the rv that counts the \# of occurences in a Poisson
+      process with rate \(/lambda\) over one unit of time, the nX is a
+      Poisson rv with rate \(/lambda\)
+    \item
+      the mean and variance of a Poisson rv are \textbf{both} equal to
+      \(\lambda\)
+    \end{itemize}
+  \item
+    \textbf{critical R functions}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      dpois(x, lambda) -\textgreater{} returns the probability of x
+      events in a poisson process with average number of events lambda
+    \item
+      ppois(x, lambda) -\textgreater{} returns the probability of x or
+      fewer events in a poisson process with average number of events
+      lambda
+    \item
+      rpois(n, lambda) -\textgreater{} returns n random numbers from a
+      poisson distribution with average number of events lambda
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{negative-binomial}{%
+\subsubsection{Negative Binomial}\label{negative-binomial}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Negative Binomial}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Waiting for the second success rather than the first success
+  \item
+    \textbf{Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      suppose we observe a seq of Berouilli trials with prob of success
+      p, if X denotes the \# of failures before nth success, then X is a
+      negative binomial random variable with parameters n and p.~the pmf
+      of X is given by
+      \(p(x) = choose(x + n - 1, x)p^{n}(1-p)^{x}, x = 0, 1, 2..\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        n = \# of successes
+      \item
+        p = probability of success
+      \item
+        shorthand -\textgreater{} X \textasciitilde{} NegBinom(n, p)
+      \end{itemize}
+    \item
+      charictaristics
+
+      \begin{itemize}
+      \tightlist
+      \item
+        the mean of a neg binomial = \(np/(1-p)\)
+      \item
+        the variance of a neg binomial = \(np/(1-p)^{2}\)
+      \end{itemize}
+    \end{itemize}
+  \item
+    \textbf{Useful R functions}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      dnbinom(x, size, prob) -\textgreater{} returns the probability of
+      x failures before the nth success in a Bernoulli process with
+      probability of success prob
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{hypergeometric}{%
+\subsubsection{Hypergeometric}\label{hypergeometric}}
+
+\begin{itemize}
+\tightlist
+\item
+  Experiments which consist of sampling without replacement from a
+  population partitioned into \textbf{two} subgroups, one labelled
+  ``success'' and one "``failure.'' The rv that counts the \# of
+  successes in the sample is a hypergeometric rv.
+\item
+  \(P(X = x) = (choose(m, x) * choose(n, k-x))/(choose(m+n, k))\)
+\item
+  E{[}X{]} = \(k(m/(m+n))\)
+\item
+  Var(X) = \(k(m/(m+n))(n/(m+n))(m+n-k)/(m+n-1)\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    here, the fudge factor is \((m+n-k)/(m+n-1)\) which essentially
+    means that the variance of a hypergeometric is less than that of a
+    binomial, in particular when m+n=k the variance of X is 0
+
+    \begin{itemize}
+    \tightlist
+    \item
+      this is because when m+n is much larger than k, we approx a
+      hypgeometric rv with a binomial rv with parameters
+      \(n = m + n, p = m/(m+n)\)
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Useful R Functions}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    dhyper(x, m, n, k) -\textgreater{} returns the probability of x
+    successes in a sample of size k from a population with m successes
+    and n failures
+  \item
+    phyper(x, m, n, k) -\textgreater{} returns the probability of x or
+    fewer successes in a sample of size k from a population with m
+    successes and n failures
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{continuous-random-variables}{%
+\subsubsection{Continuous Random
+Variables}\label{continuous-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  continues rv's are utilized to model rv's that can take on
+  \textbf{any} value in an interval either finite or infinite
+
+  \begin{itemize}
+  \tightlist
+  \item
+    ex: height of rando selected human, error measurement when measuring
+    huma nheight
+  \end{itemize}
+\item
+  continuous rv's behave simularly to discrete \textbf{except} for the
+  face that we need to replace \textbf{sums} of the pmf with
+  \textbf{integrals} of the analagous probability density function
+  (\textbf{pdf})
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{pdf} is a function f such that for any two numbers a and b
+    with a \textless{} b, the probability that the rv X takes on a value
+    between a and b is given by the area under the curve of f between a
+    and b
+  \item
+    \textbf{Formal Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      a random variable X is said to be a continuous random variable if
+      there exists a non-negative function f such that for any two
+      numbers a and b with a \textless{} b,
+      \(P(a \leq X \leq b) = \int_{a}^{b}f(x)dx\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        f is called the probability density function (pdf) of X
+      \end{itemize}
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be a continuous rv with pdf f, then for any function g,
+      \(E[g(X)] = \int g(x)f(x)dx\)
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be a continuous rv with pdf f, then \(E[X] = \int xf(x)dx\)
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be a continuous rv with pdf f, then
+      \(Var(X) = E[X^{2}] - (E[X])^{2}\)
+    \end{itemize}
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let X be a continuous rv with pdf f, then the mean and variance of
+      X are given by \(E[X] = \int xf(x)dx\) and
+      \(Var(X) = E[X^{2}] - (E[X])^{2}\)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{probability-density-functions}{%
+\subsubsection{Probability Density
+Functions}\label{probability-density-functions}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Definition}
+
+  \begin{itemize}
+  \item
+    A probability density function (pdf) is a func f such that
+  \item
+    \begin{enumerate}
+    \def\labelenumi{\arabic{enumi}.}
+    \tightlist
+    \item
+      f(x) \textgreater= 0 for all x
+    \end{enumerate}
+  \item
+    \begin{enumerate}
+    \def\labelenumi{\arabic{enumi}.}
+    \setcounter{enumi}{1}
+    \tightlist
+    \item
+      \(\int_{-\infty}^{\infty}f(x)dx = 1\)
+    \end{enumerate}
+  \end{itemize}
+\item
+  \textbf{Definition}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    a continous rrv X is a rv described by a pdf, in the sense that:
+    \(P(a \leq X \leq b) = \int_{a}^{b}f(x)dx\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      whenever \(a \leq b\) including the cases a = -inf and b = inf
+    \end{itemize}
+  \item
+    \textbf{Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the cumulative distribution function (cdf) associated with X
+      (either discrete or continuous) is the func \(F(x) = P(X \leq x)\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        the cdf of a continuous rv X is given by
+        \(F(x) = \int_{-\infty}^{x}f(t)dt\) written out in terms of pdfs
+        and pmfs:
+
+        \begin{itemize}
+        \tightlist
+        \item
+          if X is continuous:
+          \(F(X) = P(X \leq x) = \int_{-\infty}^{x}f(t)dt\)
+        \item
+          if X is discrete: \(\sum_{x, n=-inf}p(n)\)
+        \end{itemize}
+      \end{itemize}
+    \end{itemize}
+  \item
+    By the fundamental theorum of calculus (FTC), when X is cont. F is a
+    continuous func, hence the name cont. rv.
+  \item
+    Major diff. btw cont and discrete rv: discrete rvs can take on only
+    countably many different values whereas cont rvs typically take on
+    values in an \textbf{interval} such as {[}0, 1{]} or (-inf, inf)
+  \item
+    \textbf{Theorum}
+
+    \begin{itemize}
+    \item
+      let X be a cont. rv with pdf f and cdf f
+    \item
+      \begin{enumerate}
+      \def\labelenumi{\arabic{enumi}.}
+      \tightlist
+      \item
+        \(d/dx(F) = f\)
+      \end{enumerate}
+    \item
+      \begin{enumerate}
+      \def\labelenumi{\arabic{enumi}.}
+      \setcounter{enumi}{1}
+      \tightlist
+      \item
+        \(P(a \leq X \leq b) = F(b) - F(a)\)
+      \end{enumerate}
+    \item
+      \begin{enumerate}
+      \def\labelenumi{\arabic{enumi}.}
+      \setcounter{enumi}{2}
+      \tightlist
+      \item
+        P(X \geq a) = 1 - F(a) = \(\int_{a}^{\infty}f(x)dx\)
+      \end{enumerate}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{expected-values}{%
+\subsubsection{Expected values}\label{expected-values}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Definition}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Let X be a cont rv with pdf F
+  \item
+    the \textbf{expected value} of X is given by
+    \(E[X] = \int_{-\infty}^{\infty}xf(x)dx\)
+  \end{itemize}
+\item
+  \textbf{Theorum}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    let X be a cont rv and let g be a func
+  \item
+    \(E[g(X)] = \_int g(x)f(x)dx\)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{variance-and-standard-deviation}{%
+\subsubsection{Variance and Standard
+deviation}\label{variance-and-standard-deviation}}
+
+\begin{itemize}
+\tightlist
+\item
+  the var and sd of a cont. rv play the same role as they do for
+  discrete rv, that is, they measure the spread of the rv about its mean
+\item
+  note: the defn are unchanged from the discrete case !
+
+  \begin{itemize}
+  \tightlist
+  \item
+    for a rv with expected value \(\mu\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \(var(x) = E[(X - \mu)^2] = E[X^2] - E[X]^2\)
+    \item
+      \(\sigma (X) = \sqrt{Var(x)}\)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{normal-random-variables}{%
+\subsubsection{Normal Random Variables}\label{normal-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  the normal distribution is the most important in all of statistics. It
+  is often known as the bell curve.
+\item
+  the importance of this distribution stems from the \textbf{central
+  limit theorum} which implies that many rv's have a distribution that
+  is approximately normal. many measured qty's are commonly modelled
+  with normal distributions
+\item
+  \textbf{mathematical defn} of the \textbf{normal distribution}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    begins with \(h(x) = e^{-x^2}\), which produces the bell shaped
+    normal curve centered at zero, but this is \textbf{not} a
+    distribution by itself since it does not have area 1 below the
+    curve, to fix this, we need to divide by the constant
+    \(\sqrt{\pi}\), this gives us the standard normal distribution
+  \item
+    \textbf{standard normal distribution} : a rv Z is said to be
+    standard normal if it has the pdf
+    \(f(z) = (1/\sqrt{2\pi})e^{-z^2/2}\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the cdf of the standard normal distribution is denoted by
+      \(\Phi(z)\)
+    \item
+      the cdf of the standard normal distribution is given by
+      \(\Phi(z) = \int_{-\infty}^{z}f(t)dt\)
+    \end{itemize}
+  \item
+    using R to compute cdf of the normal distribution
+
+    \begin{itemize}
+    \tightlist
+    \item
+      pnorm(X) = \(P(Z /leq X)\), computing the probability that Z is
+      less than or equal to X
+    \item
+      by shifting and rescaling Z, we define the noraml rv with
+      \textbf{mean \(\mu\) and variance \(\sigma^2\) as sd = \(\sigma\)}
+    \end{itemize}
+  \item
+    \textbf{Definition}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the normal random variable X with mean \(\mu\) and sd \(\sigma\)
+      is given by \(X = \sigma Z + \mu\), which we write as X
+      \textasciitilde{} Norm(\(\mu, \sigma^2\)) = Norm(mean, variance) =
+      Norm(mean, standard deviation squared)
+    \end{itemize}
+  \end{itemize}
+\item
+  the pdf of a normal rv is given by \textbf{theorum:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    let X be a normal vs with params \(\mu\) and \(\sigma^2\), then the
+    pdf of X is given by
+    \(f(x) = (1/\sigma\sqrt{2\pi})e^{-(x-\mu)^2/2\sigma^2}\) with -inf
+    \textless{} x \textless{} inf
+  \end{itemize}
+\item
+  for any normal rv, approx: (known as the \textbf{emperical rule})
+
+  \begin{itemize}
+  \tightlist
+  \item
+    68\% of the data falls within 1 sd of the mean
+  \item
+    95\% of the data falls within 2 sd of the mean
+  \item
+    99.7\% of the data falls within 3 sd of the mean
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{computations-with-normal-rv}{%
+\subsubsection{Computations with normal
+rv}\label{computations-with-normal-rv}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{R implementation}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    R has lots of built-in's for dealing with normal rv's, the root name
+    for these is norm
+
+    \begin{itemize}
+    \tightlist
+    \item
+      prefixes d, p, and r specify the pdf, cdf, and random sampling
+    \item
+      the q prefix indicates the inverse cdf function
+    \item
+      if X \textasciitilde{} Norm(\(\mu, \sigma\)), then
+
+      \begin{itemize}
+      \tightlist
+      \item
+        dnorm(x, mean, sd) -\textgreater{} height of pdf at x
+      \item
+        pnorm(x, mean, sd) -\textgreater{} gives \(P(X \leq x)\), the
+        cdf
+      \item
+        qnorm(p, mean, sd) -\textgreater{} gives val of x so that
+        \(P(X /leq x)\) = p, the inverse cdf
+      \item
+        rnorm(n, mean, sd) -\textgreater{} simulates N rv's of X
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{normal-approximation-to-the-binomial}{%
+\subsubsection{Normal Approximation to the
+Binomial}\label{normal-approximation-to-the-binomial}}
+
+\begin{itemize}
+\tightlist
+\item
+  the value of a binomial rv is the sum of independent factors, aka the
+  \textbf{bernoulli trials}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A special case of the Central Limit Theorum is that a binomial rv
+    can be well approximated by a normal rv \textbf{if} the number of
+    trails is \textbf{large}
+  \item
+    sd of a binomial rv \textbf{theorum:}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      let x \textasciitilde{} binom(n, p), var and sd are given by
+      \(Var(X) = np(1-p)\) and \(\sigma (X) = \sqrt{np(1-p)}\)
+    \end{itemize}
+  \item
+    now, we can approx binoniaml rv X by a random normal variable with
+    the \textbf{same} mean and sd as x, \textbf{theorum:}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      fix p, for large n, the binomial rv X \textasciitilde{} binom(n,
+      p) is approx. normal with mean \(\mu = np\) and sd
+      \(\sigma = sqrt(np(1-p))\)
+    \item
+      the size of n required for a decent approximation depends on
+      accuracy required and p
+
+      \begin{itemize}
+      \tightlist
+      \item
+        if p is close to 0 or 1, then n must be very large because these
+        binom. distributions are not as well approxed by the normal
+        distribution
+      \item
+        those that are close to 0 or 1 are not well approxed by the
+        normal distribution
+      \end{itemize}
+    \item
+      this kind of normal approximation is typically used to work with
+      binomial rv's because calculating the binomial distribution is
+      difficult
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \textbf{in R:} pbinom makes it easy to work with binomial pdf's
+        directly.
+
+        \begin{itemize}
+        \tightlist
+        \item
+          \textbf{what is a pdf?} a pdf is a function that gives the
+          probability of a random variable taking on a certain value.
+          this is the probability density function.
+        \end{itemize}
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{uniform-and-exponential-random-variables}{%
+\subsubsection{Uniform and Exponential Random
+Variables}\label{uniform-and-exponential-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  Uniform rv's can be discrete or continuous. A discrete uniform var may
+  take on one of \textbf{finitely} many values, all \textbf{equally
+  likely.}
+\item
+  \textbf{Definition}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    a cont uniform random variable X on the interval {[}a, b{]} has pdf
+    given by \(f(x) = 1/(b-a)\) for a \textless= x \textless= b, 0
+    otherwise
+  \item
+    A cont. uniform rv X is charictarized by the property that for
+    \textbf{any} interval \(I \subset [a, b]\), the probability
+    \(P(X \in I)\) depends \textbf{only} on the length of the interval,
+    I. we write X \textasciitilde{} unif(a, b) if X is continuous
+    uniform on the interval {[}a, b{]}.
+  \end{itemize}
+\item
+  Relation to Poisson process
+
+  \begin{itemize}
+  \tightlist
+  \item
+    if a poisson process is observed after some length of time T and you
+    see that that event has occured exactly once, then the time that the
+    event occured in the interval {[}0, T{]} is uniformly distributed.\\
+  \end{itemize}
+\item
+  mean and variance of the uniform rv \textbf{theorum:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    for x \textasciitilde{} unif(a, b), the expected value, E{[}X{]}, is
+    given by \(E[X] = (a+b)/2\) and the variance, Var(X), is given by
+    \(Var(X) = (b-a)^2/12\)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{exponential-random-variables}{%
+\subsubsection{Exponential Random
+Variables}\label{exponential-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Defn}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    an exponential random variable, X, with rate \(\lambda\) has pdf
+    \(f(x) = \lambda e^{-\lambda x}\) for x \textgreater{} 0, we write
+    \(X ~ exp(\lambda)\)
+  \end{itemize}
+\item
+  exponential random variables measure the \textbf{waiting time} until
+  the \textbf{first event} occurs in a \textbf{Poisson process}. Note, a
+  poisson process is a process that occurs at \textbf{random times},
+  such as radioactive decay.
+\item
+  the exponential distribution is a skew distribution, meaning that it
+  is not symmetric
+\item
+  \textbf{theorum:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    let \(X ~ Exp(\lambda)\) be an exponential rv with rate \(\lambda\),
+    then the mean and variance of X are: \(E[X] = 1 / \lambda\) and
+    \(Var(X) = 1 / \lambda^2\)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{chapter-4-summary}{%
+\subsubsection{chapter 4 summary}\label{chapter-4-summary}}
+
+\begin{itemize}
+\tightlist
+\item
+  refer to dist\_cheatsheet
+\item
+  when modelling a \textbf{count} of something, you need to typically
+  choose between \textbf{binomial, geometric, and poisson}
+  distributions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{binomial} is used when you are counting the number of
+    successes in a fixed number of trials, Bernoulli trials
+  \item
+    \textbf{geometric} is used when you are counting the number of
+    trials before the first success, Bernoulli trils
+  \item
+    \textbf{poission} is used when you are counting the number of events
+    in a fixed interval of time or space, poisson process
+  \end{itemize}
+\item
+  the normal random variable
+
+  \begin{itemize}
+  \tightlist
+  \item
+    great starting point for \textbf{continuous measurements} that have
+    a \textbf{central value} and become less common away from that mean.
+  \item
+    \textbf{exponential variables} show up when waiting for events to
+    occur
+  \item
+    \textbf{continuous uniform variables} Can sometimes occur as the
+    location of an event in time or space, when the event is known to
+    have happened on some \textbf{fixed interval.}
+  \end{itemize}
+\item
+  \textbf{R Cheatsheet for these types of functions:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    R provides these random variables through a set of four functions
+    for each known distribution. The four functions are determined by a
+    prefix, which can be \textbf{p, d, r, or q}. The \textbf{root}
+    determines which distribution we are talking about. Each
+    distribution function takes a single argument first, determined by
+    the \textbf{prefix}, and then some number of parameters, determined
+    by the \textbf{root}. The general form of a distribution function in
+    R is: {[}prefix{]}{[}root{]} ( argument, parameter1, parameter2, ..)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      available prefixes are:
+
+      \begin{itemize}
+      \tightlist
+      \item
+        p: compute the cumulative distribution func \(P(X \le x)\),
+        argument is x
+      \item
+        d: compute pdf or pmf of f, value is f(x) and arg is x, in the
+        discrete case, this is the prob P(X = x)
+      \item
+        r: sample from the rv. arg is N = \# samples to take
+      \item
+        q: quantile func, inverse cdf.
+      \item
+        binom: binomial, params are n = \# of trials, p = prob of
+        success
+      \item
+        geom: geometric, param is p = prob of succcess
+      \item
+        pois: poission, parameter is \(\lambda\) = rate at which events
+        occur or the mean \# of events over the time interval
+      \item
+        nbinom: negative binomial, params are size = \# of successes,
+        and prob
+      \item
+        hyper: hypergeometric w/ params m = \# of white balls, n = \# of
+        black balls, k = \# of balls drawn without replacement
+      \item
+        unif: uniform, parameters are a, b
+      \item
+        norm: normal, parameters are mean (\(\mu\)) and sd (\(\sigma\))
+      \item
+        exp: exponential, parameter \(\lambda\), aka the rate.
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{simulation-of-random-variables}{%
+\subsection{Simulation of Random
+Variables}\label{simulation-of-random-variables}}
+
+\begin{itemize}
+\tightlist
+\item
+  In this chapter we discuss simulation related to random variables.
+  After a review of probability simulation, we turn to the estimation of
+  pdfs and pmfs of random variables. These simulations provide a
+  foundation for understanding the fundamental concepts of statistical
+  inference: sampling distributions, point estimators, and the Central
+  Limit Theorem.
+\end{itemize}
+
+\hypertarget{estimating-probabilities}{%
+\subsubsection{Estimating
+probabilities}\label{estimating-probabilities}}
+
+\end{document}

@@ -1,4 +1,4 @@
-# Probability, Statitsics and Data: A Fresh Approach Using R
+# Probability, Statistics and Data: A Fresh Approach Using R
 
 ## Chapter 2: Probability
 
@@ -6,6 +6,7 @@
 
 ### Simulations
 
+- monte carlo  simulation = stochastic simulation = simulation
 - Simulation with sample is the gold standard
   - syntax of **sample** is as follows: sample(x, size, replace = FALSE, prob = NULL)
     - x = # of vector elements sampling
@@ -21,7 +22,7 @@
   - Read as probability of A given B
   - The process of assuming B occurs and making computations under that assumption is called conditioning on B
 - Two simple facts about conditional probability
-  - $P((A \cap B) | B) = P(A|B)$
+  -  $P(A | B) = P(A \cap B) / P(B)$
     - "The probability of A and B given B is the probability of A given B
   - $P(A \cup B|B) = 1$
     - There is no event B|B, so parenthesis around the other portion is assumed
@@ -43,11 +44,11 @@
 
 ### Bayes rule and conditioning
 
-- The law of total productivity
+- The law of total probability
   - $P(A) = P(A \cap B) + P(A \cap \bar B) = P(A|B)P(B) + P(A|\bar B)P(\bar B)$
     - This formula is breaking the probability of A into two pieces, one where B happens (P(A|B)P(B)) and the other where B does not happen (P(A|barB)P(barB)), bar(B) is the case where B does not happen
   - This law allows us to compute the probability of an event through **conditioning** on another event
-- **Bayes rule** allows us to compute $P(A|B) from P(B)$, Bayes rule forms the foundation for bayesian statistics
+- **Bayes rule** allows us to compute $P(A|B)$ from $P(B)$, Bayes rule forms the foundation for bayesian statistics
   - $P(A|B) = (P(B|A)P(A))/P(B) = (P(B|A)P(A))/(P(B|A)P(A) + P(B|\bar A)P(\bar A))$
 - Law of Total Probability and Bayes Rule General Theorum, uses summary
 
@@ -167,15 +168,15 @@
   - assumptions of a Poisson process
     - the probability of an event occuring in a time interval [a, b] depends **only** on the length of the interval [c, d]
     - if [a, b] and [c, d] are disjoint time intervals, then the prob that an event occurs in [a, b] is indep of [c, d]
-    - two events cannot happen at the same timethe prob of an event occuring in a time interval [a, a + h] is roughly $/lambda h$ for some constant $\lambda$
-      - events occur at a certain rate denoted by **$/lambda$** 
+    - two events cannot happen at the same timethe prob of an event occuring in a time interval [a, a + h] is roughly $\lambda h$ for some constant $\lambda$
+      - events occur at a certain rate denoted by **$\lambda$** 
 - **Poisson random variable** counts the number of events in a fixed interval of time or space
   - **Formal Definition**
     - a random variable X is said to be a poisson random variable with parameter $\lambda$ if $P(X = x) = e^{-\lambda}(\lambda^{x}/x!) x = 0, 1, 2, 3, ...$
       - $\lambda$ = average number of events in the interval
       - shorthand -> X ~ Pois($\lambda$)
   - **Theorum**
-    - Let X be the rv that counts the # of occurences in a Poisson process with rate $/lambda$ over one unit of time, the nX is a Poisson rv with rate $/lambda$
+    - Let X be the rv that counts the # of occurences in a Poisson process with rate $\lambda$ over one unit of time, the nX is a Poisson rv with rate $\lambda$
     - the mean and variance of a Poisson rv are **both** equal to $\lambda$
   - **critical R functions**
     - dpois(x, lambda) -> returns the probability of x events in a poisson process with average number of events lambda
@@ -337,7 +338,7 @@
   - let $X ~ Exp(\lambda)$ be an exponential rv with rate $\lambda$, then the mean and variance of X are: $E[X] = 1 / \lambda$ and $Var(X) = 1 / \lambda^2$
 
 
-### summary
+### chapter 4 summary
 
 - refer to dist_cheatsheet
 - when modelling a **count** of something, you need to typically choose between **binomial, geometric, and poisson** distributions. 
@@ -363,3 +364,10 @@
         - unif: uniform, parameters are a, b
         - norm: normal, parameters are mean ($\mu$) and sd ($\sigma$)
         - exp: exponential, parameter $\lambda$, aka the rate.
+
+## Simulation of Random Variables
+
+- In this chapter we discuss simulation related to random variables. After a review of probability simulation, we turn to the estimation of pdfs and pmfs of random variables. These simulations provide a foundation for understanding the fundamental concepts of statistical inference: sampling distributions, point estimators, and the Central Limit Theorem.
+
+### Estimating probabilities
+
