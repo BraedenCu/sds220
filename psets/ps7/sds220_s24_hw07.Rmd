@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 7"
 subtitle: "Due Friday March 29"
-author: "<insert you name>"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -26,27 +26,47 @@ Consider the `austen` data set in the `fosdata` package. This data frame contain
 
 (a) Create a new data frame that consists only of the observations in *Emma*.
 
-*Solution.*
+```{r}
+library(fosdata)
+library(dplyr)
 
+emma <- austen %>% filter(novel == "Emma") 
+head(emma)
+```
 (b) Create a new data frame that contains only the variables `word`, `word_length` and `novel`.
 
-*Solution.*
-
+```{r}
+word_wordlen_novel <- austen %>% select(word, word_length, novel)
+head(word_wordlen_novel)
+```
 (c) Create a new data frame that has the words in both books arranged in descending word length.
 
-*Solution.*
+```{r}
+sort_austen <- austen %>% arrange(desc(word_length))
+head(sort_austen)
 
+```
 (d) Create a new data frame that contains only the longest words that appeared in either of the books.
 
-*Solution.*
-
+```{r}
+longest_austen <- austen %>% filter(word_length == max(word_length))
+head(longest_austen)
+```
 (e) What was the mean word length in the two books together?
 
-*Solution.*
+```{r}
+austen %>% summarize(mean(word_length))
+```
 
 (f) Create a new data frame that consists only of the distinct words found in the two books, together with the word length and sentiment score variables. (Hint: use `distinct`).
 
-*Solution.*
+```{r}
+new_data_frame <- austen %>%
+  select(word, word_length, sentiment_score) %>%
+  distinct()
+
+head(new_data_frame)
+```
 
 \newpage
 
@@ -56,16 +76,42 @@ This exercise uses the `Batting` data set from the `Lahman` package. This gives 
 
 (a) Which player has the most lifetime at bats without ever having hit a home run?
 
-*Solution.*
+```{r}
+library(Lahman)
+library(dplyr)
+
+max_at_bats_no_hr <- player <- Batting %>%
+  group_by(playerID) %>%
+  summarize(total_at_bat = sum(AB),
+            total_home_run = sum(HR)) %>%
+  filter(total_home_run == 0) %>%
+  slice_max(total_at_bat, n = 1)
+
+max_at_bats_no_hr
+People %>% filter(playerID == max_at_bats_no_hr$playerID) %>% select(nameFirst, nameLast)
+```
 
 (b) Which active player has the most lifetime at bats without ever having hit a home run? (An active player is someone with an entry in the most recent year of the data set).
 
-*Solution.*
+```{r}
+active_most_at_bat_no_home_run <- Batting %>% group_by(playerID) %>% summarize(lastest_year = max(yearID),
+total_ab = sum(AB),
+total_hr = sum(HR)) %>% filter(total_hr == 0,
+lastest_year == max(Batting$yearID)) %>% slice_max(total_ab, n = 1)
+active_most_at_bat_no_home_run
+People %>% filter(playerID == active_most_at_bat_no_home_run$playerID) %>% select(nameFirst, nameLast)
+```
 
 (c) Which player has been hit-by-pitch the most number of times?
 
-*Solution.*
+```{r}
+most_hbp <- Batting %>%
+group_by(playerID) %>%
+summarize(total_hbp = sum(HBP, na.rm = TRUE)) %>% slice_max(total_hbp, n = 1)
+most_hbp
 
+People %>% filter(playerID == most_hbp$playerID) %>% select(nameFirst, nameLast)
+```
 \newpage
 
 ### Question 3: (Exercise 6.25) Storms
@@ -74,15 +120,23 @@ Consider the `storms` data set in the `dplyr` package, from Example 6.5. Recall 
 
 (a) Which name(s) was/were given to the most storms?
 
-*Solution.*
-
+```{r}
+storms %>%
+select(name, year) %>% distinct() %>% group_by(name) %>% summarize(count = n()) %>% slice_max(count, n = 1)
+```
 (b) Which year(s) had the most named storms?
 
-*Solution.*
-
+```{r}
+storms %>%
+select(name, year) %>% distinct() %>% group_by(year) %>% summarize(count = n()) %>% slice_max(count, n = 1)
+```
 (c) The second strongest storm named Lili had maximum wind speed of 100. Which name's second strongest storm in terms of maximum wind speed was the strongest among all names' second strongest storms? The `dplyr` function `nth` may be useful for doing this problem.
 
-*Solution.*
+```{r}
+storms %>%
+group_by(name, year) %>% summarize(max_wind = max(wind)) %>% arrange(name, desc(max_wind)) %>% filter(max_wind == nth(max_wind, 2)) %>% ungroup() %>%
+slice_max(max_wind)
+```
 
 \newpage
 
@@ -92,12 +146,18 @@ The data set `fruit` is built into the `stringr` package.
 
 (a) How many fruits have the word "berry" in their name?
 
-*Solution.*
-
+```{r}
+library(stringr)
+sum(str_detect(fruit, pattern = "berry"))
+```
 (b) Some of these fruits have the word "fruit" in their name. Find these fruit and remove the word "fruit" to create a list of words that can be made into fruit. (Hint: use `str_remove`)
 
-*Solution.*
-
+```{r}
+fruit_in_name <- str_detect(fruit, "fruit")
+fruit_removed <- str_remove(fruit[fruit_in_name], pattern = "fruit") %>%
+str_trim() 
+fruit_removed
+```
 \newpage
 
 ### Question 5: (Exercise 6.36) Scotland births
@@ -106,12 +166,24 @@ Consider the `scotland_births` data set in the `fosdata` package. This data give
 
 (a) Convert the data into long format with three variable names: `age`, `year` and `births`, where each observation is the number of births in year to mothers that are age years old.
 
-*Solution.*
+```{r}
+library(fosdata)
+births_converted <- scotland_births %>% pivot_longer(cols = starts_with("x"), names_to = "year", values_to = "births")
+births_converted
+```
 
 (b) Convert the `year` to integer by removing the `x` and using `as.integer`.
 
-*Solution.*
-
+```{r}
+births_converted <- births_converted %>%
+mutate(year = as.integer(str_remove(year, "x")))
+births_converted
+```
 (c) Which year had the most babies born to mothers 20-years-old or younger?
 
-*Solution.*
+```{r}
+births_converted %>%
+filter(age <= 20) %>%
+group_by(year) %>%
+summarize(total_births = sum(births)) %>% slice_max(total_births, n = 1)
+```
