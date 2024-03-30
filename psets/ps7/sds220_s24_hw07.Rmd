@@ -30,7 +30,7 @@ Consider the `austen` data set in the `fosdata` package. This data frame contain
 library(fosdata)
 library(dplyr)
 
-emma <- austen %>% filter(novel == "Emma") 
+emma <- austen %>% filter(novel == "Emma")
 head(emma)
 ```
 (b) Create a new data frame that contains only the variables `word`, `word_length` and `novel`.
@@ -80,37 +80,41 @@ This exercise uses the `Batting` data set from the `Lahman` package. This gives 
 library(Lahman)
 library(dplyr)
 
-max_at_bats_no_hr <- player <- Batting %>%
-  group_by(playerID) %>%
-  summarize(total_at_bat = sum(AB),
-            total_home_run = sum(HR)) %>%
-  filter(total_home_run == 0) %>%
-  slice_max(total_at_bat, n = 1)
-
-max_at_bats_no_hr
+max_at_bats_no_hr <- Batting %>%
+  group_by(playerID) %>% # group by playerID
+  summarize(total_at_bat = sum(AB), # summarize total at bat
+            total_home_run = sum(HR)) %>% # summarize total home run
+  filter(total_home_run == 0) %>% # filter for total home run equal to 0
+  # find most at bats without a home run
+  slice_max(total_at_bat, n = 1) 
+# matching playerID with first and last name
 People %>% filter(playerID == max_at_bats_no_hr$playerID) %>% select(nameFirst, nameLast)
 ```
 
 (b) Which active player has the most lifetime at bats without ever having hit a home run? (An active player is someone with an entry in the most recent year of the data set).
 
 ```{r}
-active_most_at_bat_no_home_run <- Batting %>% group_by(playerID) %>% summarize(lastest_year = max(yearID),
-total_ab = sum(AB),
-total_hr = sum(HR)) %>% filter(total_hr == 0,
-lastest_year == max(Batting$yearID)) %>% slice_max(total_ab, n = 1)
-active_most_at_bat_no_home_run
+active_most_at_bat_no_home_run <- Batting %>%
+  group_by(playerID) %>% 
+  summarize(lastest_year = max(yearID),
+            total_ab = sum(AB), # summarize total at bat
+            total_hr = sum(HR)) %>% # summarize total home run
+  filter(total_hr == 0, # filter for total home run equal to 0
+        lastest_year == max(Batting$yearID)) %>% # filter for active player
+  slice_max(total_ab, n = 1) # find most at bats without a home run
+# matching playerID with first and last name
 People %>% filter(playerID == active_most_at_bat_no_home_run$playerID) %>% select(nameFirst, nameLast)
 ```
 
 (c) Which player has been hit-by-pitch the most number of times?
 
 ```{r}
-most_hbp <- Batting %>%
-group_by(playerID) %>%
-summarize(total_hbp = sum(HBP, na.rm = TRUE)) %>% slice_max(total_hbp, n = 1)
-most_hbp
-
-People %>% filter(playerID == most_hbp$playerID) %>% select(nameFirst, nameLast)
+hit_by_pitch <- Batting %>%
+  group_by(playerID) %>%
+  summarize(total_hit_by_pitch = sum(HBP, na.rm = TRUE)) %>% # summarize total hit by pitch
+  slice_max(total_hit_by_pitch, n = 1)
+# hit_by_pitch playerID with first and last name
+People %>% filter(playerID == hit_by_pitch$playerID) %>% select(nameFirst, nameLast)
 ```
 \newpage
 
@@ -122,20 +126,32 @@ Consider the `storms` data set in the `dplyr` package, from Example 6.5. Recall 
 
 ```{r}
 storms %>%
-select(name, year) %>% distinct() %>% group_by(name) %>% summarize(count = n()) %>% slice_max(count, n = 1)
+  select(name, year) %>%  # select name and year
+  distinct() %>%  # distinct name and year
+  group_by(name) %>%  # group by name
+  summarize(count = n()) %>% # summarize count
+  slice_max(count, n = 1) # find most storms given to a name
 ```
 (b) Which year(s) had the most named storms?
 
 ```{r}
 storms %>%
-select(name, year) %>% distinct() %>% group_by(year) %>% summarize(count = n()) %>% slice_max(count, n = 1)
+  select(name, year) %>%  # select name and year
+  distinct() %>%  # distinct name and year
+  group_by(year) %>% # group by year
+  summarize(count = n()) %>% # summarize count
+  slice_max(count, n = 1) # find most named storms in a year
 ```
 (c) The second strongest storm named Lili had maximum wind speed of 100. Which name's second strongest storm in terms of maximum wind speed was the strongest among all names' second strongest storms? The `dplyr` function `nth` may be useful for doing this problem.
 
 ```{r}
 storms %>%
-group_by(name, year) %>% summarize(max_wind = max(wind)) %>% arrange(name, desc(max_wind)) %>% filter(max_wind == nth(max_wind, 2)) %>% ungroup() %>%
-slice_max(max_wind)
+  group_by(name, year) %>% 
+  summarize(max_wind = max(wind)) %>% # summarize max wind
+  arrange(name, desc(max_wind)) %>%  # arrange by name and max wind
+  filter(max_wind == nth(max_wind, 2)) %>%  # filter for second strongest storm
+  ungroup() %>% # ungroup
+  slice_max(max_wind) # find strongest second strongest storm
 ```
 
 \newpage
@@ -148,15 +164,15 @@ The data set `fruit` is built into the `stringr` package.
 
 ```{r}
 library(stringr)
-sum(str_detect(fruit, pattern = "berry"))
+sum(str_detect(fruit, pattern = "berry")) # count fruits with "berry" in their name
 ```
 (b) Some of these fruits have the word "fruit" in their name. Find these fruit and remove the word "fruit" to create a list of words that can be made into fruit. (Hint: use `str_remove`)
 
 ```{r}
-fruit_in_name <- str_detect(fruit, "fruit")
-fruit_removed <- str_remove(fruit[fruit_in_name], pattern = "fruit") %>%
-str_trim() 
-fruit_removed
+fruit_in_name <- str_detect(fruit, "fruit") # detect fruit with "fruit" in their name
+remove_fruit <- str_remove(fruit[fruit_in_name], pattern = "fruit") %>% # remove "fruit" from fruit name
+  str_trim() # trim white space
+remove_fruit
 ```
 \newpage
 
@@ -168,22 +184,29 @@ Consider the `scotland_births` data set in the `fosdata` package. This data give
 
 ```{r}
 library(fosdata)
-births_converted <- scotland_births %>% pivot_longer(cols = starts_with("x"), names_to = "year", values_to = "births")
-births_converted
+library(dplyr)
+library(tidyr)
+
+births_converted <- scotland_births %>%
+  # convert data into long format
+  pivot_longer(cols = starts_with("x"), names_to = "year", values_to = "births")
+head(births_converted)
 ```
 
 (b) Convert the `year` to integer by removing the `x` and using `as.integer`.
 
 ```{r}
 births_converted <- births_converted %>%
-mutate(year = as.integer(str_remove(year, "x")))
-births_converted
+  mutate(year = as.integer(str_remove(year, "x"))) # convert year to integer
+head(births_converted)
 ```
 (c) Which year had the most babies born to mothers 20-years-old or younger?
 
 ```{r}
 births_converted %>%
-filter(age <= 20) %>%
-group_by(year) %>%
-summarize(total_births = sum(births)) %>% slice_max(total_births, n = 1)
+  filter(age <= 20) %>%
+  group_by(year) %>%
+  summarize(total_births = sum(births)) %>% # summarize total births
+  slice_max(total_births, n = 1) # find year with most babies born to mothers 20-years-old or younger
+
 ```
