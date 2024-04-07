@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 8"
 subtitle: "Due Friday April 5"
-author: "<insert you name>"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -35,13 +35,24 @@ The exercise uses the `billboard` data from the `tidyr` package.
 
 (a) Which artist had the most tracks on the chart in 2000?
 
-*Solution.*
-
+```{r}
+most_tracks_in_2000_on_chart <- billboard %>%
+  filter(year == 2000) %>%
+  count(artist) %>%
+  arrange(desc(n)) %>%
+  head(1)
+```
 
 (b) Which track from 2000 spent the most weeks at \#1?
 
-*Solution.*
-
+```{r} 
+track_most_weeks_at_1 <- billboard %>%
+  filter(year == 2000) %>%
+  filter(rank == 1) %>%
+  count(track) %>%
+  arrange(desc(n)) %>%
+  head(1)
+```
 
 \newpage
 
@@ -49,8 +60,13 @@ The exercise uses the `billboard` data from the `tidyr` package.
 
 Consider the `frogs` data set in the `fosdata` package. This data was used to argue that a new species of frog had been found in a densely populated area of Bangladesh. Create a scatterplot of head length distance from tip of snout to back of mandible versus forearm length distance from corner of elbow to proximal end of outer palmar metacarpal tubercle, colored by species. Explain whether this plot is visual evidence that the physical characteristics of the dhaka frog are different than the other frogs.  Give the plot an appropriate title and axes names.
 
-*Solution.*
-
+```{r}
+ggplot(frogs, aes(x = forearm, y = head, color = species)) +
+  geom_point() +
+  labs(title = "Head length vs. Forearm length of frogs",
+       x = "Forearm length",
+       y = "Head length")
+```
 
 \newpage
 
@@ -60,8 +76,17 @@ The data `flint` from `fosdata` gives the results of tap water lead testing duri
 
 The $y$-axis scale is logarithmic, which you can accomplish with `scale_y_log10()`. Note that there is no Ward 0 in Flint.
 
-*Solution.*
+```{r}
 
+ggplot(flint, aes(x = ward, y = pb1)) +
+  geom_point() +
+  geom_hline(yintercept = 15, color = "red") +
+  scale_y_log10() +
+  labs(title = "Lead levels at first draw (Pb1) for Flint's Wards",
+       x = "Ward",
+       y = "Lead levels (ppb)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 \newpage
 
@@ -71,5 +96,13 @@ This question uses the movies data set `movies_wide.rds` in the "Files -> Data s
 
 Create a scatterplot of the ratings of Twister (1996) versus the date of review, and add a trend line using `geom_smooth`. Give the plot an appropriate title and axes names.
 
-*Solution.*
+```{r}
+movies <- read_rds("movies_wide.rds")
+ggplot(movies, aes(x = date, y = twister)) +
+  geom_point() +
+  geom_smooth() +
+  labs(title = "Ratings of Twister (1996) vs. Date of review",
+       x = "Date of review",
+       y = "Ratings")
+```
 
