@@ -36,22 +36,26 @@ The exercise uses the `billboard` data from the `tidyr` package.
 (a) Which artist had the most tracks on the chart in 2000?
 
 ```{r}
-most_tracks_in_2000_on_chart <- billboard %>%
-  filter(year == 2000) %>%
-  count(artist) %>%
-  arrange(desc(n)) %>%
+tidyr::billboard |>
+  group_by(artist) |>
+  summarise(n = n()) |>
+  slice_max(n, n=1) |>
+  arrange(desc(n)) |>
   head(1)
 ```
 
 (b) Which track from 2000 spent the most weeks at \#1?
 
 ```{r} 
-track_most_weeks_at_1 <- billboard %>%
-  filter(year == 2000) %>%
-  filter(rank == 1) %>%
-  count(track) %>%
-  arrange(desc(n)) %>%
+tidyr::billboard |>
+  pivot_longer(starts_with("wk"), names_to = "week", values_to = "rank") |>
+  filter(rank == 1) |>
+  group_by(track) |>
+  summarise(n = n()) |>
+  slice_max(n, n=1) |>
+  arrange(desc(n)) |>
   head(1)
+
 ```
 
 \newpage
@@ -61,12 +65,17 @@ track_most_weeks_at_1 <- billboard %>%
 Consider the `frogs` data set in the `fosdata` package. This data was used to argue that a new species of frog had been found in a densely populated area of Bangladesh. Create a scatterplot of head length distance from tip of snout to back of mandible versus forearm length distance from corner of elbow to proximal end of outer palmar metacarpal tubercle, colored by species. Explain whether this plot is visual evidence that the physical characteristics of the dhaka frog are different than the other frogs.  Give the plot an appropriate title and axes names.
 
 ```{r}
-ggplot(frogs, aes(x = forearm, y = head, color = species)) +
+fosdata::frogs %>% 
+  ggplot(aes(x = fal, y = hl, col = species)) +
   geom_point() +
-  labs(title = "Head length vs. Forearm length of frogs",
-       x = "Forearm length",
-       y = "Head length")
+  labs(title = "Head Length vs. Forearm Length of Frogs",
+       x = "Forearm Length",
+       y = "Head Length")
 ```
+Explain whether this plot is visual evidence that the physical characteristics of the dhaka frog are different than the other frogs:
+
+This plot is visual evidence that the physical charictaristics of the dhaka frog are different than the other frogs. The dhaka frog has a large forearm length and a comparatively small head length compared to the other frogs. The other frogs with similarly long forearm lengths also have longer head lengths, while the dhaka frog has a much shorter head length. This trend is consistent accross all the other frogs, with the exception of the dhaka frog thus providing evidence that the physical characteristics of the dhaka frog are different than the other frogs.
+
 
 \newpage
 
@@ -77,15 +86,19 @@ The data `flint` from `fosdata` gives the results of tap water lead testing duri
 The $y$-axis scale is logarithmic, which you can accomplish with `scale_y_log10()`. Note that there is no Ward 0 in Flint.
 
 ```{r}
-
-ggplot(flint, aes(x = ward, y = pb1)) +
-  geom_point() +
-  geom_hline(yintercept = 15, color = "red") +
+fosdata::flint %>% 
+  filter(Ward != 0) %>% # must remove ward 0
+  ggplot(aes(x = Ward, y = Pb1)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 15, col = "red") +
   scale_y_log10() +
-  labs(title = "Lead levels at first draw (Pb1) for Flint's Wards",
+  geom_text(inherit.aes = FALSE,
+            data = tibble(x = 1, y = 15, label = "EPA action level 15ppb"),
+            aes(x = x, y = y, label = label),
+            hjust = 0, vjust = -1, col = "red") +
+  labs(title = "Lead levels in tap water accross wards in Flint, Michigan",
        x = "Ward",
-       y = "Lead levels (ppb)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+       y = "Lead level at first draw (log scale) for Flint's Wards")
 ```
 
 \newpage
@@ -97,12 +110,14 @@ This question uses the movies data set `movies_wide.rds` in the "Files -> Data s
 Create a scatterplot of the ratings of Twister (1996) versus the date of review, and add a trend line using `geom_smooth`. Give the plot an appropriate title and axes names.
 
 ```{r}
-movies <- read_rds("movies_wide.rds")
-ggplot(movies, aes(x = date, y = twister)) +
+fosdata::movies %>% 
+  filter(title == "Twister (1996)") %>% 
+  ggplot(aes(x = lubridate::as_datetime(timestamp), y = rating)) +
   geom_point() +
-  geom_smooth() +
-  labs(title = "Ratings of Twister (1996) vs. Date of review",
-       x = "Date of review",
-       y = "Ratings")
+  geom_smooth(method = "lm") +
+  labs(title = "Ratings of Twister (1996) Over Time",
+       x = "Date of Review",
+       y = "Rating")
+
 ```
 
