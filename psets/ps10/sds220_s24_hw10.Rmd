@@ -1,0 +1,105 @@
+---
+title: "S&DS 220: Homework 10"
+subtitle: "Due Friday April 19"
+author: "<insert you name>"
+output:
+  pdf_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(fosdata)
+```
+
+## Instructions
+
+1. Complete the questions below.  Upload your knitted PDF solutions to Gradescope by the due date.
+2. Your solutions should be a combination of writing and R code.  When writing, use complete sentences.
+3. Previous homework assignments already had code chunks created for you.  Now it is up to you to insert R code chunks within each problem as needed.
+4. You should aim for clear and concise communication (in both words and R code).
+
+## Problem set questions
+
+### Question 1: (8.31) Fish oil and blood pressure
+
+Consider the `ex0112` data in the `Sleuth3` package. The researchers randomly assigned 7 people to receive fish oil and 7 people to receive regular oil, and measured the decrease in their diastolic blood pressure. Is there sufficient evidence to conclude that the mean decrease in blood pressure of patients taking fish oil is different from the mean decrease in blood pressure of those taking regular oil?
+
+*Solution.*
+
+
+\newpage
+
+### Question 2: (8.42) Drug trials
+
+In a drug trial, patients are given a drug to test if it will cure their illness.
+
+(a) What is the null hypothesis for a drug trial?
+
+*Solution.*
+
+
+(b) What would a type I error be for a drug trial?
+
+*Solution.*
+
+
+(c) What would a type II error be for a drug trial?
+
+*Solution.*
+
+
+(d) What are the implications for each type of error for ill patients?
+
+*Solution.*
+
+
+(e) What are the implications for each type of error for drug manufacturers?
+
+*Solution.*
+
+
+\newpage
+
+### Question 3: (8.43) Determining sample size
+
+Suppose you wish to test the side effects of a new vaccine by forming two groups of subjects, one that gets the vaccine and another that gets a placebo. You would like to detect a $1^{\circ}F$ change in body temperature at the $\alpha = 0.05$ level of significance with a power of $99\%$. Data on human body temperature (such as `fosdata::normtemp`) suggests that the standard deviation of body temperature is around $0.73^{\circ}F$. How many subjects will you need in each group?
+
+*Solution.*
+
+
+\newpage
+
+### Question 4: (8.47) A study on treating wrist fractures I: Statistical power
+
+This exercise uses the data set `fosdata::wrist`, which comes from a study by Raittio et al.
+
+The authors performed a power analysis in order to determine sample size. They wanted a power of 80% at the $\alpha = 0.05$ level, and they assumed that 30% of their patients would drop out. Previous studies had shown that the standard deviation of the `prwe12m` variable would be about 14. They concluded that they needed 40 participants in each group. What difference in means did they use in their power computation? (You can check your answer by looking up their paper.)
+
+*Solution.*
+
+
+\newpage
+
+### Question 5: (8.48) A study on treating wrist fractures II: $t$-test
+
+This exercise uses the data set `fosdata::wrist`, which comes from a study by Raittio et al.
+
+The authors used the `fosdata::wrist` data set to find a 95% confidence interval for the difference in the mean of `prwe12m` between the functional cast position and the volar-flexion and ulnar deviation cast position. They **assumed** equal variances in the two populations to find the 95% confidence interval.
+
+(a) Find the 95% confidence interval of the mean difference assuming equal variances.
+
+*Solution.*
+
+
+(b) Compare your answer to the result in the published paper.
+
+*Solution.*
+
+
+(c) Was assuming equal variance justified?
+
+*Solution.*
+
