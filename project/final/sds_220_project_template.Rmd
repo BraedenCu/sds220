@@ -122,16 +122,11 @@ if(sum(duplicated(data)) != 0) {
 
 # Convert diagnosis into a binary value, P = 1 HC = 0
 data$class <- ifelse(data$class == "P", 1, 0)
-```
 
-## Variable Selection: Exclusively Test One
-
-
-```{r}
-# For now, lets only use patient performance on the first written test (1->18, 451 only)
+# Indicies, we will be limiting our analysis to the first 100 features
 x1_idx = 2;
-x2_idx = 19;
-diagnosis_idx = 452;
+x2_idx = 100; 
+diagnosis_idx = 452; 
 
 data_condensed <- data %>% select(x1_idx:x2_idx, diagnosis_idx)
 
@@ -148,7 +143,11 @@ test_data_outcomes <- test_data %>% select(x2_idx - x1_idx + 2)
 # Remove diagnosis category
 train_data_removed <- train_data %>% select(1:(x2_idx - x1_idx + 1))
 test_data_removed <- test_data %>% select(1:(x2_idx - x1_idx + 1))
+```
 
+## Variable Selection
+
+```{r}
 # Linear Regression Model
 set.seed(42)
 lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data_removed)
@@ -160,46 +159,25 @@ predictions_test <- predict(lm_model, newdata=test_data_removed)
 predictions_list <- unname(as.list(as.data.frame(predictions_train)))
 train_data_outcomes_numeric <- as.numeric(unlist(train_data_outcomes))
 
-# Find the coefficents of the model
-coefficients <- summary(lm_model)$coefficients
-
-# Examine which variables are significant, p < 0.05
-significant_variables <- p_values[p_values < 0.05]
-significant_variables
+# Find the statistically significant coefficents of the model
+significant_coefficients <- coefficients[coefficients[, "Pr(>|t|)"] < 0.05, ]
+print(significant_coefficients)
 
 # Calculate the adjusted R^2 value
 adjusted_r_squared <- summary(lm_model)$adj.r.squared
-adjusted_r_squared
+print(adjusted_r_squared)
 
+# Store significant variables for future training within a new dataframe
+significant_variables <- data.frame()
+for (i in 1:nrow(significant_coefficients)) {
+  significant_variables <- rbind(significant_variables, data.frame(variable = rownames(significant_coefficients)[i], coefficient = significant_coefficients[i, "Estimate"]))
+}
+significant_variables
 ```
 
 ## Model Plotting
 ```{r}
-# Preparing Data for Plots
-residuals <- residuals(lm_model)
-fitted_values <- fitted(lm_model)
-predictions_train <- predict(lm_model, newdata=train_data_removed)
-train_data_outcomes_numeric <- as.numeric(unlist(train_data_outcomes))
-
-# Plotting Residuals
-plot(fitted_values, residuals, main="Residuals vs Fitted", xlab="Fitted Values", ylab="Residuals") 
-abline(h = 0, col = "steelblue")
-
-# QQ Plot of Residuals
-qqnorm(residuals)
-qqline(residuals, col = "steelblue")
-
-# Cook's Distance Plot
-cooks_distance <- cooks.distance(lm_model)
-plot(cooks_distance, main="Cook's Distance", type="h", col="blue", ylab="Cook's Distance", xlab="Index")
-
-# Scale-Location Plot (also known as Spread-Location plot)
-plot(fitted_values, sqrt(abs(residuals)), main="Scale-Location Plot", xlab="Fitted Values", ylab="Sqrt(|Residuals|)")
-abline(h = sqrt(2), col="steelblue")
-
-# Plotting actual vs. predicted values
-plot(train_data_outcomes_numeric, as.numeric(unlist(predictions_train)), main="Actual vs Predicted",
-     xlab="Actual", ylab="Predicted")
-abline(0, 1, col = "steelblue")
+# Visualizing the linear regression model
+plot(lm_model)
 
 ```
