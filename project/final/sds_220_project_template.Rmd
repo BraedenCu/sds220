@@ -26,7 +26,9 @@ knitr::opts_chunk$set(echo = TRUE,      ## show or suppress the code
 library(tidyverse)
 library(caret)
 library(plotly)
-
+library(pROC)
+library(e1071)
+library(randomForest)
 ```
 
 
@@ -97,9 +99,9 @@ If you build multiple models or perform multiple types of analysis, compare the 
 A few sentences stating conclusions, recommendations, and ideas for future work and improvements.
 
 
-# All Code
+# Code
 
-Guiding question: Can we predict how trusted someone will be based soley on their facial composition?
+Guiding question: Can we predict the existence of Alzheimer's disease based on patient handwriting data?
 
 ## Data Preprocessing
 
@@ -143,41 +145,164 @@ test_data_outcomes <- test_data %>% select(x2_idx - x1_idx + 2)
 # Remove diagnosis category
 train_data_removed <- train_data %>% select(1:(x2_idx - x1_idx + 1))
 test_data_removed <- test_data %>% select(1:(x2_idx - x1_idx + 1))
+
+# Isolate the data to only utilize the very first handwriting task
+train_data <- train_data_removed %>% select(1:18)
+test_data <- test_data_removed %>% select(1:18)
 ```
+## Exploration of Data
+
+```{r}
+# Summary of the data
+summary(train_data)
+
+# Identify the distribution of each feature in the data mapped alongside the diagnosis
+for (i in 1:ncol(train_data)) 
+{
+  hist(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+  xfit<-seq(min(train_data[,i]),max(train_data[,i]),length=40)
+  yfit<-dnorm(xfit,mean=mean(train_data[,i]),sd=sd(train_data[,i]))
+  yfit <- yfit*diff(h$mids[1:2])*length(train_data[,i])
+  plot(xfit, yfit, type="l", col="salmon", lwd=2, add=TRUE)
+  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+}
+
+# Density plots of each feature by diagnosis
+for (i in 1:ncol(train_data)) 
+{
+  plot(density(train_data[train_data_outcomes == 0, i]), col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+  lines(density(train_data[train_data_outcomes == 1, i]), col = "blue")
+}
+
+# Measure the correlation between each feature and the diagnosis
+correlation_matrix <- cor(train_data, unlist(train_data_outcomes))
+
+# Visualize the correlation matrix
+plot_ly(y = colnames(train_data), z = correlation_matrix, type = "heatmap")
+
+# By examining the variation, we can get a rough estimate of the importance of each feature, the variance must be scaled for each feature
+variance <- apply(train_data, 2, var)
+
+# Scale the variance for visualization
+variance <- variance / max(variance)
+
+# Visualize the variance of each feature
+plot_ly(x = colnames(train_data), y = variance, type = "bar", marker = list(color = "salmon"))
+
+# Perform Chi-Squared Test for all features, store to a list
+for(i in 1:ncol(train_data)) 
+{
+  feature_storage <- list()
+  chi_test <- chisq.test(train_data[,i], train_data$class)
+  # store the name of the feature
+  feature_storage[[i]] <- colnames(train_data)[i]
+  print(chi_test)
+}
+
+# Print the top 10 features with the highest variance
+top_10_features <- sort(variance, decreasing = TRUE)[1:10]
+top_10_features
+
+```
+
+
+
 
 ## Variable Selection
 
 ```{r}
 # Linear Regression Model
 set.seed(42)
-lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data_removed)
+lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data)
 
-# Model Evaluation
+# Linear Regression Model: Hand-Picked Features
+selected_features <- c("pressure_var1", "total_time1", "air_time1", "paper_time1", "max_y_extension1", "max_x_extension1", "pressure_mean1", "gmrt_in_air1", "mean_gmrt1", "gmrt_on_paper1")
+lm_model_selected <- lm(unlist(train_data_outcomes) ~ ., data=train_data[,selected_features])
+
+# Model Evaluation All Features
 summary(lm_model)
-predictions_train <- predict(lm_model, newdata=train_data_removed)
-predictions_test <- predict(lm_model, newdata=test_data_removed)
-predictions_list <- unname(as.list(as.data.frame(predictions_train)))
+predictions_train <- predict(lm_model, newdata=train_data)
+predictions_test <- predict(lm_model, newdata=test_data)
+predictions_list <- unname(as.list(as.data.frame(train_data)))
 train_data_outcomes_numeric <- as.numeric(unlist(train_data_outcomes))
 
+# Model Evaluation Selected Features
+summary(lm_model_selected)
+predictions_train_selected <- predict(lm_model_selected, newdata=train_data)
+predictions_test_selected <- predict(lm_model_selected, newdata=test_data)
+predictions_list_selected <- unname(as.list(as.data.frame(train_data)))
+train_data_outcomes_numeric_selected <- as.numeric(unlist(train_data_outcomes))
+
+# All Features Model MSE
+mse_linear_regression_all <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test))^2)
+print(mse_linear_regression_all)
+
+# Selected Features Model MSE
+mse_linear_regression_selected <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_selected))^2)
+print(mse_linear_regression_selected)
+
 # Find the statistically significant coefficents of the model
-significant_coefficients <- coefficients[coefficients[, "Pr(>|t|)"] < 0.05, ]
+significant_coefficients <- summary(lm_model)$coefficients[summary(lm_model)$coefficients[,4] < 0.05,]
 print(significant_coefficients)
 
-# Calculate the adjusted R^2 value
+# Calculate the adjusted R^2 value of Selected Feature Model
 adjusted_r_squared <- summary(lm_model)$adj.r.squared
 print(adjusted_r_squared)
 
-# Store significant variables for future training within a new dataframe
-significant_variables <- data.frame()
-for (i in 1:nrow(significant_coefficients)) {
-  significant_variables <- rbind(significant_variables, data.frame(variable = rownames(significant_coefficients)[i], coefficient = significant_coefficients[i, "Estimate"]))
-}
-significant_variables
+# Create a correlation test for the linear regression model
+cor.test(unlist(test_data_outcomes), predictions_test_selected)
+
+# Visualizing the Selected Feature Model  
+plot(lm_model_selected)
+
 ```
 
-## Model Plotting
+## Modelling
 ```{r}
-# Visualizing the linear regression model
-plot(lm_model)
+# Begin SVM Model
+svm_model <- svm(unlist(train_data_outcomes) ~ ., data=train_data_removed, kernel="linear", cost=10)
+
+# Model Evaluation
+predictions_test_svm <- predict(svm_model, newdata=test_data_removed)
+
+# Calculate the accuracy of the model
+accuracy_train_svm <- sum(predictions_test_svm == unlist(test_data_outcomes)) / length(predictions_test_svm)
+
+# Create a confusion matrix
+confusion_matrix <- table(predictions_test_svm, unlist(test_data_outcomes))
+
+# Calculate the sensitivity and specificity of the model
+sensitivity_svm <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
+specificity_svm <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
+
+# Calculate MSE
+mse_svm <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_svm))^2)
+mse_svm
+
+# Store the model results
+model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
+
+# Begin Random Forest Model
+rf_model <- randomForest(unlist(train_data_outcomes) ~ ., data=train_data_removed, ntree=100)
+
+# Model Evaluation
+predictions_test_rf <- predict(rf_model, newdata=test_data_removed)
+
+# Calculate the accuracy of the models
+accuracy_train_rf <- sum(predictions_test_rf == unlist(test_data_outcomes)) / length(predictions_test_rf)
+
+# Create a confusion matrix
+confusion_matrix_rf <- table(predictions_test_rf, unlist(test_data_outcomes))
+
+# Calculate the sensitivity and specificity of the model
+sensitivity_rf <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
+specificity_rf <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
+
+# Calculate MSE
+mse_rf <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_rf))^2)
+mse_rf
+
+# Store the model results
+model_results <- rbind(model_results, data.frame(model = "Random Forest", accuracy = accuracy_train_rf, sensitivity = sensitivity_rf, specificity = specificity_rf))
 
 ```
