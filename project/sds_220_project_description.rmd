@@ -1,0 +1,64 @@
+---
+title: "Spring 2023 S&DS 220 Project Description"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float: no
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+This project will be an opportunity to apply the skills you've learned in S&DS 220 to a statistics or data analysis topic that is of interest to you.  In particular this project has the following objectives:
+
+1. Formulating a well-defined problem/question that will be investigated using data science skills and statistical tools.
+2. Acquiring, cleaning, and organizing the data.
+3. Data exploration and visualization.
+4. Regression/hypothesis testing/inferential statistics
+5. Interpretation of results
+6. Communication.  This includes:
+    a. having a well-organized professional looking report (generated from an R markdown document)
+    b. clearly communicating the entire process and the interpretations of your results.
+
+# Data sources
+
+You will need (at least) one data set for your project.  Data sets should typically include several variables in columns (3 or more).  If you are doing regression or classification, there should be at least one outcome column (numerical or categorical).  The number of rows should at least be in the hundreds.
+
+There are many sources for data.  Here are a few to help you get started (though you are not restricted to these).
+
+- [Kaggle datasets](https://www.kaggle.com/datasets)
+- [R Stat2Data package](https://cran.r-project.org/web/packages/Stat2Data/Stat2Data.pdf)
+- [R datasets package](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html)
+- [UCI Machine Learning Repository](https://archive.ics.uci.edu/datasets)
+
+Feel free to meet with the instructor or one of the TAs if you need help obtaining data.
+
+# Doing the work
+
+Each step in the data science pipeline is part of an iterative process.  You may start with a question in mind, and upon exploring data, decide that you should be answering a different question.  Often times the model you build is insufficient (assumptions not met, etc...), and so you need to go back and refine the model.  The following diagram highlights some of the steps in this process.
+
+![The data science modeling process, from: https://rviews.rstudio.com/2019/06/19/a-gentle-intro-to-tidymodels/](https://rviews.rstudio.com/post/2019-06-14-a-gentle-intro-to-tidymodels_files/figure-html/ds.png)
+
+A project template and further guidelines for your project write ups are in the *Project* folder on Canvas. Below is a rough outline, but what goes in the report can be topic dependent.
+
+- Introduction
+- Data exploration, visualization
+- Regression modeling, Analysis
+- Visualization and interpretation of the results
+- Conclusions and recommendations
+
+Your report should be at least 5 pages, and no more than 10. It should be concise, to-the-point, and polished. These sections don't have to be long, only long enough to communicate what you need to communicate.  
+
+# Project submission and deadline
+
+You will be responsible for submitting a short report in R Markdown with your work.
+
+- Please submit your `Report.pdf` on Gradescope as you would for another assignment.
+- The due date for the report is **Friday April 26th, 11:59PM**
