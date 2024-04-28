@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 10"
 subtitle: "Due Friday April 19"
-author: "<insert you name>"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -27,8 +27,16 @@ library(fosdata)
 
 Consider the `ex0112` data in the `Sleuth3` package. The researchers randomly assigned 7 people to receive fish oil and 7 people to receive regular oil, and measured the decrease in their diastolic blood pressure. Is there sufficient evidence to conclude that the mean decrease in blood pressure of patients taking fish oil is different from the mean decrease in blood pressure of those taking regular oil?
 
-*Solution.*
+```{r}
+library(Sleuth3)
 
+glimpse(ex0112)
+
+t.test(data = ex0112, BP ~ Diet)
+
+```
+
+By examining the p-value we can determine if the mean decrease in blood pressure of patients taking fish oil is different from the mean decrease in blood pressure of those taking regular oil. The p-value is $0.013$, which is less than the significance level of $0.05$. Therefore, we reject the null hypothesis and conclude that there is sufficient evidence to suggest that the mean decrease in blood pressure of patients taking fish oil is different from the mean decrease in blood pressure of those taking regular oil. 
 
 \newpage
 
@@ -38,28 +46,23 @@ In a drug trial, patients are given a drug to test if it will cure their illness
 
 (a) What is the null hypothesis for a drug trial?
 
-*Solution.*
-
+The null hypothesis for a drug trial is the following: the drug has no effect on the illness.
 
 (b) What would a type I error be for a drug trial?
 
-*Solution.*
-
+A type I error would be to determine that the drug has an effect when in reality it doesn't
 
 (c) What would a type II error be for a drug trial?
 
-*Solution.*
-
+A type II error is to conclude that the drug has no effect when in reality it does.
 
 (d) What are the implications for each type of error for ill patients?
 
-*Solution.*
-
+Implications of a type I error for ill patients would be that they think they are given a drug that cures their illness when in reality it does not actually cure their illness. Implications of a type II error for ill patients would be that they are given a drug that is effective but they think that it is not effective.
 
 (e) What are the implications for each type of error for drug manufacturers?
 
-*Solution.*
-
+Implications of a type I error for drug manufacturers would be that they are able to sell a drug that does not actually cure the illness, therefore reducing the reputability of that manufacturer. Implications of a type II error for drug manufacturers would be that they are not able to sell a drug that could potentially cure the illness, therefore making them lose out on potential profits.
 
 \newpage
 
@@ -67,8 +70,13 @@ In a drug trial, patients are given a drug to test if it will cure their illness
 
 Suppose you wish to test the side effects of a new vaccine by forming two groups of subjects, one that gets the vaccine and another that gets a placebo. You would like to detect a $1^{\circ}F$ change in body temperature at the $\alpha = 0.05$ level of significance with a power of $99\%$. Data on human body temperature (such as `fosdata::normtemp`) suggests that the standard deviation of body temperature is around $0.73^{\circ}F$. How many subjects will you need in each group?
 
-*Solution.*
+```{r}
+standard_deviation <- sd(fosdata::normtemp$temp)
 
+power.t.test(delta = 1, sd = 0.73, sig.level = 0.05, power = 0.99)
+```
+
+Based on this result, we will need atleast 21 subjects in each group in order to detect a $1^{\circ}F$ change in body temperature at the $\alpha = 0.05$ level of significance with a power of $99\%$.
 
 \newpage
 
@@ -78,8 +86,11 @@ This exercise uses the data set `fosdata::wrist`, which comes from a study by Ra
 
 The authors performed a power analysis in order to determine sample size. They wanted a power of 80% at the $\alpha = 0.05$ level, and they assumed that 30% of their patients would drop out. Previous studies had shown that the standard deviation of the `prwe12m` variable would be about 14. They concluded that they needed 40 participants in each group. What difference in means did they use in their power computation? (You can check your answer by looking up their paper.)
 
-*Solution.*
+```{r}
+power.t.test(n = 40*0.7, sd = 14, sig.level = 0.05, power = 0.80, type = "two.sample")
 
+```
+We can conclude that they utilized a difference in means of 10.67 in their power computation.
 
 \newpage
 
@@ -91,15 +102,39 @@ The authors used the `fosdata::wrist` data set to find a 95% confidence interval
 
 (a) Find the 95% confidence interval of the mean difference assuming equal variances.
 
-*Solution.*
+`*Solution.*
+```{r}
+t.test(data = wrist, prwe12m ~ cast_position, var.equal = TRUE)
 
+```
 
 (b) Compare your answer to the result in the published paper.
 
-*Solution.*
+This answer is the same as the result in the published paper.
 
 
 (c) Was assuming equal variance justified?
 
-*Solution.*
+We are justified in assuming equal variance. If we examine the plot drawn, we can see that while cast position does have an impact on the variance of the data, the variance is not significantly different between the two groups. This is further shown by the t.test performed, which shows that while the confidence interval is narrowed when assuming equal variance, the confidence interval is still relatively wide, which suggests that the assumption of equal variance is justified.
+
+```{r}
+t.test(data = wrist, prwe12m ~ cast_position, var.equal = FALSE)
+
+
+# visualization of differences in variance, not assuming equal variance 
+ggplot(data = wrist, aes(x = cast_position, y = prwe12m)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, height = 0, alpha = 0.5) +
+  labs(title = "Boxplot of PRWE12M by Cast Position",
+       x = "Cast Position",
+       y = "PRWE12M") +
+  facet_wrap(~cast_position, scales = "free_y") +
+  theme_minimal()
+
+```
+
+
+
+
+
 
