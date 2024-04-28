@@ -71,7 +71,7 @@ Suppose you have 100 data points, and $\overline{x} = 3$, $s_x = 1$, $\overline{
 *Solution.*
 
 beta = r * (s_y / s_x) = 0.7 * (2 / 1) = 1.4
-beta2 = \overline{y} - beta * \overline{x} = 2 - 1.4 * 3 = -2.2
+beta2 = $\overline{y}$ - beta * $\overline{x}$ = 2 - 1.4 * 3 = -2.2
 
 Equation of the line = y = 1.4x - 2.2
 
