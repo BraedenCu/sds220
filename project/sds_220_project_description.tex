@@ -1,0 +1,206 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Spring 2023 S\&DS 220 Project Description},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Spring 2023 S\&DS 220 Project Description}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{overview}{%
+\section{Overview}\label{overview}}
+
+This project will be an opportunity to apply the skills you've learned
+in S\&DS 220 to a statistics or data analysis topic that is of interest
+to you. In particular this project has the following objectives:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Formulating a well-defined problem/question that will be investigated
+  using data science skills and statistical tools.
+\item
+  Acquiring, cleaning, and organizing the data.
+\item
+  Data exploration and visualization.
+\item
+  Regression/hypothesis testing/inferential statistics
+\item
+  Interpretation of results
+\item
+  Communication. This includes:
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    having a well-organized professional looking report (generated from
+    an R markdown document)
+  \item
+    clearly communicating the entire process and the interpretations of
+    your results.
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{data-sources}{%
+\section{Data sources}\label{data-sources}}
+
+You will need (at least) one data set for your project. Data sets should
+typically include several variables in columns (3 or more). If you are
+doing regression or classification, there should be at least one outcome
+column (numerical or categorical). The number of rows should at least be
+in the hundreds.
+
+There are many sources for data. Here are a few to help you get started
+(though you are not restricted to these).
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.kaggle.com/datasets}{Kaggle datasets}
+\item
+  \href{https://cran.r-project.org/web/packages/Stat2Data/Stat2Data.pdf}{R
+  Stat2Data package}
+\item
+  \href{https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html}{R
+  datasets package}
+\item
+  \href{https://archive.ics.uci.edu/datasets}{UCI Machine Learning
+  Repository}
+\end{itemize}
+
+Feel free to meet with the instructor or one of the TAs if you need help
+obtaining data.
+
+\hypertarget{doing-the-work}{%
+\section{Doing the work}\label{doing-the-work}}
+
+Each step in the data science pipeline is part of an iterative process.
+You may start with a question in mind, and upon exploring data, decide
+that you should be answering a different question. Often times the model
+you build is insufficient (assumptions not met, etc\ldots), and so you
+need to go back and refine the model. The following diagram highlights
+some of the steps in this process.
+
+\begin{figure}
+\centering
+\includegraphics{https://rviews.rstudio.com/post/2019-06-14-a-gentle-intro-to-tidymodels_files/figure-html/ds.png}
+\caption{The data science modeling process, from:
+\url{https://rviews.rstudio.com/2019/06/19/a-gentle-intro-to-tidymodels/}}
+\end{figure}
+
+A project template and further guidelines for your project write ups are
+in the \emph{Project} folder on Canvas. Below is a rough outline, but
+what goes in the report can be topic dependent.
+
+\begin{itemize}
+\tightlist
+\item
+  Introduction
+\item
+  Data exploration, visualization
+\item
+  Regression modeling, Analysis
+\item
+  Visualization and interpretation of the results
+\item
+  Conclusions and recommendations
+\end{itemize}
+
+Your report should be at least 5 pages, and no more than 10. It should
+be concise, to-the-point, and polished. These sections don't have to be
+long, only long enough to communicate what you need to communicate.
+
+\hypertarget{project-submission-and-deadline}{%
+\section{Project submission and
+deadline}\label{project-submission-and-deadline}}
+
+You will be responsible for submitting a short report in R Markdown with
+your work.
+
+\begin{itemize}
+\tightlist
+\item
+  Please submit your \texttt{Report.pdf} on Gradescope as you would for
+  another assignment.
+\item
+  The due date for the report is \textbf{Friday April 26th, 11:59PM}
+\end{itemize}
+
+\end{document}

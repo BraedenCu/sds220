@@ -1,7 +1,7 @@
 ---
 title: "S&DS 220: Homework 11"
 subtitle: "Due Friday April 26"
-author: "Braeden"
+author: "Braeden Cullen"
 output:
   pdf_document: default
 urlcolor: blue
@@ -48,6 +48,9 @@ legend("topright", legend = c("Paired", "Two-sample"), col = c("blue", "red"), l
 
 ```
 
+If we examine the graphs, we can clearly see that a paired t-test has more power. 
+How can we tell? Simply examine the graph of power vs difference in means, and notice that the blue line (paired t-test) is consistently higher than the red line (two-sample t-test). 
+This means that the paired t-test has more power.
 
 \newpage
 
@@ -57,9 +60,9 @@ For each of the following four plots, indicate whether the sample correlation co
 
 *Solution.*
 
-PLOT A: STRONGLY negative
-PLOT B: WEAK 
-PLOT C: STRONGLY positive
+PLOT A: STRONGLY negative, 
+PLOT B: WEAK, 
+PLOT C: STRONGLY positive, 
 PLOT D: STRONGLY negative
 
 \newpage
@@ -70,8 +73,8 @@ Suppose you have 100 data points, and $\overline{x} = 3$, $s_x = 1$, $\overline{
 
 *Solution.*
 
-beta = r * (s_y / s_x) = 0.7 * (2 / 1) = 1.4
-beta2 = $\overline{y}$ - beta * $\overline{x}$ = 2 - 1.4 * 3 = -2.2
+b1 = r * (s_y / s_x) = 0.7 * (2 / 1) = 1.4
+b2 = $\overline{y}$ - b1 * $\overline{x}$ = 2 - 1.4 * 3 = -2.2
 
 Equation of the line = y = 1.4x - 2.2
 
@@ -84,14 +87,14 @@ For each of the following eight residual plots, indicate whether the residual pl
 
 *Solution.*
 
-PLOT 1: not satisfied, U-shape
-PLOT 2: not satisfied, evidenced by positive trend
-PLOT 3: satisfied
-PLOT 4: not satisfied, due to high leverage outliner
-PLOT 5: not statisfied, resituals skewed
-PLOT 6: satisfied
-PLOT 7: not satisfied, evidenced by negative trend
-PLOT 8: satisfied 
+PLOT 1: not satisfied indicated by clear U-shape in the plot, 
+PLOT 2: not satisfied indicated by positive trend sloping upwards, 
+PLOT 3: satisfied, 
+PLOT 4: not satisfied, due to the influence of significant outliers, 
+PLOT 5: not statisfied indicated by skewed residuals,
+PLOT 6: satisfied, 
+PLOT 7: not satisfied indicated by negative trend, 
+PLOT 8: satisfied
 
 \newpage
 
@@ -116,7 +119,7 @@ summary(model)
 autoplot(model)
 ```
 
-After examining the residuals of this model, we can see that there are outliers and a high leverage point w/ a large residual. Notice that the assumptions of linear regression are not satisfied.
+After examining the residuals of this model, we can see that there are outliers and a high leverage point w/ a large residual. Notice that the assumptions of linear regression are not met.
 
 
 
@@ -137,7 +140,7 @@ summary(model2)
 autoplot(model2)
 ```
 
-The assumptions of linear regression are satisfied in this model. The plots look much better than the previous model.
+The assumptions of linear regression are met in this model. The plots look much better than the previous model.
 
 (c) Which model seems to better match the assumptions of linear regression?
 
@@ -151,7 +154,7 @@ Consider the `cern` data set in the `fosdata` package. Create a linear model of 
 
 *Solution.*
 
-We can simply reuse the log-log model from the previous question. The residuals, from the previous question in parts b and c, look solid. 95% confidence intervals for the slope and intercept are: 
+We can simply reuse the log-log model from the previous question. The residuals, from the previous question in parts b and c, look solid. 95% confidence intervals for the slope and intercept are as follows:
 ```{r}
 confint(model2)
 

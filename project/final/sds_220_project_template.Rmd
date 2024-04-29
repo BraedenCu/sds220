@@ -29,6 +29,7 @@ library(plotly)
 library(pROC)
 library(e1071)
 library(randomForest)
+library(class)
 ```
 
 
@@ -44,13 +45,13 @@ library(randomForest)
 
 - a non-technical description of the hypothesis you are testing
 
-Early-stage alzehimers can be effectively detected through graphological analysis of patient handwriting data. The most effective indicators of early-stage alzherimers will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes. Using a series of metrics, we can determine which features are most indicative of early-stage alzheimers, and use these features to develop a predictive model that can accurately classify patients as either having or not having the disease.
+Early-stage alzehimers can be effectively detected through graphological analysis of patient handwriting data. The most effective indicators of early-stage alzherimers will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes. Using a series of metrics, we can determine which features are most indicative of early-stage alzheimers, and use these features to develop a predictive model that can accurately classify patients as either having or not having the disease. After the conclusion of variable selection, I predict that the most crucial parameters for predicting alzheimers from handwriting data will be the number of pen lifts, the pressure of the pen, and the speed of the pen.  
 
 # Data Overview
 
 - a non-technical description of the data, where it came from, and what it contains, including the predictors, the outcome, and the observations
 
-This project focuses on using graphological analysis of patient handwriting data, provided through the DARWIN dataset, to determine indicators of early-stage Alzheimers. This dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. The data includes wether the patient has Alzheimer's disease or not, as well as 451 features carefully collected during the participant handwriting process. These features include the number of pen lifts and the number of pen strokes, as well as various measures of the size, shape, and speed of the handwriting. 
+This project focuses on using graphological analysis of patient handwriting data, provided through the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 25 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinal trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. 
 
 # Data exploration and visualization
 
@@ -61,10 +62,7 @@ This project focuses on using graphological analysis of patient handwriting data
 
 - a non-technical description of what kind of analysis you did and how to interpret the results of the model
 
-# Results
-
-- a non-technical description of the results of the model and main takeaways.
-
+We begin by sifting through the dataset to identify any missing values or duplicates. After confirming that the data was clean, I converted the diagnosis column into a binary value indicating the existence of a positive Alzheimer's diagnosis. I then isolated the data to utilize the very first handwriting task due to the sheer magnitude of the dataset. With 451 features recorded for every patient, it was simply unnecessary to utilize all of this data for a preliminary analysis. After a short exploratory period, it was determined that the first 18 features, representing the first handwriting task given to trial participants, would be sufficient. I then created train and test splits of the data and immediately stored the test dataset away to prevent any data leakage. The next step involved transforming the data to facilitate model building. The diagnosis category was removed from the training data, and the data was split into the predictors and the outcome. I then performed a series of exploratory data analyses, including a summary of the data, the distribution of each feature in the data mapped alongside the diagnosis, density plots of each feature by diagnosis, and a correlation matrix. I then examined the variation of each feature to get a rough estimate of the importance of each feature. This step is crucial for variable selection, as it allows us to identify the most impactful features in the data, therefore reducing the dimensionality of the dataset and improving the performance of trained models. A chi-squared test was then performed for all features and the top features with the greatest variance, indicating features that have the greatest likelihood of being solid predictors of Alzheimer's presence. After deriving critical features we began creating models. Two linear regression models were created, one including all 18 features whereas the other included only the most impactful features. The models were then evaluated, and the adjusted R^2 value of the selected feature model was calculated. A correlation test was then created for the linear regression model, and the selected feature model was visualized. To interpret the results of these models, we can simply examine the coefficients of the model. The coefficients of the model represent the relationship between the predictors and the outcome. The coefficients have the expected sign, and the sizes of the coefficients are reasonable. The coefficients can be put into real-world terms, and the results of the model can be easily interpreted as indicative of what factors can be used to predict the presence of Alzheimer's. We can also calculate the accuracy of the model, the sensitivity and specificity of the model, and the mean squared error. These results all provide valuable metrics providing insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. After the linear regression models were created and validated, we explored two other model types, a SVM model and a random forest model. SVM models were chosen due to their ability to handle high-dimensional data, and random forest models were selected due to their ability to handle non-linear data. The models were then evaluated, and the accuracy of the model was calculated, a confusion matrix was created, the sensitivity and specificity of the model were calculated, and the mean squared error was calculated. The metrics produced from these models are then compared to the linear regression models to determine which model is most appropriate for the data. The result of our procedure is a series of models that can predict the presence of Alzheimer's based on patient handwriting data. The models are evaluated on their ability to accurately classify new patients as either having or not having the disease, and the results are used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We end our analysis with the crowning of the most effective model, and the identification of the most impactful features contained within the data.
 
 # Modeling/Analysis
 
@@ -109,6 +107,12 @@ Guiding question: Can we predict the existence of Alzheimer's disease based on p
 # Load the data
 data <- read.csv("darwin.csv")
 
+# Convert class into binary
+data$class <- ifelse(data$class == "P", 1, 0)
+
+# data outcoems
+data_outcomes <- data %>% select(452)
+
 # Print Dimmensions of Face Data
 print(dim(data))
 
@@ -122,16 +126,117 @@ if(sum(duplicated(data)) != 0) {
   print("There are duplicates in the data")
 }
 
-# Convert diagnosis into a binary value, P = 1 HC = 0
-data$class <- ifelse(data$class == "P", 1, 0)
+train_data <- data %>% select(1:18)
+train_data_outcomes <- data_outcomes
 
-# Indicies, we will be limiting our analysis to the first 100 features
-x1_idx = 2;
-x2_idx = 100; 
-diagnosis_idx = 452; 
+# getting error non-numeric argument to binary operator, clean train_data
+train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
 
-data_condensed <- data %>% select(x1_idx:x2_idx, diagnosis_idx)
+```
+## Exploration of Data
 
+```{r}
+# Discrete RV, measure the spread and variance using geom:boxplot. Check for outliers in the population, if there are outliers, remove them from the data. we are dealing 
+# with two independence samples, HC and P, so lets calculate the effect size using cohen's d. Then lets use resampling. Perform a permutation test. Compare wilcoxon and t-test results. Then calculate ROC accuracy score
+
+# Summary of the data
+summary(train_data)
+dim(train_data)
+
+# Discrete random variable, therefore, we can measure the spread and variance using geom:boxplot
+# Remove pressure_var1 because it has a much greater range, thereby hiding the other variables
+boxplot(train_data %>% select(-pressure_var1), col = "salmon")
+
+# Lets also measure the pressure variable alone
+boxplot(train_data$pressure_var1, col = "salmon")
+
+# Now lets find the confidence interval of each feature
+for (i in 1:ncol(train_data)) 
+{
+  output <- (t.test(train_data[,i], conf.level = 0.95))
+  print(output)
+}
+
+# Notice how we have a few high leverage outliers in the data, we should remove these and make new boxplot
+# Lets remove all values above 500000 within the dataset
+num_removed <- 0
+#for (i in 1:ncol(train_data)) 
+#{
+#  # remove rows with values over 50000
+#  if (any(train_data[,i] > 50000)) 
+#  {
+#    num_removed <- num_removed + 1
+#    train_data <- train_data[train_data[,i] < 50000,]
+#  }
+#}
+#num_removed
+
+# Make a new boxplot after removing high leverage outliers
+train_data_boxplot <- train_data %>% select(-pressure_var1)
+
+boxplot(train_data_boxplot, col = "salmon")
+
+# Make a new boxplot for pressure_var1
+boxplot(train_data$pressure_var1, col = "salmon")
+
+# Viable box plots are those that have a similar range, we can see that the data is now more normalized, therefore lets strip out features that have a similar range
+# Features 1, 5, 6, 15, 15
+#train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
+
+# Now selectively show those box plots
+for (i in 1:ncol(train_data)) 
+{
+  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+}
+
+# Identify the distribution of each feature in the data mapped alongside the diagnosis
+for (i in 1:ncol(train_data)) 
+{
+  hist(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+  xfit<-seq(min(train_data[,i]),max(train_data[,i]),length=40)
+  yfit<-dnorm(xfit,mean=mean(train_data[,i]),sd=sd(train_data[,i]))
+  yfit <- yfit*diff(h$mids[1:2])*length(train_data[,i])
+  plot(xfit, yfit, type="l", col="salmon", lwd=2, add=TRUE)
+  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+}
+
+# Density plots of each feature by diagnosis
+#for (i in 1:ncol(train_data)) 
+#{
+#  plot(density(train_data[train_data_outcomes == 0, i]), col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+#  lines(density(train_data[train_data_outcomes == 1, i]), col = "blue")
+#}
+
+# Visualize variance of each feature
+# Lets perform a chi-squared test for each feature, and store the results to determine the top features with the highest variance
+for(i in 1:ncol(train_data)) 
+{
+  feature_storage <- list()
+  chi_test <- chisq.test(train_data[,i], train_data$class)
+  # store the name of the feature
+  feature_storage[[i]] <- colnames(train_data)[i]
+  print(chi_test)
+}
+
+# store and print the top 5 features with the highest variance
+top_5_features <- sort(variance, decreasing = TRUE)[1:5]
+top_5_features
+
+dim(train_data)
+dim(train_data_outcomes)
+summary(train_data_outcomes)
+# now lets create a correlation matrix to determine the relationship between each selected feature and the diagnosis
+correlation_matrix <- cor(train_data, train_data_outcomes)
+correlation_matrix
+
+```
+
+
+
+
+## Variable Selection
+
+```{r}
 # Create train / test splits, save trustworthiness data
 set.seed(123)
 train_index <- sample(1:nrow(data_condensed), 0.7*nrow(data_condensed))
@@ -149,68 +254,9 @@ test_data_removed <- test_data %>% select(1:(x2_idx - x1_idx + 1))
 # Isolate the data to only utilize the very first handwriting task
 train_data <- train_data_removed %>% select(1:18)
 test_data <- test_data_removed %>% select(1:18)
-```
-## Exploration of Data
-
-```{r}
-# Summary of the data
-summary(train_data)
-
-# Identify the distribution of each feature in the data mapped alongside the diagnosis
-for (i in 1:ncol(train_data)) 
-{
-  hist(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
-  xfit<-seq(min(train_data[,i]),max(train_data[,i]),length=40)
-  yfit<-dnorm(xfit,mean=mean(train_data[,i]),sd=sd(train_data[,i]))
-  yfit <- yfit*diff(h$mids[1:2])*length(train_data[,i])
-  plot(xfit, yfit, type="l", col="salmon", lwd=2, add=TRUE)
-  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
-}
-
-# Density plots of each feature by diagnosis
-for (i in 1:ncol(train_data)) 
-{
-  plot(density(train_data[train_data_outcomes == 0, i]), col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
-  lines(density(train_data[train_data_outcomes == 1, i]), col = "blue")
-}
-
-# Measure the correlation between each feature and the diagnosis
-correlation_matrix <- cor(train_data, unlist(train_data_outcomes))
-
-# Visualize the correlation matrix
-plot_ly(y = colnames(train_data), z = correlation_matrix, type = "heatmap")
-
-# By examining the variation, we can get a rough estimate of the importance of each feature, the variance must be scaled for each feature
-variance <- apply(train_data, 2, var)
-
-# Scale the variance for visualization
-variance <- variance / max(variance)
-
-# Visualize the variance of each feature
-plot_ly(x = colnames(train_data), y = variance, type = "bar", marker = list(color = "salmon"))
-
-# Perform Chi-Squared Test for all features, store to a list
-for(i in 1:ncol(train_data)) 
-{
-  feature_storage <- list()
-  chi_test <- chisq.test(train_data[,i], train_data$class)
-  # store the name of the feature
-  feature_storage[[i]] <- colnames(train_data)[i]
-  print(chi_test)
-}
-
-# Print the top 10 features with the highest variance
-top_10_features <- sort(variance, decreasing = TRUE)[1:10]
-top_10_features
-
-```
 
 
 
-
-## Variable Selection
-
-```{r}
 # Linear Regression Model
 set.seed(42)
 lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data)
@@ -253,17 +299,17 @@ print(adjusted_r_squared)
 cor.test(unlist(test_data_outcomes), predictions_test_selected)
 
 # Visualizing the Selected Feature Model  
-plot(lm_model_selected)
+plot(lm_model_selected, col = "salmon")
 
 ```
 
 ## Modelling
 ```{r}
 # Begin SVM Model
-svm_model <- svm(unlist(train_data_outcomes) ~ ., data=train_data_removed, kernel="linear", cost=10)
+svm_model <- svm(unlist(train_data_outcomes) ~ ., data=train_data, kernel="linear", cost=10)
 
 # Model Evaluation
-predictions_test_svm <- predict(svm_model, newdata=test_data_removed)
+predictions_test_svm <- predict(svm_model, newdata=test_data)
 
 # Calculate the accuracy of the model
 accuracy_train_svm <- sum(predictions_test_svm == unlist(test_data_outcomes)) / length(predictions_test_svm)
@@ -283,10 +329,10 @@ mse_svm
 model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
 
 # Begin Random Forest Model
-rf_model <- randomForest(unlist(train_data_outcomes) ~ ., data=train_data_removed, ntree=100)
+rf_model <- randomForest(unlist(train_data_outcomes) ~ ., data=train_data, ntree=100)
 
 # Model Evaluation
-predictions_test_rf <- predict(rf_model, newdata=test_data_removed)
+predictions_test_rf <- predict(rf_model, newdata=test_data)
 
 # Calculate the accuracy of the models
 accuracy_train_rf <- sum(predictions_test_rf == unlist(test_data_outcomes)) / length(predictions_test_rf)
