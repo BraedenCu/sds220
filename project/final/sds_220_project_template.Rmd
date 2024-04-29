@@ -32,77 +32,7 @@ library(randomForest)
 library(class)
 ```
 
-
-# Introduction
-
-# Problem Statement
-
-- a non-technical description of the problem you are trying to solve or the question you are trying to answer, and why you are trying to answer that question
-
-10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimers is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be $305 billion in 2020, and this number is expected to rise to $1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a machine learning model that can predict whether a person has Alzheimer's disease based on demographic and clinical data. The model will be trained on a dataset of patients with and without Alzheimer's disease and will be evaluated on its ability to accurately classify new patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages.
-
-# Hypothesis
-
-- a non-technical description of the hypothesis you are testing
-
-Early-stage alzehimers can be effectively detected through graphological analysis of patient handwriting data. The most effective indicators of early-stage alzherimers will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes. Using a series of metrics, we can determine which features are most indicative of early-stage alzheimers, and use these features to develop a predictive model that can accurately classify patients as either having or not having the disease. After the conclusion of variable selection, I predict that the most crucial parameters for predicting alzheimers from handwriting data will be the number of pen lifts, the pressure of the pen, and the speed of the pen.  
-
-# Data Overview
-
-- a non-technical description of the data, where it came from, and what it contains, including the predictors, the outcome, and the observations
-
-This project focuses on using graphological analysis of patient handwriting data, provided through the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 25 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinal trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. 
-
-# Data exploration and visualization
-
-- This section will give an overview of the data.  It should include descriptive statistics and visualizations of the raw data.  Reveal to the reader any interesting relationships in the data, and if you are doing multiple regression, convince the reader that the predictors are related to the outcome. Visualizations are one of the most powerful ways to communicate information to the reader, so it is important to spend time producing clear, descriptive, eye-catching visualizations. 
-- again, this should be nontechnical
-
-# Methodology
-
-- a non-technical description of what kind of analysis you did and how to interpret the results of the model
-
-We begin by sifting through the dataset to identify any missing values or duplicates. After confirming that the data was clean, I converted the diagnosis column into a binary value indicating the existence of a positive Alzheimer's diagnosis. I then isolated the data to utilize the very first handwriting task due to the sheer magnitude of the dataset. With 451 features recorded for every patient, it was simply unnecessary to utilize all of this data for a preliminary analysis. After a short exploratory period, it was determined that the first 18 features, representing the first handwriting task given to trial participants, would be sufficient. I then created train and test splits of the data and immediately stored the test dataset away to prevent any data leakage. The next step involved transforming the data to facilitate model building. The diagnosis category was removed from the training data, and the data was split into the predictors and the outcome. I then performed a series of exploratory data analyses, including a summary of the data, the distribution of each feature in the data mapped alongside the diagnosis, density plots of each feature by diagnosis, and a correlation matrix. I then examined the variation of each feature to get a rough estimate of the importance of each feature. This step is crucial for variable selection, as it allows us to identify the most impactful features in the data, therefore reducing the dimensionality of the dataset and improving the performance of trained models. A chi-squared test was then performed for all features and the top features with the greatest variance, indicating features that have the greatest likelihood of being solid predictors of Alzheimer's presence. After deriving critical features we began creating models. Two linear regression models were created, one including all 18 features whereas the other included only the most impactful features. The models were then evaluated, and the adjusted R^2 value of the selected feature model was calculated. A correlation test was then created for the linear regression model, and the selected feature model was visualized. To interpret the results of these models, we can simply examine the coefficients of the model. The coefficients of the model represent the relationship between the predictors and the outcome. The coefficients have the expected sign, and the sizes of the coefficients are reasonable. The coefficients can be put into real-world terms, and the results of the model can be easily interpreted as indicative of what factors can be used to predict the presence of Alzheimer's. We can also calculate the accuracy of the model, the sensitivity and specificity of the model, and the mean squared error. These results all provide valuable metrics providing insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. After the linear regression models were created and validated, we explored two other model types, a SVM model and a random forest model. SVM models were chosen due to their ability to handle high-dimensional data, and random forest models were selected due to their ability to handle non-linear data. The models were then evaluated, and the accuracy of the model was calculated, a confusion matrix was created, the sensitivity and specificity of the model were calculated, and the mean squared error was calculated. The metrics produced from these models are then compared to the linear regression models to determine which model is most appropriate for the data. The result of our procedure is a series of models that can predict the presence of Alzheimer's based on patient handwriting data. The models are evaluated on their ability to accurately classify new patients as either having or not having the disease, and the results are used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We end our analysis with the crowning of the most effective model, and the identification of the most impactful features contained within the data.
-
-# Modeling/Analysis
-
-Describe the statistical inference/hypothesis testing/regression model(s) used and the analysis that was performed.  Discuss 
-
-- Any assumptions that are made
-- The observations (the rows of the data), the predictors (non-outcome columns of the data), and the outcome (one of the column of the data)
-- Interpret the results of the model
-    - If regression:
-        - What the coefficients mean and how this is related to your problem
-        - Appropriate measures of the performance of the model, such as adjusted $R^2$
-        - How easy/hard it is to interpret the results and explain them to either a technical or non-technical audience. For example, do the coefficients have the expected sign? Are the sizes (magnitudes) of the coefficients reasonable, and can you put them in real world terms?
-    - For other kinds of analysis, what you give is highly dependent on the type of analysis you do. But in general, talk about assumptions, if they are appropriate, how they might not be appropriate, and why you chose this type of analysis. 
-- Whether or not you think the model is appropriate for this kind of data, and why.
-
-
-# Visualization and interpretation of the results
-
-Create visualizations of the results, focusing on visualizations that 
-
-- help describe aspects of the results that have real-world interpretation 
-- help the reader understand how the model addresses the problem you are studying. 
-
-**Visualizations are one of the most powerful ways to communicate information to the reader, so it is important to spend time producing clear, descriptive, eye-catching visualizations.**
-
-Discuss the results of the model or models you chose, and describe how they are related to the problem statement or question that you were trying to answer in the project.  
-
-If you build multiple models or perform multiple types of analysis, compare the measures of performance and the ease of interpretability across models or types of analysis, stating which model or models performed best, and which model or models were most interpretable.  Finally, decide which model or type of analysis is best for your particular problem based on some combination of performance and interpretability.
-
-# Conclusions and recommendations
-
-A few sentences stating conclusions, recommendations, and ideas for future work and improvements.
-
-
-# Code
-
-Guiding question: Can we predict the existence of Alzheimer's disease based on patient handwriting data?
-
 ## Data Preprocessing
-
 ```{r}
 # Load the data
 data <- read.csv("darwin.csv")
@@ -130,133 +60,162 @@ train_data <- data %>% select(1:18)
 train_data_outcomes <- data_outcomes
 
 # getting error non-numeric argument to binary operator, clean train_data
-train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
+# train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
 
 ```
-## Exploration of Data
+
+# Introduction
+
+# Problem Statement
+
+- a non-technical description of the problem you are trying to solve or the question you are trying to answer, and why you are trying to answer that question
+
+10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimers is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be $305 billion in 2020, and this number is expected to rise to $1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a machine learning model that can predict whether a person has Alzheimer's disease based on demographic and clinical data. The model will be trained on a dataset of patients with and without Alzheimer's disease and will be evaluated on its ability to accurately classify new patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages.
+
+# Hypothesis
+
+- a non-technical description of the hypothesis you are testing
+
+Early-stage alzehimers can be effectively detected through graphological analysis of patient handwriting data. We estimate that most effective indicators of early-stage alzherimers will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes. Alzheimer's is a neurodegenerative disease that affects the brain, and it is likely that the disease will manifest itself in these features because the most common Alzheimers symptoms include memory loss, cognitive decline, and behavioral changes. Using a series of metrics, we can determine which features are most indicative of early-stage alzheimers, and use these features to develop a predictive model that can accurately classify patients as either having or not having the disease. After the conclusion of variable selection, I predict that the most crucial parameters for predicting alzheimers from handwriting data will be the number of pen lifts, the pressure of the pen, and the speed of the pen.  
+
+# Data Overview
+
+- a non-technical description of the data, where it came from, and what it contains, including the predictors, the outcome, and the observations
+
+This project focuses on using graphological analysis of patient handwriting data, provided through the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 25 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinal trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. 
+
+# Data exploration and visualization
+
+- This section will give an overview of the data.  It should include descriptive statistics and visualizations of the raw data.  Reveal to the reader any interesting relationships in the data, and if you are doing multiple regression, convince the reader that the predictors are related to the outcome. Visualizations are one of the most powerful ways to communicate information to the reader, so it is important to spend time producing clear, descriptive, eye-catching visualizations. 
+- again, this should be nontechnical
 
 ```{r}
 # Discrete RV, measure the spread and variance using geom:boxplot. Check for outliers in the population, if there are outliers, remove them from the data. we are dealing 
 # with two independence samples, HC and P, so lets calculate the effect size using cohen's d. Then lets use resampling. Perform a permutation test. Compare wilcoxon and t-test results. Then calculate ROC accuracy score
-
-# Summary of the data
 summary(train_data)
 dim(train_data)
+```
 
-# Discrete random variable, therefore, we can measure the spread and variance using geom:boxplot
-# Remove pressure_var1 because it has a much greater range, thereby hiding the other variables
-boxplot(train_data %>% select(-pressure_var1), col = "salmon")
+The DARWIN dataset contains 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. The dataset contains 451 features associated with each patient, including demographic information, clinical data, and handwriting data. The dataset is incredibly dense, therefore, we concluded that it would be advantageous to cut down on the number of handwriting tasks that we examine to make our analysis more manageable. We decided to focus on the first handwriting task, which contains 18 features. These features include the pressure of the pen, the speed of the pen, the size of the handwriting, and the number of pen lifts and pen strokes. We performed a series of exploratory data analyses to better understand the relationship between these features and the presence of Alzheimer's disease. Initially, we produced scatter plots and box plots for each feature to search for potential high leverage outliers while examining the variability of each feature. Immediately we can observe the presence of high leverage outliers that are having a disproportionate impact on the data. We will first create box plots for each variable to further confirm our conclusion about the presence of high leverage outliers while also giving us insight into the distribution of each feature. If we examine the box plots below, we can see that the data is not normally distributed, and that there are a few high leverage outliers that are skewing the data. We will remove these outliers to normalize the data and make it easier to analyze, then create a new set of box plots, histogram, and distributions that contain features after the removal of high leverage outliers. 
 
-# Lets also measure the pressure variable alone
-boxplot(train_data$pressure_var1, col = "salmon")
 
-# Now lets find the confidence interval of each feature
-for (i in 1:ncol(train_data)) 
-{
-  output <- (t.test(train_data[,i], conf.level = 0.95))
-  print(output)
-}
+```{r}
+# merge plots onto one figure
+par(mfrow=c(3,6))
 
-# Notice how we have a few high leverage outliers in the data, we should remove these and make new boxplot
-# Lets remove all values above 500000 within the dataset
-num_removed <- 0
-#for (i in 1:ncol(train_data)) 
-#{
-#  # remove rows with values over 50000
-#  if (any(train_data[,i] > 50000)) 
-#  {
-#    num_removed <- num_removed + 1
-#    train_data <- train_data[train_data[,i] < 50000,]
-#  }
-#}
-#num_removed
-
-# Make a new boxplot after removing high leverage outliers
-train_data_boxplot <- train_data %>% select(-pressure_var1)
-
-boxplot(train_data_boxplot, col = "salmon")
-
-# Make a new boxplot for pressure_var1
-boxplot(train_data$pressure_var1, col = "salmon")
-
-# Viable box plots are those that have a similar range, we can see that the data is now more normalized, therefore lets strip out features that have a similar range
-# Features 1, 5, 6, 15, 15
-#train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
-
-# Now selectively show those box plots
+# Create boxplots of all features
 for (i in 1:ncol(train_data)) 
 {
   boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
 }
+```
 
-# Identify the distribution of each feature in the data mapped alongside the diagnosis
+We remove high leverage outliers from the dataset by computing the standard deviation for each variable and removing all data points that lie outside of three standard deviations of the mean. This process is repeated for each variable in the dataset, and the resulting dataset is stored for further analysis. We then recreate box plots, histograms, and distribution plots of the new dataset generated after removing the high leverage outliers. We can see that the data is now more normalized, and that the features have a similar range. While some box plots are still skewed, several features appear to be normally distributed. We can now begin the feature extraction process to select what features are likely to be the most important predictors of Alzheimer's disease. 
+
+```{r}
+
+# Remove high-leverage outliers, get rid of that row entirely
 for (i in 1:ncol(train_data)) 
 {
+  # find the average value within that row
+  avg <- mean(train_data[,i])
+  
+  # find the standard deviation
+  sd <- sd(train_data[,i])
+  
+  # if any data lies outside of 3 standard deviations, remove it
+  for (j in 1:nrow(train_data)) 
+  {
+    if (train_data[j,i] > (avg + 3*sd)) 
+    {
+      train_data[j,i] <- NA
+      
+    }
+  }
+}
+
+# remove all rows with NA values, but save the index of all NA rows first 
+# because these must be removed from the outcomes data as well
+NA_rows <- which(apply(train_data, 1, function(x) any(is.na(x))))
+NA_rows
+
+# remove NA rows from train_data_outcomes
+train_data_outcomes <- train_data_outcomes[-NA_rows,]
+
+# remove NA rows from train_data
+train_data <- na.omit(train_data)
+
+# Recreate boxplots and histograms of data distribution after data adjustment
+par(mfrow=c(3,6))
+for (i in 1:ncol(train_data)) 
+{
+  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
   hist(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
-  xfit<-seq(min(train_data[,i]),max(train_data[,i]),length=40)
+  xfit<-seq(min(train_data[,i]), max(train_data[,i]),length=40)
   yfit<-dnorm(xfit,mean=mean(train_data[,i]),sd=sd(train_data[,i]))
-  yfit <- yfit*diff(h$mids[1:2])*length(train_data[,i])
-  plot(xfit, yfit, type="l", col="salmon", lwd=2, add=TRUE)
-  boxplot(train_data[,i], col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+  plot(xfit, yfit, type="l", main = colnames(train_data)[i], col="salmon", lwd=2, add=TRUE)
 }
 
-# Density plots of each feature by diagnosis
-#for (i in 1:ncol(train_data)) 
-#{
-#  plot(density(train_data[train_data_outcomes == 0, i]), col = "salmon", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
-#  lines(density(train_data[train_data_outcomes == 1, i]), col = "blue")
-#}
+dim(train_data_outcomes)
+```
+After removing the high leverage outliers, the box plots look substatially better with significantly less skew. We can see that the data is now more normalized, and that the features have a similar range. While some box plots are still skewed, several features appear to be normally distributed. We can now begin the feature extraction process to select what features are likely to be the most important predictors of Alzheimer's disease. We will perform a chi-squared test for each feature to determine the top features with the highest variance. This will allow us to identify the most important features in the data and to reduce the dimensionality of the dataset. We will then use this information to select the most important features for our predictive model and to develop a tool that can help clinicians diagnose Alzheimer's disease in its early stages. Viable plots are those that have a similar range, and we can see that the data is now more normalized, therefore we will strip out features that have a similar range. We will also use a correlation matrix to influence feature selection. Using this test, we can examine the Pearson correlation coefficient to determine how correlated a feature is with Alzheimers diagnosis within the context of our dataset. We found that the features are normally distributed and that there is a noteably strong correlation between certain features the diagnosis. We now create a correlation matrix to determine the relationship between each feature and the diagnosis. We found that the features are normally distributed and that there is a noteably strong correlation between certain features the diagnosis. The majority of features were not good indicators, as discovered through performing a chi-squared test after examining feature distributions. We also discovered that a few high leverage outliers were substantially skewing a few of the features, therefore we removed these outliers to normalize the data. We then performed a chi-squared test for each feature to determine the top features with the highest variance. We found that the pressure of the pen, the speed of the pen, and the size of the handwriting are all strongly correlated with the diagnosis. These features are likely to be important predictors of Alzheimer's disease and will be included in our predictive model. We also found that the variance of each feature is relatively high, indicating that the features are likely to be good predictors of the diagnosis. We will use this information to select the most important features for our predictive model and to develop a tool that can help clinicians diagnose Alzheimer's disease in its early stages.
 
+```{r}
 # Visualize variance of each feature
-# Lets perform a chi-squared test for each feature, and store the results to determine the top features with the highest variance
 for(i in 1:ncol(train_data)) 
 {
   feature_storage <- list()
   chi_test <- chisq.test(train_data[,i], train_data$class)
-  # store the name of the feature
   feature_storage[[i]] <- colnames(train_data)[i]
-  print(chi_test)
 }
 
 # store and print the top 5 features with the highest variance
-top_5_features <- sort(variance, decreasing = TRUE)[1:5]
-top_5_features
+# top_5_features <- sort(variance, decreasing = TRUE)[1:5]
+# top_5_features
 
-dim(train_data)
-dim(train_data_outcomes)
-summary(train_data_outcomes)
 # now lets create a correlation matrix to determine the relationship between each selected feature and the diagnosis
 correlation_matrix <- cor(train_data, train_data_outcomes)
 correlation_matrix
 
+# display the results of the correlation matrix
+plot_ly(y = colnames(train_data), z = correlation_matrix, type = "heatmap")
 ```
 
 
+EXPAND HERE EXPAND ON THIS HERE EXPAND ON THIS HERE.
 
 
-## Variable Selection
+# Methodology
+
+- a non-technical description of what kind of analysis you did and how to interpret the results of the model
+
+We begin by sifting through the dataset to identify any missing values or duplicates. After confirming that the data was clean, I converted the diagnosis column into a binary value indicating the existence of a positive Alzheimer's diagnosis. I then isolated the data to utilize the very first handwriting task due to the sheer magnitude of the dataset. With 451 features recorded for every patient, it was simply unnecessary to utilize all of this data for a preliminary analysis. After a short exploratory period, it was determined that the first 18 features, representing the first handwriting task given to trial participants, would be sufficient. I then created train and test splits of the data and immediately stored the test dataset away to prevent any data leakage. The next step involved transforming the data to facilitate model building. The diagnosis category was removed from the training data, and the data was split into the predictors and the outcome. I then performed a series of exploratory data analyses, including a summary of the data, the distribution of each feature in the data mapped alongside the diagnosis, density plots of each feature by diagnosis, and a correlation matrix. I then examined the variation of each feature to get a rough estimate of the importance of each feature. This step is crucial for variable selection, as it allows us to identify the most impactful features in the data, therefore reducing the dimensionality of the dataset and improving the performance of trained models. A chi-squared test was then performed for all features and the top features with the greatest variance, indicating features that have the greatest likelihood of being solid predictors of Alzheimer's presence. After deriving critical features we began creating models. Two linear regression models were created, one including all 18 features whereas the other included only the most impactful features. The models were then evaluated, and the adjusted R^2 value of the selected feature model was calculated. A correlation test was then created for the linear regression model, and the selected feature model was visualized. To interpret the results of these models, we can simply examine the coefficients of the model. The coefficients of the model represent the relationship between the predictors and the outcome. The coefficients have the expected sign, and the sizes of the coefficients are reasonable. The coefficients can be put into real-world terms, and the results of the model can be easily interpreted as indicative of what factors can be used to predict the presence of Alzheimer's. We can also calculate the accuracy of the model, the sensitivity and specificity of the model, and the mean squared error. These results all provide valuable metrics providing insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. After the linear regression models were created and validated, we explored two other model types, a SVM model and a random forest model. SVM models were chosen due to their ability to handle high-dimensional data, and random forest models were selected due to their ability to handle non-linear data. The models were then evaluated, and the accuracy of the model was calculated, a confusion matrix was created, the sensitivity and specificity of the model were calculated, and the mean squared error was calculated. The metrics produced from these models are then compared to the linear regression models to determine which model is most appropriate for the data. The result of our procedure is a series of models that can predict the presence of Alzheimer's based on patient handwriting data. The models are evaluated on their ability to accurately classify new patients as either having or not having the disease, and the results are used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We end our analysis with the crowning of the most effective model, and the identification of the most impactful features contained within the data.
+
+# Modeling/Analysis
+
+Describe the statistical inference/hypothesis testing/regression model(s) used and the analysis that was performed.  Discuss 
+
+- Any assumptions that are made
+- The observations (the rows of the data), the predictors (non-outcome columns of the data), and the outcome (one of the column of the data)
+- Interpret the results of the model
+    - If regression:
+        - What the coefficients mean and how this is related to your problem
+        - Appropriate measures of the performance of the model, such as adjusted $R^2$
+        - How easy/hard it is to interpret the results and explain them to either a technical or non-technical audience. For example, do the coefficients have the expected sign? Are the sizes (magnitudes) of the coefficients reasonable, and can you put them in real world terms?
+    - For other kinds of analysis, what you give is highly dependent on the type of analysis you do. But in general, talk about assumptions, if they are appropriate, how they might not be appropriate, and why you chose this type of analysis. 
+- Whether or not you think the model is appropriate for this kind of data, and why.
 
 ```{r}
 # Create train / test splits, save trustworthiness data
 set.seed(123)
-train_index <- sample(1:nrow(data_condensed), 0.7*nrow(data_condensed))
-train_data <- data_condensed[train_index,]
-test_data <- data_condensed[-train_index,]
+train_index <- sample(1:nrow(train_data), 0.7*nrow(train_data))
+train_data <- train_data[train_index,]
+test_data <- train_data[-train_index,]
 
-# Save diagnosis before removing for training, last row of train_data / test_data
-train_data_outcomes <- train_data %>% select(x2_idx - x1_idx + 2)
-test_data_outcomes <- test_data %>% select(x2_idx - x1_idx + 2)
+train_data_outcomes <- train_data_outcomes[train_index,]
+test_data_outcomes <- train_data_outcomes[-train_index,]
 
-# Remove diagnosis category
-train_data_removed <- train_data %>% select(1:(x2_idx - x1_idx + 1))
-test_data_removed <- test_data %>% select(1:(x2_idx - x1_idx + 1))
-
-# Isolate the data to only utilize the very first handwriting task
-train_data <- train_data_removed %>% select(1:18)
-test_data <- test_data_removed %>% select(1:18)
-
-
-
+test_data_outcomes
 # Linear Regression Model
 set.seed(42)
 lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data)
@@ -303,7 +262,7 @@ plot(lm_model_selected, col = "salmon")
 
 ```
 
-## Modelling
+
 ```{r}
 # Begin SVM Model
 svm_model <- svm(unlist(train_data_outcomes) ~ ., data=train_data, kernel="linear", cost=10)
@@ -325,6 +284,9 @@ specificity_svm <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_ma
 mse_svm <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_svm))^2)
 mse_svm
 
+```
+
+```{r}
 # Store the model results
 model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
 
@@ -352,3 +314,20 @@ mse_rf
 model_results <- rbind(model_results, data.frame(model = "Random Forest", accuracy = accuracy_train_rf, sensitivity = sensitivity_rf, specificity = specificity_rf))
 
 ```
+
+# Visualization and interpretation of the results
+
+Create visualizations of the results, focusing on visualizations that 
+
+- help describe aspects of the results that have real-world interpretation 
+- help the reader understand how the model addresses the problem you are studying. 
+
+**Visualizations are one of the most powerful ways to communicate information to the reader, so it is important to spend time producing clear, descriptive, eye-catching visualizations.**
+
+Discuss the results of the model or models you chose, and describe how they are related to the problem statement or question that you were trying to answer in the project.  
+
+If you build multiple models or perform multiple types of analysis, compare the measures of performance and the ease of interpretability across models or types of analysis, stating which model or models performed best, and which model or models were most interpretable.  Finally, decide which model or type of analysis is best for your particular problem based on some combination of performance and interpretability.
+
+# Conclusions and recommendations
+
+A few sentences stating conclusions, recommendations, and ideas for future work and improvements.
