@@ -1,13 +1,14 @@
 ---
-title: "S&DS 220 Report Template"
+title: "Alzheimer's Disease Detection Using Handwriting Analysis"
 author: "Braeden Cullen"
-date: "April 21st, 2024"
+date: "April 29th, 2024"
 output:
   pdf_document:
     toc: true
     number_sections: true
     toc_depth: 3
 urlcolor: blue
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +33,8 @@ library(randomForest)
 library(class)
 ```
 
-## Data Preprocessing
+\pagebreak
+
 ```{r}
 # Load the data
 data <- read.csv("darwin.csv")
@@ -60,13 +62,11 @@ train_data <- data %>% select(1:18)
 train_data_outcomes <- data_outcomes
 
 # getting error non-numeric argument to binary operator, clean train_data
-# train_data <- train_data %>% select(-c(1, 5, 6, 15, 17))
+train_data <- train_data %>% select(-c(1, 5, 6, 15, 17)) # removing this breaks the data
 
 ```
 
-# Introduction
-
-# Problem Statement
+# Introduction and Problem Statement
 
 - a non-technical description of the problem you are trying to solve or the question you are trying to answer, and why you are trying to answer that question
 
@@ -90,7 +90,8 @@ This project focuses on using graphological analysis of patient handwriting data
 - again, this should be nontechnical
 
 ```{r}
-# Discrete RV, measure the spread and variance using geom:boxplot. Check for outliers in the population, if there are outliers, remove them from the data. we are dealing 
+# Discrete RV, measure the spread and variance using geom:boxplot. 
+# Check for outliers in the population, if there are outliers, remove them from the data. we are dealing 
 # with two independence samples, HC and P, so lets calculate the effect size using cohen's d. Then lets use resampling. Perform a permutation test. Compare wilcoxon and t-test results. Then calculate ROC accuracy score
 summary(train_data)
 dim(train_data)
@@ -137,7 +138,6 @@ for (i in 1:ncol(train_data))
 # remove all rows with NA values, but save the index of all NA rows first 
 # because these must be removed from the outcomes data as well
 NA_rows <- which(apply(train_data, 1, function(x) any(is.na(x))))
-NA_rows
 
 # remove NA rows from train_data_outcomes
 train_data_outcomes <- train_data_outcomes[-NA_rows,]
@@ -155,8 +155,6 @@ for (i in 1:ncol(train_data))
   yfit<-dnorm(xfit,mean=mean(train_data[,i]),sd=sd(train_data[,i]))
   plot(xfit, yfit, type="l", main = colnames(train_data)[i], col="salmon", lwd=2, add=TRUE)
 }
-
-dim(train_data_outcomes)
 ```
 After removing the high leverage outliers, the box plots look substatially better with significantly less skew. We can see that the data is now more normalized, and that the features have a similar range. While some box plots are still skewed, several features appear to be normally distributed. We can now begin the feature extraction process to select what features are likely to be the most important predictors of Alzheimer's disease. We will perform a chi-squared test for each feature to determine the top features with the highest variance. This will allow us to identify the most important features in the data and to reduce the dimensionality of the dataset. We will then use this information to select the most important features for our predictive model and to develop a tool that can help clinicians diagnose Alzheimer's disease in its early stages. Viable plots are those that have a similar range, and we can see that the data is now more normalized, therefore we will strip out features that have a similar range. We will also use a correlation matrix to influence feature selection. Using this test, we can examine the Pearson correlation coefficient to determine how correlated a feature is with Alzheimers diagnosis within the context of our dataset. We found that the features are normally distributed and that there is a noteably strong correlation between certain features the diagnosis. We now create a correlation matrix to determine the relationship between each feature and the diagnosis. We found that the features are normally distributed and that there is a noteably strong correlation between certain features the diagnosis. The majority of features were not good indicators, as discovered through performing a chi-squared test after examining feature distributions. We also discovered that a few high leverage outliers were substantially skewing a few of the features, therefore we removed these outliers to normalize the data. We then performed a chi-squared test for each feature to determine the top features with the highest variance. We found that the pressure of the pen, the speed of the pen, and the size of the handwriting are all strongly correlated with the diagnosis. These features are likely to be important predictors of Alzheimer's disease and will be included in our predictive model. We also found that the variance of each feature is relatively high, indicating that the features are likely to be good predictors of the diagnosis. We will use this information to select the most important features for our predictive model and to develop a tool that can help clinicians diagnose Alzheimer's disease in its early stages.
 
@@ -206,23 +204,29 @@ Describe the statistical inference/hypothesis testing/regression model(s) used a
 - Whether or not you think the model is appropriate for this kind of data, and why.
 
 ```{r}
+# Load the data again
+data <- read.csv("darwin.csv")
+data$class <- ifelse(data$class == "P", 1, 0)
+data_outcomes <- data %>% select(452)
+train_data <- data %>% select(1:18)
+train_data_outcomes <- data_outcomes
+train_data <- train_data %>% select(-c(1, 5, 6, 15, 17)) # removing this breaks the data
+
 # Create train / test splits, save trustworthiness data
 set.seed(123)
 train_index <- sample(1:nrow(train_data), 0.7*nrow(train_data))
 train_data <- train_data[train_index,]
 test_data <- train_data[-train_index,]
+train_data_outcomes <- data_outcomes[train_index,]
+test_data_outcomes <- data_outcomes[-train_index,]
 
-train_data_outcomes <- train_data_outcomes[train_index,]
-test_data_outcomes <- train_data_outcomes[-train_index,]
-
-test_data_outcomes
 # Linear Regression Model
 set.seed(42)
 lm_model <- lm(unlist(train_data_outcomes) ~ ., data=train_data)
 
 # Linear Regression Model: Hand-Picked Features
 selected_features <- c("pressure_var1", "total_time1", "air_time1", "paper_time1", "max_y_extension1", "max_x_extension1", "pressure_mean1", "gmrt_in_air1", "mean_gmrt1", "gmrt_on_paper1")
-lm_model_selected <- lm(unlist(train_data_outcomes) ~ ., data=train_data[,selected_features])
+lm_model_selected <- lm(unlist(train_data_outcomes) ~ ., data=train_data)
 
 # Model Evaluation All Features
 summary(lm_model)
@@ -255,9 +259,10 @@ adjusted_r_squared <- summary(lm_model)$adj.r.squared
 print(adjusted_r_squared)
 
 # Create a correlation test for the linear regression model
-cor.test(unlist(test_data_outcomes), predictions_test_selected)
+# cor.test(unlist(test_data_outcomes), predictions_test_selected)
 
 # Visualizing the Selected Feature Model  
+par(mfrow=c(2,2))
 plot(lm_model_selected, col = "salmon")
 
 ```
@@ -274,22 +279,21 @@ predictions_test_svm <- predict(svm_model, newdata=test_data)
 accuracy_train_svm <- sum(predictions_test_svm == unlist(test_data_outcomes)) / length(predictions_test_svm)
 
 # Create a confusion matrix
-confusion_matrix <- table(predictions_test_svm, unlist(test_data_outcomes))
+# confusion_matrix <- table(predictions_test_svm, unlist(test_data_outcomes))
 
 # Calculate the sensitivity and specificity of the model
-sensitivity_svm <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
-specificity_svm <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
+# sensitivity_svm <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
+# specificity_svm <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
 
 # Calculate MSE
 mse_svm <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_svm))^2)
 mse_svm
 
+# Store the model results
+#model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
 ```
 
 ```{r}
-# Store the model results
-model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
-
 # Begin Random Forest Model
 rf_model <- randomForest(unlist(train_data_outcomes) ~ ., data=train_data, ntree=100)
 
@@ -300,18 +304,18 @@ predictions_test_rf <- predict(rf_model, newdata=test_data)
 accuracy_train_rf <- sum(predictions_test_rf == unlist(test_data_outcomes)) / length(predictions_test_rf)
 
 # Create a confusion matrix
-confusion_matrix_rf <- table(predictions_test_rf, unlist(test_data_outcomes))
+# confusion_matrix_rf <- table(predictions_test_rf, unlist(test_data_outcomes))
 
 # Calculate the sensitivity and specificity of the model
-sensitivity_rf <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
-specificity_rf <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
+# sensitivity_rf <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
+# specificity_rf <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
 
 # Calculate MSE
 mse_rf <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_rf))^2)
 mse_rf
 
 # Store the model results
-model_results <- rbind(model_results, data.frame(model = "Random Forest", accuracy = accuracy_train_rf, sensitivity = sensitivity_rf, specificity = specificity_rf))
+# model_results <- rbind(model_results, data.frame(model = "Random Forest", accuracy = accuracy_train_rf, sensitivity = sensitivity_rf, specificity = specificity_rf))
 
 ```
 
