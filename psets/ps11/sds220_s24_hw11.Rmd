@@ -29,28 +29,26 @@ library(ggfortify)
 Consider a *paired* random sample $(X_1, Y_1), \ldots, (X_n, Y_n)$ where the $X_i \sim \mathcal{N}(\mu_x, \sigma_x)$ and $Y_i \sim \mathcal{N}(\mu_y, \sigma_y)$. We wish to test $H_0: \mu_x = \mu_y$ versus the alternative $H_a: \mu_x \ne \mu_y$. For a given significance level $\alpha$, which test has more power: a two-sample $t$-test or a paired $t$-test? Experiment using `power.t.test`. Plot a power curve for each.
 
 ```{r}
+diff_in_means <- seq(-2, 2, by = 0.01)
 
-d <- seq(-2, 2, by = 0.01)
+paired <- rep(NA_real_, length(diff_in_means))
+two_sample <- rep(NA_real_, length(diff_in_means))
 
-paired <- rep(NA_real_, length(d))
-two_sample <- rep(NA_real_, length(d))
-
-for(i in 1:length(d)) {
-  paired[i] <- power.t.test(n = 10, delta = d[i], sd = 1, sig.level = 0.05, type = "paired")$power
-  two_sample[i] <- power.t.test(n = 10, delta = d[i], sd = 1, sig.level = 0.05, type = "two.sample")$power
+for(i in 1:length(diff_in_means)) {
+  paired[i] <- power.t.test(n = 10, delta = diff_in_means[i], sd = 1, sig.level = 0.05, type = "paired")$power
+  two_sample[i] <- power.t.test(n = 10, delta = diff_in_means[i], sd = 1, sig.level = 0.05, type = "two.sample")$power
 }
 
-plot(d, paired, type = "l", col = "blue", xlab = "Difference in means", ylab = "Power", main = "Power curves for paired and two-sample t-tests")
+plot(diff_in_means, paired, type = "l", col = "blue", xlab = "Delta", ylab = "Probability of Rejecting the Null", main = "Power curves for paired and two-sample t-tests")
 
-lines(d, two_sample, col = "red")
+lines(diff_in_means, two_sample, col = "red")
 
 legend("topright", legend = c("Paired", "Two-sample"), col = c("blue", "red"), lty = 1)
 
 ```
 
 If we examine the graphs, we can clearly see that a paired t-test has more power. 
-How can we tell? Simply examine the graph of power vs difference in means, and notice that the blue line (paired t-test) is consistently higher than the red line (two-sample t-test). 
-This means that the paired t-test has more power.
+How can we tell? Simply examine the graph of power vs delta (aka difference in means), and notice that the blue line (paired t-test) is always higher than the red line (two-sample t-test). Therefore, the paired t-test has more power.
 
 \newpage
 
@@ -60,10 +58,10 @@ For each of the following four plots, indicate whether the sample correlation co
 
 *Solution.*
 
-PLOT A: STRONGLY negative, 
-PLOT B: WEAK, 
-PLOT C: STRONGLY positive, 
-PLOT D: STRONGLY negative
+1. PLOT A: STRONGLY negative, 
+2. PLOT B: WEAK, 
+3. PLOT C: STRONGLY positive, 
+4. PLOT D: STRONGLY negative
 
 \newpage
 
@@ -74,6 +72,7 @@ Suppose you have 100 data points, and $\overline{x} = 3$, $s_x = 1$, $\overline{
 *Solution.*
 
 b1 = r * (s_y / s_x) = 0.7 * (2 / 1) = 1.4
+
 b2 = $\overline{y}$ - b1 * $\overline{x}$ = 2 - 1.4 * 3 = -2.2
 
 Equation of the line = y = 1.4x - 2.2
@@ -87,14 +86,14 @@ For each of the following eight residual plots, indicate whether the residual pl
 
 *Solution.*
 
-PLOT 1: not satisfied indicated by clear U-shape in the plot, 
-PLOT 2: not satisfied indicated by positive trend sloping upwards, 
-PLOT 3: satisfied, 
-PLOT 4: not satisfied, due to the influence of significant outliers, 
-PLOT 5: not statisfied indicated by skewed residuals,
-PLOT 6: satisfied, 
-PLOT 7: not satisfied indicated by negative trend, 
-PLOT 8: satisfied
+1. PLOT 1: not satisfied indicated by clear U-shape in the plot, 
+2. PLOT 2: not satisfied indicated by positive trend sloping upwards, 
+3. PLOT 3: satisfied, 
+4. PLOT 4: not satisfied, due to the influence of significant outliers, 
+5. PLOT 5: not statisfied indicated by skewed residuals,
+6. PLOT 6: satisfied, 
+7. PLOT 7: not satisfied indicated by negative trend, 
+8. PLOT 8: satisfied
 
 \newpage
 
@@ -119,7 +118,7 @@ summary(model)
 autoplot(model)
 ```
 
-After examining the residuals of this model, we can see that there are outliers and a high leverage point w/ a large residual. Notice that the assumptions of linear regression are not met.
+After examining the residuals of this model, we can see that there are outliers and a high leverage point w/ a large residual. These outliers contribute to the largest residual and have a disproportionate effect on the slope of the line. The assumptions of linear regression are not met.
 
 
 
@@ -156,7 +155,8 @@ Consider the `cern` data set in the `fosdata` package. Create a linear model of 
 
 We can simply reuse the log-log model from the previous question. The residuals, from the previous question in parts b and c, look solid. 95% confidence intervals for the slope and intercept are as follows:
 ```{r}
-confint(model2)
+# 95% confidence intervals
+confint(model2, level = 0.95)
 
 ```
 
