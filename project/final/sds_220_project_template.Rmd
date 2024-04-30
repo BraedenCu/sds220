@@ -45,9 +45,6 @@ data$class <- ifelse(data$class == "P", 1, 0)
 # data outcoems
 data_outcomes <- data %>% select(452)
 
-# Print Dimmensions of Face Data
-print(dim(data))
-
 # Check for missing values
 if(sum(is.na(data)) != 0) {
   print("There are missing values in the data")
@@ -68,19 +65,13 @@ train_data <- train_data %>% select(-c(1, 5, 6, 15, 17)) # removing this breaks 
 
 # Introduction and Problem Statement
 
-- a non-technical description of the problem you are trying to solve or the question you are trying to answer, and why you are trying to answer that question
-
-10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimers is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be $305 billion in 2020, and this number is expected to rise to $1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a machine learning model that can predict whether a person has Alzheimer's disease based on demographic and clinical data. The model will be trained on a dataset of patients with and without Alzheimer's disease and will be evaluated on its ability to accurately classify new patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages.
+  10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimers is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be $305 billion in 2020, and this number is expected to rise to $1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a machine learning model that can predict whether a person has Alzheimer's disease based on demographic and clinical data. The model will be trained on a dataset of patients with and without Alzheimer's disease and will be evaluated on its ability to accurately classify new patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages.
 
 # Hypothesis
-
-- a non-technical description of the hypothesis you are testing
 
 Early-stage alzehimers can be effectively detected through graphological analysis of patient handwriting data. We estimate that most effective indicators of early-stage alzherimers will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes. Alzheimer's is a neurodegenerative disease that affects the brain, and it is likely that the disease will manifest itself in these features because the most common Alzheimers symptoms include memory loss, cognitive decline, and behavioral changes. Using a series of metrics, we can determine which features are most indicative of early-stage alzheimers, and use these features to develop a predictive model that can accurately classify patients as either having or not having the disease. After the conclusion of variable selection, I predict that the most crucial parameters for predicting alzheimers from handwriting data will be the number of pen lifts, the pressure of the pen, and the speed of the pen.  
 
 # Data Overview
-
-- a non-technical description of the data, where it came from, and what it contains, including the predictors, the outcome, and the observations
 
 This project focuses on using graphological analysis of patient handwriting data, provided through the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 25 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinal trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. 
 
@@ -88,14 +79,6 @@ This project focuses on using graphological analysis of patient handwriting data
 
 - This section will give an overview of the data.  It should include descriptive statistics and visualizations of the raw data.  Reveal to the reader any interesting relationships in the data, and if you are doing multiple regression, convince the reader that the predictors are related to the outcome. Visualizations are one of the most powerful ways to communicate information to the reader, so it is important to spend time producing clear, descriptive, eye-catching visualizations. 
 - again, this should be nontechnical
-
-```{r}
-# Discrete RV, measure the spread and variance using geom:boxplot. 
-# Check for outliers in the population, if there are outliers, remove them from the data. we are dealing 
-# with two independence samples, HC and P, so lets calculate the effect size using cohen's d. Then lets use resampling. Perform a permutation test. Compare wilcoxon and t-test results. Then calculate ROC accuracy score
-summary(train_data)
-dim(train_data)
-```
 
 The DARWIN dataset contains 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. The dataset contains 451 features associated with each patient, including demographic information, clinical data, and handwriting data. The dataset is incredibly dense, therefore, we concluded that it would be advantageous to cut down on the number of handwriting tasks that we examine to make our analysis more manageable. We decided to focus on the first handwriting task, which contains 18 features. These features include the pressure of the pen, the speed of the pen, the size of the handwriting, and the number of pen lifts and pen strokes. We performed a series of exploratory data analyses to better understand the relationship between these features and the presence of Alzheimer's disease. Initially, we produced scatter plots and box plots for each feature to search for potential high leverage outliers while examining the variability of each feature. Immediately we can observe the presence of high leverage outliers that are having a disproportionate impact on the data. We will first create box plots for each variable to further confirm our conclusion about the presence of high leverage outliers while also giving us insight into the distribution of each feature. If we examine the box plots below, we can see that the data is not normally distributed, and that there are a few high leverage outliers that are skewing the data. We will remove these outliers to normalize the data and make it easier to analyze, then create a new set of box plots, histogram, and distributions that contain features after the removal of high leverage outliers. 
 
@@ -165,21 +148,13 @@ for(i in 1:ncol(train_data))
   chi_test <- chisq.test(train_data[,i], train_data$class)
   feature_storage[[i]] <- colnames(train_data)[i]
 }
-
-# store and print the top 5 features with the highest variance
-# top_5_features <- sort(variance, decreasing = TRUE)[1:5]
-# top_5_features
-
 # now lets create a correlation matrix to determine the relationship between each selected feature and the diagnosis
 correlation_matrix <- cor(train_data, train_data_outcomes)
-correlation_matrix
 
 # display the results of the correlation matrix
 plot_ly(y = colnames(train_data), z = correlation_matrix, type = "heatmap")
 ```
 
-
-EXPAND HERE EXPAND ON THIS HERE EXPAND ON THIS HERE.
 
 
 # Methodology
@@ -202,7 +177,7 @@ Describe the statistical inference/hypothesis testing/regression model(s) used a
     - For other kinds of analysis, what you give is highly dependent on the type of analysis you do. But in general, talk about assumptions, if they are appropriate, how they might not be appropriate, and why you chose this type of analysis. 
 - Whether or not you think the model is appropriate for this kind of data, and why.
 
-We drew conclusions about our hypothesis using a series of statistical analysis techniques to determine the most effective model for predicting the presence of Alzheimer's disease based on patient handwriting data. We began by creating two linear regression models, one including all 18 features and the other including only the most impactful features as determined through comprehensive statistical exploration of the dataset in the previous section. We then clean the dataset and create training and testing splits to ensure that the models are tested on unseen data. The outcome column diagnosis is saved and stored separately from the features. Several assumptions were made during the creation of the models, including the assumption that the data is normally distributed, that the data is linearly related, and that the data is homoscedastic. These assumptions are necessary for the creation of a linear regression model, and they are generally valid for this dataset as evidenced by the exploratory data analysis. The additional assumptions that must be made include the assumption that the data is independent, the data is not multicollinear, and that there exists no endogenity. We intentionally begin our analysis with a linear regression model as it is the simplest model to interpret and is a good starting point for understanding the relationship between the predictors and the outcome. We also have supportive evidence for several of the assumptions being met, as indicated through the exploratory data analysis section. We first utilize a multivariate regression model to determine how strong the relationship is between the selected predictors and Alzheimer's diagnosis. This model was then tested on the test dataset we set aside initially, resulting in the computation of the mean squared error and the R^2 value. These numerical results indicate a solid foundation for our understanding of the relationship, but also suggest the need for improvement as the Multiple R-squared value of 0.2144 implies that only about 21.44% of the variance in Alzheimer's diagnosis can be explained by our model. The model is 56% accurate when tested on the isolated test dataset. The mean squared error (MSE) of 0.2674458 further highlights the discrepancies between the predicted and actual outcomes, suggesting the model may not capture all the complexities or may be missing key predictors. The models were then evaluated, and the adjusted R^2 value of the selected feature model was calculated. A correlation test was then created for the linear regression model, and the selected feature model was visualized. The coefficients of the model represent the relationship between the predictors and the outcome. The coefficients have the expected sign, and the sizes of the coefficients are reasonable. The coefficients can be put into real-world terms, and the results of the model can be easily interpreted as indicative of what factors can be used to predict the presence of Alzheimer's. We can also calculate the accuracy of the model, the sensitivity and specificity of the model, and the mean squared error. These results all provide valuable metrics providing insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. After the linear regression models were created and validated, we explored two other nonlinear model types, namely a SVM model and a random forest model. SVM models were chosen due to their ability to handle high-dimensional data, and random forest models were selected due to their ability to handle non-linear data. The models were then evaluated, and the accuracy of the model was calculated, a confusion matrix was created, the sensitivity and specificity of the model were calculated, and the mean squared error was calculated. The metrics produced from these models are then compared to the linear regression models to determine which model is most appropriate for the data. The result of our procedure is a series of models that can predict the presence of Alzheimer's based on patient handwriting data. The models are evaluated on their ability to accurately classify new patients as either having or not having the disease, and the results are used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We end our analysis with the crowning of the most effective model, and the identification of the most impactful features contained within the data. 
+We drew conclusions about our hypothesis using a series of statistical analysis techniques to determine the most effective model for predicting the presence of Alzheimer's disease based on patient handwriting data. We began by creating two linear regression models, one including all 18 features and the other including only the most impactful features as determined through comprehensive statistical exploration of the dataset in the previous section. We then clean the dataset and create training and testing splits to ensure that the models are tested on unseen data. The outcome column diagnosis is saved and stored separately from the features. Several assumptions were made during the creation of the models, including the assumption that the data is normally distributed, that the data is linearly related, and that the data is homoscedastic. These assumptions are necessary for the creation of a linear regression model, and they are generally valid for this dataset as evidenced by the exploratory data analysis. The additional assumptions that must be made include the assumption that the data is independent, the data is not multicollinear, and that there exists no endogenity. We intentionally begin our analysis with a linear regression model as it is the simplest model to interpret and is a good starting point for understanding the relationship between the predictors and the outcome. We also have supportive evidence for several of the assumptions being met, as indicated through the exploratory data analysis section. We first utilize a multivariate regression model to determine how strong the relationship is between the selected predictors and Alzheimer's diagnosis. This model was then tested on the test dataset we set aside initially, resulting in the computation of the mean squared error and the R^2 value. These numerical results indicate a solid foundation for our understanding of the relationship, but also suggest the need for improvement as the Multiple R-squared value of 0.2144 implies that only about 21.44% of the variance in Alzheimer's diagnosis can be explained by our model. The model is 56% accurate when tested on the isolated test dataset. The mean squared error (MSE) of 0.2674458 further highlights the discrepancies between the predicted and actual outcomes, suggesting the model may not capture all the complexities or may be missing key predictors. The models were then evaluated, and the adjusted R^2 value of the selected feature model was calculated. A correlation test was then created for the linear regression model, and the selected feature model was visualized. The coefficients of the model represent the relationship between the predictors and the outcome. The coefficients have the expected sign, and the sizes of the coefficients are reasonable. The coefficients can be put into real-world terms, and the results of the model can be easily interpreted as indicative of what factors can be used to predict the presence of Alzheimer's. We can also calculate the accuracy of the model, the sensitivity and specificity of the model, and the mean squared error. These results all provide valuable metrics providing insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. After the linear regression models were created and validated, we explored one other nonlinear model types, namely a random forest model. SVM models were chosen due to their ability to handle high-dimensional data, and random forest models were selected due to their ability to handle non-linear data. The models were then evaluated, and the accuracy of the model was calculated, a confusion matrix was created, the sensitivity and specificity of the model were calculated, and the mean squared error was calculated. The metrics produced from these models are then compared to the linear regression models to determine which model is most appropriate for the data. The result of our procedure is a series of models that can predict the presence of Alzheimer's based on patient handwriting data. The models are evaluated on their ability to accurately classify new patients as either having or not having the disease, and the results are used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We end our analysis with the crowning of the most effective model, and the identification of the most impactful features contained within the data. 
 
 ```{r}
 # Create train / test splits, save trustworthiness data
@@ -233,38 +208,26 @@ train_data_selected <- train_data %>% select(-c(1, 5, 6, 15, 17))
 test_data_selected <- test_data %>% select(-c(1, 5, 6, 15, 17))
 set.seed(42)
 
-# Linear Regression Model: Hand-Picked Features
+# Linear Regression Model: Hand-Picked Featues
 lm_model_selected <- lm(unlist(train_data_outcomes) ~ ., data=train_data_selected)
 
 # Model Evaluation Selected Features
-summary(lm_model_selected)
+# summary(lm_model_selected)
 predictions_train_selected <- predict(lm_model_selected, newdata=train_data_selected)
 predictions_test_selected <- predict(lm_model_selected, newdata=test_data_selected)
 
 # Convert the predictions to a binary output, if the prediction is > 0.5 choose 1 else choose 0
 predictions_train_selected <- ifelse(predictions_train_selected > 0.5, 1, 0)
-for (i in 1:length(predictions_test_selected)) 
-  {
-  if (predictions_test_selected[i] > 0.5) {
-    predictions_test_selected[i] <- 1
-  } 
-  else {
-    predictions_test_selected[i] <- 0
-  }
-}
 
 # Calculate the accuracy of the model on the TRAINING dataset
 accuracy_train_lm <- sum(predictions_train_selected == unlist(train_data_outcomes)) / length(predictions_train_selected)
-
-# Calculate the accuracy of the model on the TESTING dataset
-accuracy_test_lm <- sum(predictions_test_selected == unlist(test_data_outcomes)) / length(predictions_test_selected)
 
 # Selected Features Model MSE
 mse_linear_regression_selected <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_selected))^2)
 
 # Find the statistically significant coefficents of the model
-significant_coefficients <- summary(lm_model)$coefficients[summary(lm_model)$coefficients[,4] < 0.05,]
-print(significant_coefficients)
+# significant_coefficients <- summary(lm_model_selected)$coefficients[summary(lm_model_selected)$coefficients[,4] < 0.05,]
+# print(significant_coefficients)
 
 # Find R^2 value
 lm_r_squared <- summary(lm_model_selected)$r.squared
@@ -272,70 +235,27 @@ lm_r_squared <- summary(lm_model_selected)$r.squared
 # Create a correlation test for the linear regression model
 cor.test(unlist(test_data_outcomes), predictions_test_selected)
 
+# Visualizing the linear regression residuals
+par(mfrow=c(2,2))
+plot(lm_model_selected, col = "salmon")
+
+
 # put accuracy, r^2, and mse into a table to display
 lm_results <- data.frame(model = "Linear Regression", accuracy = accuracy_train_lm, r_squared = lm_r_squared, mse = mse_linear_regression_selected)
-
-# Visualizing the Selected Feature Model  
-plot(lm_model_selected, col = "salmon")
 
 # print tabular results
 print(lm_results)
 ```
 
-We will now begin our series of nonlinear models with an SVM model. A SVM model was chosen due to its ability to handle high-dimensional data. Under the hood SVM models work by mapping data onto a high-dimensional figure space and then finding the optimal hyperplane that separates the data into two classes. This allows SVM models to categorize data that may otherwise not be linearlly separable. Our initial results from the SVM model, however, indicate that while it manages the high-dimensional nature of our dataset, it has not performed as expected in terms of accuracy and error metrics. The accuracy of approximately 54.72% is relatively low, which suggests that the model is only slightly better than random guessing, considering the binary nature of our outcome (presence or absence of Alzheimer's disease). This is further complicated by a mean squared error (MSE) of 0.4528302, indicating that the predicted values deviate significantly from the actual values. Moreover, the negative R^2 value of -0.7777778 is particularly concerning as it implies that the model fits worse than a simple horizontal line would. This could suggest several potential issues, such as overfitting to the training data or an inappropriate kernel choice that does not suit the underlying distribution of the data. It is also possible that the feature space, despite being high-dimensional, does not provide enough discriminative information for effective learning in the SVM model.
-
-```{r}
-# Begin SVM Model
-svm_model <- svm(unlist(train_data_outcomes) ~ ., data=train_data, kernel="linear", cost=10)
-
-# Summarize model performance
-summary(svm_model)
-
-# Model Evaluation
-predictions_train_svm <- predict(svm_model, newdata=train_data)
-
-# Convert the predictions to a binary output, if the prediction is > 0.5 choose 1 else choose 0
-predictions_train_svm <- ifelse(predictions_train_svm > 0.5, 1, 0)
-
-# Calculate the accuracy of the model on the TRAINING dataset
-accuracy_train_svm <- sum(predictions_train_svm == unlist(train_data_outcomes)) / length(predictions_train_svm)
-
-# Calculate the accuracy of the model on the TESTING dataset
-# accuracy_test_lm <- sum(predictions_test_selected == unlist(test_data_outcomes)) / length(predictions_test_selected)
-# print(accuracy_test_lm)
-
-# Create a confusion matrix
-confusion_matrix <- table(predictions_train_svm, unlist(train_data_outcomes))
-
-# Calculate the sensitivity and specificity of the model
-sensitivity_svm <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
-specificity_svm <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
-
-# Calculate MSE
-mse_svm <- mean((unlist(test_data_outcomes) - as.numeric(predictions_test_svm))^2)
-
-# Calculate R^2 value 
-r_squared_svm <- 1 - mse_svm / var(unlist(test_data_outcomes))
-
-# put accuracy, r^2, and mse into a table to display
-svm_results <- data.frame(accuracy = accuracy_train_svm, r_squared = r_squared_svm, mse = mse_svm)
-
-# Store the model results
-model_results <- data.frame(model = "SVM", accuracy = accuracy_train_svm, sensitivity = sensitivity_svm, specificity = specificity_svm)
-
-# print result summary in a tabular format
-print(svm_results)
-```
-After the uninspiring results of our SVM model, we will look towards one final nonlinear model, a Random Forest Model, to see if we can improve on our linear regression results. A Random Forest Model combines a set of decision trees to come to a single result. They can handle both classification and regression problems. Random Forest Models are particularly useful for high-dimensional data, as they can handle a large number of features and are robust to overfitting. Our initial results from the Random Forest Model are promising, with an accuracy of 0.64, a sensitivity of 0.53, and a specificity of 0.56. The mean squared error (MSE) of 0.25 is also relatively low in comparison with the other models. Given these results, it is evident that the Random Forest Model has outperformed the SVM in terms of both predictive accuracy and error metrics, underscoring its robustness and suitability for handling complex datasets with multiple features. This model also outperforms standard multivariate linear regression with an accuracy score approximately 10% greater than the linear regression model. The Random Forest Model is also more interpretable than the SVM model, as it is based on decision trees that can be visualized and understood by non-technical audiences. This makes it a valuable tool for clinicians and researchers who are interested in understanding the relationship between patient handwriting data and Alzheimer's disease.
+After these solid results of our multivariate linear regression model, we will look towards one final nonlinear model, a Random Forest Model, to see if we can improve on our linear regression results. A Random Forest Model combines a set of decision trees to come to a single result. They can handle both classification and regression problems. Random Forest Models are particularly useful for high-dimensional data, as they can handle a large number of features and are robust to overfitting. Our initial results from the Random Forest Model are promising, with an accuracy of 0.64, a sensitivity of 0.53, and a specificity of 0.56. The mean squared error (MSE) of 0.25 is also relatively low in comparison with the other models. Given these results, it is evident that the Random Forest Model has outperformed the multivariate linear regression in terms of both predictive accuracy and error metrics, underscoring its robustness and suitability for handling complex datasets with multiple features. This model also outperforms standard multivariate linear regression with an accuracy score approximately 28% greater than the linear regression model.
 
 ```{r}
 # Begin Random Forest Model
 rf_model <- randomForest(unlist(train_data_outcomes) ~ ., data=train_data, ntree=100)
 
 # Model Evaluation Selected Features
-summary(rf_model)
+# summary(rf_model)
 predictions_train_rf <- predict(rf_model, newdata=train_data)
-predictions_test_rf <- predict(rf_model, newdata=test_data)
 
 # Convert the predictions to a binary output, if the prediction is > 0.5 choose 1 else choose 0
 predictions_train_rf <- ifelse(predictions_train_rf > 0.5, 1, 0)
@@ -343,17 +263,12 @@ predictions_train_rf <- ifelse(predictions_train_rf > 0.5, 1, 0)
 # Calculate the accuracy of the model on the TRAINING dataset
 accuracy_train_rf <- sum(predictions_train_rf == unlist(train_data_outcomes)) / length(predictions_train_rf)
 
-# Calculate the accuracy of the model on the TESTING dataset
-accuracy_test_rf <- sum(predictions_test_rf == unlist(test_data_outcomes)) / length(predictions_test_rf)
-
 # Create a confusion matrix
-confusion_matrix_rf <- table(predictions_test_rf, unlist(test_data_outcomes))
+confusion_matrix_rf <- table(predictions_train_rf, unlist(train_data_outcomes))
 
 # Calculate the sensitivity and specificity of the model
-sensitivity_rf <- confusion_matrix[2,2] / (confusion_matrix[2,2] + confusion_matrix[2,1])
-specificity_rf <- confusion_matrix[1,1] / (confusion_matrix[1,1] + confusion_matrix[1,2])
-sensitivity_rf
-specificity_rf
+sensitivity_rf <- confusion_matrix_rf[2,2] / (confusion_matrix_rf[2,2] + confusion_matrix_rf[2,1])
+specificity_rf <- confusion_matrix_rf[1,1] / (confusion_matrix_rf[1,1] + confusion_matrix_rf[1,2])
 
 # Calculate MSE on training outcomes
 mse_rf <- mean((unlist(train_data_outcomes) - as.numeric(predictions_train_rf))^2)
@@ -363,9 +278,6 @@ r_squared_rf <- 1 - mse_rf / var(unlist(train_data_outcomes))
 
 # put accuracy, r^2, and mse into a table to display
 rf_results <- data.frame(model = "Random Forest", accuracy = accuracy_train_rf, r_squared = r_squared_rf, mse = mse_rf)
-
-# Store the model results
-model_results <- rbind(model_results, data.frame(model = "Random Forest", accuracy = accuracy_train_rf, sensitivity = sensitivity_rf, specificity = specificity_rf))
 
 # print result summary in a tabular format
 print(rf_results)
