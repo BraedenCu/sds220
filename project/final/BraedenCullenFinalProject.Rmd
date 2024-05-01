@@ -1,5 +1,5 @@
 ---
-title: "Alzheimer's Detection Using Handwriting Analysis"
+title: "Alzheimer's Classification Using Patient Handwriting"
 author: "Braeden Cullen"
 date: "April 29th, 2024"
 output:
@@ -10,6 +10,10 @@ output:
   word_document:
     toc: true
     toc_depth: '3'
+  html_document:
+    toc: true
+    toc_depth: '3'
+    df_print: paged
 urlcolor: blue
 always_allow_html: true
 ---
@@ -44,11 +48,11 @@ library(pdp)
 
 # Introduction and Problem Statement
 
-10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimer's is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be 305 billion in 2020, and this number is expected to rise to 1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a model that can predict whether a person has Alzheimer's disease based on features extracted from handwriting tasks. The model will be trained on a dataset containing patients with Alzheimer's disease and healthy controls. This model will be evaluated on its ability to accurately classify unseen patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages.We hypothesize that early-stage Alzheimer's can be effectively detected through graphological analysis of patient handwriting data. We estimate that most effective indicators of early-stage Alzheimer's will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes.  
+10% of all people over the age of 65 have Alzheimer's disease, and as many as 50% of people over 85 have it. The number of people with the disease doubles every 5 years beyond age 65. Alzheimer's is a progressive neurodegenerative disease that affects millions of people worldwide. It is the most common cause of dementia and is characterized by memory loss, cognitive decline, and behavioral changes. The disease is currently incurable, but early detection can help slow its progression and improve the quality of life for affected individuals. Someone in the United States develops Alzheimer's disease every 65 seconds, and it is the sixth leading cause of death in the country. The cost of caring for people with Alzheimer's and other dementias is estimated to be 305 billion in 2020, and this number is expected to rise to 1.1 trillion by 2050. The disease is a major public health concern, and there is an urgent need for effective diagnostic tools and treatments. Early stage Alzheimer's detection, in particular, is crucial for developing interventions that can slow or stop the progression of the disease. The goal of this project is to develop a model that can predict whether a person has Alzheimer's disease based on features extracted from handwriting tasks. The model will be trained on a dataset containing patients with Alzheimer's disease and healthy controls. This model will be evaluated on its ability to accurately classify unseen patients as either having or not having the disease. The model will be used to identify risk factors for Alzheimer's disease and to develop a predictive tool that can help clinicians diagnose the disease in its early stages. We hypothesize that early-onset= Alzheimer's can be effectively detected through graphological analysis of patient handwriting data. We estimate that most effective indicators of early-stage Alzheimer's will likely be related to the size, shape, and speed of the handwriting, as well as the number of pen lifts and pen strokes.  
 
 # Data Overview and Visualization
 
-This project focuses on a graphological analysis of patient handwriting data using the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 25 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinal trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. For our purposes, we will utilize only the first handwriting task to reduce the density of the dataset. Let us first examine boxplots of all features contained within the first handwriting task to get a feel for the median and spread of the DARWIN dataset.
+This project focuses on a graphological analysis of patient handwriting data using the DARWIN (Diagnosis AlzheimeR WIth haNdwriting) dataset. DARWIN was created by the University of Bari, Italy, and the University of Salerno, Italy, and is available on the UCI Machine Learning Repository. The dataset was collected from patients at the Neurological Institute for Diagnosis and Care "Hermitage Capodimonte" in Naples. Data was collected according to an acquisition protocol that included 18 distinct tasks. These tasks included graphic tasks, copy tasks, memory tasks, and dictation tasks. The dataset contains data from 174 patients, including 89 patients with Alzheimer's disease and 85 healthy controls. Patients were recruited using standard clinical trial procedures, specifically through the use of Mini-Mental State Examination (MMSE), Frontal Assessment Battery (FAB), and Montreal Cognitive Assessment (MoCA) tests. These examinations assess cogintive ability and are used to diagnose Alzheimer's disease. An intentional effort was made to avoid poential cognitive bias, as participants were recruited from a wide range of educational, physical, and social backgrounds. During the data collection process, each trial participant was asked to perform a series of 25 handwriting tasks. Each of these tasks was designed to assess different aspects of handwriting, such as speed, pressure, and size. Researchers extracted 18 distinct features from each handwriting task, ultimately producing a total of 451 features associated with each patient. For our purposes, we will utilize only the first handwriting task to reduce the density of the dataset. Let us first examine boxplots of all features contained within the first handwriting task to get a feel for the median and spread of each feature within the DARWIN dataset.
 
 ## Data Preprocessing
 ```{r}
@@ -76,10 +80,12 @@ par(mfrow=c(3,6))
 # Create boxplots of all features
 for (i in 1:(ncol(train_data)-1) )
 {
-  boxplot(train_data[,i], col = "navy", main = colnames(train_data)[i], xlab = colnames(train_data)[i])
+  boxplot(train_data[,i], col = "navy", 
+          main = colnames(train_data)[i], 
+          xlab = colnames(train_data)[i])
 }
 ```
-Several high leverage outliers are present in the data, as indicated by the boxplots, significantly skewing the data and masking the true distribution of each feature. Before continuing with further analysis, we will remove these high leverage outliers in an effort to normalize the data. Normalizing the data is crucial for the creation of a predictive model, as it will allow us to better understand the relationship between features and diagnosis. This normalization process is crucial for the creation of a predictive model using linear regression, as one of the fundamental assumptions of linear regression is that the data is normally distributed. After removing the high leverage outliers, we recreate these box plots to better understand the distribution of each feature and to identify the most important predictors of Alzheimer's disease. Alongside each box plot, we also create a histogram and a distribution plot for every feature.
+Several high leverage outliers are present in the data, as indicated by the boxplots, significantly skewing the data and masking the true distribution of each feature. Before continuing with further analysis, we will remove these high leverage outliers in an effort to normalize the data. Normalizing the data is crucial for the creation of a predictive model, as it will allow us to better understand the relationship between features and diagnosis. This normalization process is essential for the creation of a predictive model using linear regression, as one of the fundamental assumptions of linear regression is that the data is normally distributed. After removing the high leverage outliers, we recreate these box plots to better understand the distribution of each feature and to identify the most important predictors of Alzheimer's disease. Alongside each box plot, we also create a histogram and a distribution plot for every feature. We will only display the first features for this analysis to condense the space that these diagrams consume.
 
 ## Remove High Leverage Outliers, Recreate Boxplots, Histograms, and Distributions for All Features
 
@@ -114,8 +120,7 @@ train_data_outcomes <- train_data_outcomes[-NA_rows,]
 # remove NA rows from train_data
 train_data <- na.omit(train_data)
 
-# Recreate boxplots and histograms of data distribution after data adjustmen
-# only display first 6 features for brevity
+# Recreate boxplots and histograms of data distribution after data adjustment
 par(mfrow=c(3,6))
 for (i in 1:(ncol(train_data)/3)) 
 {
@@ -136,18 +141,8 @@ To remove the high leverage outliers from the dataset, we compute the standard d
 
 ## Feature Extraction through Variation and Correlation Analysis
 
-```{r}
-# Correlation matrix creation
-correlation_matrix <- cor(train_data, train_data_outcomes)
-
-# Display results
-p <- plot_ly(y = colnames(train_data), z = correlation_matrix, type = "heatmap")
-
-# Save the plot to an HTML file
-htmlwidgets::saveWidget(p, "temp_plot.html", selfcontained = TRUE)
-
-# Use webshot to take a screenshot of the HTML file and save it as an image
-webshot::webshot("temp_plot.html", file = "plotly_heatmap.png", delay = 2) 
+```{r echo=FALSE, out.width='75%', out.height='75%'}
+knitr::include_graphics("plotly_heatmap.png")
 ```
 
 After removing the high leverage outliers, the box plots look substantially better with significantly less skew. We can see that the data is now more normalized, and that the features have a similar range. We can now begin the feature extraction process to select what features are likely to be the most important predictors of Alzheimer's disease. We will now create a correlation matrix to graphically depict the relationship between each feature and the diagnosis. Certain features are notably more correlated with the diagnosis than others, denoted by darker colors in the correlation matrix. 
@@ -155,7 +150,7 @@ After removing the high leverage outliers, the box plots look substantially bett
 # Methodology
 
 Initially we imported and cleaned the data by removing any rows with incomplete or missing cells. We then examined box plots of each feature to get a sense of the median and spread of each variable. Using this data, we then further adjusted the dataset to remove high leverage outliers in order to normalize the data. We then examined a correlation matrix, certain features were notably more correlated with the diagnosis than others, denoted by darker colors in matrix. These features include generalization of the mean relative tremor (gmrt), mean pressure, mean speed, and mean time in air during the handwriting task. We isolated these features and used them to build a predictive model that can accurately classify new patients as either having or not having Alzheimer's disease. 
-After this initial data exploration, we began the process of formatting the data for modelling tasks. This involves splitting the data into training and testing dataset, an important step to ensure that validation metrics accurately reflect the performance of a model in unpredictable real world settings. A multivariate linear regression model was selected because it is a simple model to interpret and is a good starting point for understanding the relationship between the predictors and the outcome. Multivariate linear regression models are capable of handling multiple predictors simultaneously and to assess the relative contribution of each feature to the probability of Alzheimer's disease detection. This approach is well-suited for our analysis because it provides a clear interpretation of how each variable impacts the outcome. After producing an initial model using multivariate linear regression, we then created a random forest model to see if we could improve on our linear regression results. Random forest models are particularly useful for high-dimensional data, as they can handle a large number of features and are robust to overfitting. Random forests are also capable of capturing non-linear relationships between features and the outcome, which might be missed by linear models like multivariate regression. They can also model interaction effects between variables without explicit programming, which is particularly useful in medical data where such interactions can be significant but not immediately apparent. After training each model and testing its performance on the test dataset, we evaluated the results of each model to determine which was the most effective at predicting the presence of Alzheimer's disease.  Interpretation is relatively straightforward, as the coefficients of each model represent the relationship between the predictors and the outcome. Additionally, we compute the raw accuracy of each model alongside the sensitivity, specificity, ROC curve, AUC curve, mean squared error, and adjusted R^2 value. These metrics provide valuable insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. We then conclude with a direct comparison of the two models and a discussion of which model is best suited for our particular problem based on a combination of performance and interpretability.
+After this initial data exploration, we began the process of formatting the data for modelling tasks. This involves splitting the data into training and testing dataset, an important step to ensure that validation metrics accurately reflect the performance of a model in unpredictable real world settings. A multivariate linear regression model was selected because it is a simple model to interpret and is a good starting point for understanding the relationship between the predictors and the outcome. Multivariate linear regression models are capable of handling multiple predictors simultaneously and to assess the relative contribution of each feature to the probability of Alzheimer's disease detection. This approach is well-suited for our analysis because it provides a clear interpretation of how each variable impacts the outcome. After producing an initial model using multivariate linear regression, we then created a random forest model to see if we could improve on our linear regression results. Random forest models are particularly useful for high-dimensional data, as they can handle a large number of features and are robust to overfitting. Random forests are also capable of capturing non-linear relationships between features and the outcome, which might be missed by linear models like multivariate regression. They can also model interaction effects between variables without explicit programming, which is particularly useful in medical data where such interactions can be significant but not immediately apparent. After training each model and testing its performance on the test dataset, we evaluated the results of each model to determine which was the most effective at predicting the presence of Alzheimer's disease. Interpretation is relatively straightforward, as the coefficients of each model represent the relationship between the predictors and the outcome. Additionally, we compute the raw accuracy of each model alongside the sensitivity, specificity, ROC curve, AUC score, mean squared error, and adjusted R^2 value. These metrics provide valuable insight into the viability of our model in predicting the presence of Alzheimer's on unseen data. We then conclude with a direct comparison of the two models and a discussion of which model is best suited for our particular problem based on a combination of performance and interpretability.
 
 # Modeling/Analysis
 
@@ -167,13 +162,17 @@ We drew conclusions about our hypothesis using a series of statistical analysis 
 set.seed(123)
 data <- read.csv("darwin.csv")
 data$class <- ifelse(data$class == "P", 1, 0)
+
+# Format the data into a usable format for modelling and testing
 data_outcomes <- data %>% select(452)
 data_condensed <- data %>% select(1:18) %>% cbind(data_outcomes)
+
+# Save 40% of the data for testing, 60% for training
 train_index <- sample(1:nrow(data_condensed), 0.6*nrow(data_condensed))
 train_data <- data_condensed[train_index,]
 test_data <- data_condensed[-train_index,]
 
-# Save diagnosis before removing for training, last row of train_data / test_data
+# Save diagnosis before removing for training
 train_data_outcomes <- train_data %>% select(19)
 test_data_outcomes <- test_data %>% select(19)
 
@@ -198,7 +197,7 @@ set.seed(123)
 lm_model_selected <- lm(unlist(train_data_outcomes) ~ ., data=train_data_selected)
 
 # Model Evaluation Selected Features
-# summary(lm_model_selected)
+summary(lm_model_selected)
 predictions_train_selected <- predict(lm_model_selected, newdata=train_data_selected)
 predictions_test_selected <- predict(lm_model_selected, newdata=test_data_selected)
 
@@ -243,10 +242,10 @@ lm_results <- rbind(lm_results,
 # print tabular results
 print(lm_results)
 ```
-The consistency of R-squared and MSE values across both training and testing sets suggests that the model is stable and performs uniformly on both seen and unseen data. However, the moderate to low R-squared values in both datasets indicate that the model's explanatory power is limited. This may be due to the simplicity of the model or the absence of key predictors in the analysis. The relatively higher accuracy indicates that the model is capable of making correct predictions a majority of the time, but improvements could be made to enhance its explanatory capabilities and reduce prediction errors further. Possible steps include exploring more complex modeling approaches, adding additional or more relevant features, or using techniques to address potential overfitting which is resulting in the significant accuracy dropoff between the training and testing datasets.
+The consistency of R-squared and MSE values across both training and testing sets suggests that the model is stable and performs uniformly on both seen and unseen data. However, the moderate to low R-squared values in both datasets indicate that the model's explanatory power is limited. This may be due to the simplicity of the model or the absence of key predictors in the analysis. The relatively higher accuracy indicates that the model is capable of making correct predictions a majority of the time, but improvements could be made to enhance its explanatory capabilities and reduce prediction errors further. Possible steps include exploring more complex modeling approaches, adding additional or more relevant features, or using techniques to address potential overfitting which is resulting in the accuracy dropoff between the training and testing datasets.
 
 ## ROC Curve and AUC Analysis
-```{r}
+```{r echo=FALSE, out.width='75%', out.height='75%'}
 # Create ROC curve
 roc_curve_test <- roc(unlist(test_data_outcomes), predictions_test_selected)
 roc_curve_train <- roc(unlist(train_data_outcomes), predictions_train_selected)
@@ -295,7 +294,7 @@ After these solid results of our multivariate linear regression model, we will l
 
 ## Random Forest Model
 
-```{r}
+```{r echo=FALSE, out.width='75%', out.height='75%'}
 # Begin Random Forest Model
 set.seed(124)
 rf_model <- randomForest(unlist(train_data_outcomes) ~ ., 
@@ -316,7 +315,8 @@ varImpPlot(rf_model, main="Feature Importance", col = "navy")
 
 ## Model Evaluation: Random Forest
 
-```{r}
+```{r echo=FALSE, out.width='50%', out.height='50%'}
+
 # Calculate the accuracy of the model on the TRAINING dataset
 accuracy_train_rf <- (sum(predictions_train_rf == unlist(train_data_outcomes)) 
                       / length(predictions_train_rf))
@@ -347,8 +347,7 @@ print(rf_results)
 
 # Create a confusion matrix
 confusion_matrix_rf <- table(predictions_test_rf, unlist(test_data_outcomes))
-confusion_matrix_rf <- table(predictions_train_rf, unlist(train_data_outcomes))
-# confusionMatrix(confusion_matrix_rf)
+#confusionMatrix(confusion_matrix_rf)
 plot(confusion_matrix_rf, col = c("navy", "yellow"))
 
 ```
@@ -356,7 +355,7 @@ plot(confusion_matrix_rf, col = c("navy", "yellow"))
 The random forest model performs very well on both the testing and training dataset. The accuracy of the model on the testing dataset is 0.814, which is substantially higher than the accuracy of the linear regression model. The random forest model has an R-squared value of 0.99 on the training dataset, indicating that the model explains 99% of the variance in the data. The model has an R-squared value of 0.819 on the testing dataset, indicating that the model explains 81.9% of the variance in the data. The mean squared error of the model is 0.0001 on the training dataset and 0.181 on the testing dataset. The confusion matrix shows that the model has a high true positive rate and a low false positive rate, indicating that the model is effective at distinguishing between patients with and without Alzheimer's disease. The random forest model is very effective at predicting the presence of Alzheimer's disease based on patient handwriting data, with an accuracy of 0.819 on the testing dataset. The model has a high R-squared value and a low mean squared error, indicating that the model is effective at explaining the variance in the data and making accurate predictions. The confusion matrix shows that the model has a high true positive rate and a low false positive rate, indicating that the model is effective at distinguishing between patients with and without Alzheimer's disease. We also gain valuble insight into the most important features of the model through the feature importance plot, which shows that mean pressure, mean speed, generalization of the mean relative tremor (gmrt), and mean time in air are the most important features for predicting the presence of Alzheimer's disease.
 
 ## ROC Curve and AUC Analysis
-```{r}
+```{r echo=FALSE, out.width='75%', out.height='75%'}
 # Create ROC curve
 roc_curve_train <- roc(unlist(train_data_outcomes), predictions_train_rf)
 roc_curve_test <- roc(unlist(test_data_outcomes), predictions_test_rf)
@@ -372,6 +371,7 @@ plot(roc_curve_test, col = "navy",
      col.main = "black", col.axis = "black", col.lab = "black", 
      col.sub = "black", lwd = 2, lty = 2, print.auc = TRUE)
 ```
+
 The ROC curve and AUC score for the Random Forest model are very good, with an AUC score of 0.99 on the training dataset and a score of 0.819 on the testing dataset. While the substantially greater training AUC score indicates a possible overfitting of the model, overall the Random Forest model is very effective at distinguishing between patients with and without Alzheimer's disease. The AUC score of 0.819 on the testing dataset suggests that the model is performing substantially better than the null model, which would have an AUC score of 0.5.
 
 # Interpretation of Results and Recommendations
@@ -381,7 +381,7 @@ This research aimed to explore the potential of handwriting analysis as a tool f
 The findings underscore the importance of early diagnostic tools in the management of Alzheimer's disease and suggest that handwriting analysis could be a viable, non-invasive method to aid in early detection. It offers a promising direction for non-traditional diagnostic approaches that could complement existing cognitive tests, but several key steps need to be taken before these models can be used in production. We recommend the following steps for future research:
 
 1. Validation with much larger samples: Future studies should include a larger and more diverse sample population.
-2. Integration with clinicaldDiagnostics: Combining graphological analysis with traditional diagnostic methods could improve diagnostic accuracy and reliability.
+2. Integration with clinical diagnostics: Combining graphological analysis with traditional diagnostic methods could improve diagnostic accuracy and reliability.
 3. Exploration of deep learning techniques: Investigating deep learning and other advanced machine learning techniques may uncover more complex patterns in handwriting that relate to neurological changes associated with Alzheimer's which simply could not be uncovered by linear models or random forests.
 
 In conclusion, this project has laid the groundwork for future explorations into graphological analysis as a predictive tool for Alzheimer's disease. With further research and development, handwriting analysis could become an integral part of the diagnostic process, offering a quick and non-intrusive method to assess the risk of Alzheimer's in individuals long before clinical symptoms become apparent.
